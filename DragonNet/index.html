@@ -14,7 +14,10 @@
 </main>
 <script>
 // Remplis ces DEUX constantes avec les valeurs publiques de Supabase pour GitHub Pages.
-const CONFIG={url:'',key:''};
+const CONFIG = {
+    url: "https://oxtozwtsmxheekegpzou.supabase.co",
+    key: "sb_publishable_yvTIfMslERI75PNNB6epkA_vw-eThsu"
+};
 const $=id=>document.getElementById(id);
 let client=null,session=null,profile=null,sections=[],articles=[],editing=null;
 const safe=(s)=>String(s??'');
