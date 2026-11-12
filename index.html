@@ -3,15 +3,17 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="JJCookieLabs - Des cookies artisanaux créatifs et gourmands.">
-    <title>JJCookieLabs | Laboratoire de Cookies Gourmands</title>
+    <meta name="description" content="JJCookieLabs - Portail principal et hub de projets.">
+    <title>JJCookieLabs | Accueil</title>
     <style>
         :root {
-            --bg-color: #fdf8f5;
-            --text-color: #3d251e;
-            --accent-color: #c86d51;
-            --accent-hover: #a8543a;
-            --card-bg: #ffffff;
+            --bg-color: #0f1115;
+            --card-bg: #181b22;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #2a2f3d;
         }
 
         * {
@@ -21,13 +23,12 @@
         }
 
         body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
             color: var(--text-color);
-            line-height: 1.6;
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
-            min-height: 100vh;
         }
 
         header {
@@ -35,94 +36,131 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            background-color: var(--card-bg);
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+            border-bottom: 1px solid var(--border);
         }
 
         .logo {
-            font-size: 1.5rem;
+            font-size: 1.4rem;
             font-weight: 800;
             letter-spacing: -0.5px;
         }
 
         nav a {
+            color: var(--text-muted);
             text-decoration: none;
-            color: var(--text-color);
             margin-left: 1.5rem;
             font-weight: 500;
             transition: color 0.2s;
         }
 
         nav a:hover {
-            color: var(--accent-color);
+            color: var(--text-color);
         }
 
         main {
             flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
             text-align: center;
-            padding: 2rem;
-        }
-
-        .hero {
-            max-width: 650px;
         }
 
         h1 {
             font-size: 3rem;
             margin-bottom: 1rem;
-            line-height: 1.2;
+            letter-spacing: -1px;
         }
 
-        p {
+        .subtitle {
+            color: var(--text-muted);
             font-size: 1.15rem;
-            margin-bottom: 2rem;
-            opacity: 0.85;
+            margin-bottom: 3.5rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            text-align: left;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.8rem;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 0.6rem;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
         }
 
         .btn {
             display: inline-block;
-            background-color: var(--accent-color);
-            color: #ffffff;
-            padding: 0.9rem 2rem;
-            border-radius: 50px;
+            text-align: center;
+            background-color: var(--accent);
+            color: #fff;
             text-decoration: none;
+            padding: 0.75rem 1.2rem;
+            border-radius: 8px;
             font-weight: 600;
-            transition: background-color 0.2s, transform 0.2s;
+            font-size: 0.95rem;
+            transition: background-color 0.2s;
         }
 
         .btn:hover {
             background-color: var(--accent-hover);
-            transform: translateY(-2px);
         }
 
         footer {
             text-align: center;
             padding: 1.5rem;
-            font-size: 0.9rem;
-            opacity: 0.7;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">🍪 JJCookieLabs</div>
+        <div class="logo">JJCookieLabs</div>
         <nav>
-            <a href="#creations">Nos Créations</a>
-            <a href="#labo">Le Labo</a>
-            <a href="#contact">Contact</a>
+            <a href="./index.html">Accueil</a>
+            <a href="./CRSHStudio/index.html">CRSHStudio</a>
         </nav>
     </header>
 
     <main>
-        <section class="hero">
-            <h1>Welcome to JJCookieLabs</h1>
-            <p>Bienvenue dans notre laboratoire gourmand. Découvrez nos recettes de cookies croustillants à l'extérieur, fondants à l'intérieur.</p>
-            <a href="#creations" class="btn">Découvrir la carte</a>
-        </section>
+        <h1>Welcome to JJCookieLabs</h1>
+        <p class="subtitle">Espace central et laboratoire de projets numériques.</p>
+
+        <div class="projects-grid">
+            <article class="card">
+                <div>
+                    <h2>CRSHStudio</h2>
+                    <p>Accédez à l'espace dédié au projet CRSHStudio, nos créations et outils.</p>
+                </div>
+                <a href="./CRSHStudio/index.html" class="btn">Ouvrir CRSHStudio &rarr;</a>
+            </article>
+        </div>
     </main>
 
     <footer>
