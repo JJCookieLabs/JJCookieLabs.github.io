@@ -333,8 +333,21 @@
         await result(client.auth.signInWithPassword({ email, password }));
         $('password').value = '';
         if (!await refreshAdmin()) {
-          await result(client.auth.signOut());
-          throw Error('Ce compte n’a pas le rôle admin dans Supabase.');
+          const { data: userData, error: userError } =
+            await client.auth.getUser();
+        
+          const { data: adminData, error: adminError } =
+            await client.rpc('dragon_is_admin');
+        
+          console.log("Utilisateur :", userData?.user?.id ?? "aucun");
+          console.log("Erreur utilisateur :", userError?.message ?? "aucune");
+          console.log("Admin :", adminData);
+          console.log("Erreur admin :", adminError?.message ?? "aucune");
+        
+          throw Error(
+            adminError?.message ||
+            'La vérification du rôle admin a échoué. Consulte F12 → Console.'
+          );
         }
         await loadArticles();
         notify('Connexion administrateur réussie.');
