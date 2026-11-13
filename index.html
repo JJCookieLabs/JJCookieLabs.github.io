@@ -1,181 +1,29 @@
-<!DOCTYPE html>
-<html lang="fr">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio et DragonNet.">
-    <title>JJCookieLabs | Accueil</title>
-    <style>
-        :root {
-            --bg-color: #0f1115;
-            --card-bg: #181b22;
-            --text-color: #f3f4f6;
-            --text-muted: #9ca3af;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --border: #2a2f3d;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            padding: 1.5rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            margin-left: 1.5rem;
-            font-weight: 500;
-            transition: color 0.2s;
-        }
-
-        nav a:hover {
-            color: var(--text-color);
-        }
-
-        main {
-            flex: 1;
-            max-width: 900px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 4rem 1.5rem;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 1.15rem;
-            margin-bottom: 3.5rem;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            text-align: left;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.8rem;
-            transition: transform 0.2s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-        }
-
-        .card h2 {
-            font-size: 1.4rem;
-            margin-bottom: 0.6rem;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
-        }
-
-        .btn {
-            display: inline-block;
-            text-align: center;
-            background-color: var(--accent);
-            color: #fff;
-            text-decoration: none;
-            padding: 0.75rem 1.2rem;
-            border-radius: 8px;
-            font-weight: 600;
-            font-size: 0.95rem;
-            transition: background-color 0.2s;
-        }
-
-        .btn:hover {
-            background-color: var(--accent-hover);
-        }
-
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border);
-        }
-    </style>
-</head>
-<body>
-
-    <header>
-        <div class="logo">JJCookieLabs</div>
-        <nav>
-            <a href="./index.html">Accueil</a>
-            <a href="./CRSHStudio/index.html">CRSHStudio</a>
-            <a href="./DragonNet/index.html">DragonNet</a>
-        </nav>
-    </header>
-
-    <main>
-        <h1>Welcome to JJCookieLabs</h1>
-        <p class="subtitle">Espace central et laboratoire de projets numériques.</p>
-
-        <div class="projects-grid">
-            <article class="card">
-                <div>
-                    <h2>CRSHStudio</h2>
-                    <p>Accédez à l'espace dédié au projet CRSHStudio, nos créations et outils.</p>
-                </div>
-                <a href="./CRSHStudio/index.html" class="btn">Ouvrir CRSHStudio &rarr;</a>
-            </article>
-
-            <article class="card">
-                <div>
-                    <h2>DragonNet</h2>
-                    <p>Accédez à la plateforme et aux ressources du projet DragonNet.</p>
-                </div>
-                <a href="./DragonNet/index.html" class="btn">Ouvrir DragonNet &rarr;</a>
-            </article>
-        </div>
-    </main>
-
-    <footer>
-        &copy; 2026 JJCookieLabs. Tous droits réservés.
-    </footer>
-
-</body>
-</html>
+<!doctype html><html lang="fr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>DragonNet Anarchy</title><style>
+:root{color-scheme:dark;font-family:system-ui,Arial,sans-serif;background:#0a1020;color:#edf3ff}*{box-sizing:border-box}body{margin:0}header{padding:20px max(20px,calc((100vw - 1060px)/2));background:#121d35;border-bottom:1px solid #354b6b}header h1{margin:0;color:#78caff}main{max-width:1060px;margin:24px auto;padding:0 18px}.panel{background:#16223d;border:1px solid #33496d;border-radius:16px;padding:22px;margin:0 0 20px}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:14px}.article{background:#1d2d4c;border-radius:12px;padding:16px;overflow-wrap:anywhere}.article p{white-space:pre-wrap;line-height:1.55}input,textarea,select,button{font:inherit;border-radius:9px;padding:10px;border:1px solid #597097}input,textarea,select{background:#0b152b;color:white;width:100%;margin:5px 0 12px}textarea{min-height:135px}button{background:#238ce5;border:0;color:white;cursor:pointer;margin:4px 5px 4px 0}button.secondary{background:#3b506e}button.danger{background:#b83d56}label{display:block;margin:8px 0 0}.muted{color:#b5c5de;font-size:.9rem}.hidden{display:none!important}.row{display:flex;gap:12px;flex-wrap:wrap;align-items:end}.row>*{flex:1;min-width:170px}.notice{background:#25496d;padding:12px 18px;display:none}.pill{display:inline-block;border-radius:20px;padding:3px 9px;background:#30496e;font-size:.8rem}small{color:#b5c5de}code{overflow-wrap:anywhere}
+</style></head><body><header><h1>🐉 DragonNet Anarchy</h1><div class="muted">Publier librement. Aucun compte nécessaire.</div></header><div id="notice" class="notice" role="status"></div><main>
+<section class="panel"><h2>Publier un article</h2><form id="publishForm" novalidate><label>Pseudonyme<input id="author" maxlength="40" required placeholder="Anonyme"></label><label>Titre<input id="title" maxlength="160" required></label><label>Catégorie<input id="category" maxlength="40" value="Général" required></label><label>Contenu<textarea id="body" maxlength="10000" required></textarea></label><button type="submit">Publier immédiatement</button></form><small>Les publications sont publiques. Ne partage pas de données personnelles.</small></section>
+<section class="panel"><h2>Articles</h2><div class="row"><label>Recherche<input id="search" placeholder="Rechercher..."></label><label>Catégorie<select id="filter"><option value="">Toutes</option></select></label><label>Ordre<select id="order"><option value="new">Plus récents</option><option value="old">Plus anciens</option></select></label></div><button id="reload" class="secondary">Actualiser</button><div id="articles" class="grid"></div></section>
+<section id="adminLogin" class="panel hidden"><h2>🔒 Accès administrateur</h2><p class="muted">Le titre secret ouvre seulement cette interface. Les droits sont vérifiés par Supabase.</p><label>E-mail<input id="email" type="email" autocomplete="username"></label><label>Mot de passe<input id="password" type="password" autocomplete="current-password"></label><button id="login">Se connecter</button><button id="closeLogin" class="secondary">Fermer</button></section>
+<section id="adminPanel" class="panel hidden"><h2>🛡️ Administration</h2><p class="muted">Masquer, réafficher, supprimer, bannir temporairement ou débannir. Aucune modification du texte.</p><button id="logout" class="secondary">Déconnexion admin</button><h3>Bannissements actifs</h3><div id="bans"></div></section>
+</main><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script><script>
+'use strict';
+const SUPABASE_URL='https://oxtozwtsmxheekegpzou.supabase.co';
+const SUPABASE_KEY='sb_publishable_yvTIfMslERI75PNNB6epkA_vw-eThsu';
+const client=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+const $=id=>document.getElementById(id);
+const SECRET_TITLE='\u00ADadmin connection\u00AD';
+let articles=[],admin=false;
+function notice(s){$('notice').textContent=s;$('notice').style.display='block';}
+function el(tag,content,cls){const x=document.createElement(tag);if(content!==undefined)x.textContent=String(content);if(cls)x.className=cls;return x;}
+function clientId(){let id=localStorage.getItem('dragon_client_id');if(!id){id=crypto.randomUUID();localStorage.setItem('dragon_client_id',id);}return id;}
+async function call(p){const {data,error}=await p;if(error)throw error;return data;}
+async function checkAdmin(){const {data:{session}}=await client.auth.getSession();admin=!!session&&await call(client.rpc('dragon_is_admin'));$('adminPanel').classList.toggle('hidden',!admin);if(admin){$('adminLogin').classList.add('hidden');await loadBans();}return admin;}
+async function loadArticles(){articles=await call(client.from('dragon_documents').select('id,payload,created_at').eq('kind','article').order('created_at',{ascending:false}).limit(500));render();}
+function render(){const query=$('search').value.toLowerCase(),category=$('filter').value;let items=articles.filter(a=>(!category||a.payload.category===category)&&[a.payload.title,a.payload.author,a.payload.body].some(v=>String(v||'').toLowerCase().includes(query)));if($('order').value==='old')items=[...items].reverse();const cats=[...new Set(articles.map(a=>a.payload.category))].sort();$('filter').replaceChildren(new Option('Toutes',''),...cats.map(c=>new Option(c,c)));$('filter').value=category;$('articles').replaceChildren();if(!items.length)$('articles').append(el('p','Aucun article visible.'));for(const a of items){const d=a.payload,card=el('div',undefined,'article');card.append(el('h3',d.title),el('div',`${d.author} · ${d.category} · ${new Date(a.created_at).toLocaleString('fr-FR')}`,'muted'),el('p',d.body));if(d.status==='hidden')card.append(el('span','MASQUÉ','pill'));if(admin){const actions=el('div');const action=(label,code,cls)=>{const b=el('button',label,cls);b.onclick=async()=>{if(code==='delete'&&!confirm('Supprimer définitivement ?'))return;try{await call(client.rpc('dragon_admin_article',{p_id:a.id,p_action:code}));await loadArticles();}catch(e){notice(e.message)}};actions.append(b)};action(d.status==='hidden'?'Réafficher':'Masquer',d.status==='hidden'?'show':'hide','secondary');action('Supprimer','delete','danger');const ban=el('button','Bannir auteur','secondary');ban.onclick=async()=>{const h=prompt('Durée en heures (1 à 8760) :','24');if(h===null)return;const hours=Number(h);if(!Number.isInteger(hours)||hours<1||hours>8760)return notice('Durée invalide');try{await call(client.rpc('dragon_admin_ban',{p_client:d.client_id,p_hours:hours}));await loadBans();notice('Bannissement enregistré')}catch(e){notice(e.message)}};actions.append(ban);card.append(actions,el('small',`ID navigateur : ${d.client_id}`));}$('articles').append(card);}}
+async function loadBans(){if(!admin)return;const bans=await call(client.rpc('dragon_admin_bans'));$('bans').replaceChildren();if(!bans.length)$('bans').append(el('p','Aucun bannissement actif.'));for(const b of bans){const line=el('div',undefined,'article');line.append(el('small',`${b.client_id} · jusqu'au ${new Date(b.until_at).toLocaleString('fr-FR')}`));const btn=el('button','Débannir','secondary');btn.onclick=async()=>{try{await call(client.rpc('dragon_admin_ban',{p_client:b.client_id,p_hours:0}));await loadBans();notice('Débanni')}catch(e){notice(e.message)}};line.append(btn);$('bans').append(line)}}
+$('publishForm').onsubmit=async e=>{e.preventDefault();const title=$('title').value.trim();if(title===SECRET_TITLE){$('adminLogin').classList.remove('hidden');$('adminLogin').scrollIntoView();return;}if(!$('author').value.trim()||!title||!$('body').value.trim()||!$('category').value.trim())return notice('Complète tous les champs.');try{await call(client.rpc('dragon_publish',{p_doc:{client_id:clientId(),author:$('author').value.trim(),title,category:$('category').value.trim(),body:$('body').value.trim()}}));$('title').value='';$('body').value='';notice('Article publié !');await loadArticles()}catch(e){notice('Publication impossible : '+e.message)}};
+$('login').onclick=async()=>{try{const {error}=await client.auth.signInWithPassword({email:$('email').value.trim(),password:$('password').value});if(error)throw error;$('password').value='';if(!await checkAdmin()){await client.auth.signOut();throw Error('Ce compte n’a pas le rôle admin.')}await loadArticles();notice('Administration activée')}catch(e){notice('Connexion : '+e.message)}};
+$('logout').onclick=async()=>{await client.auth.signOut();admin=false;$('adminPanel').classList.add('hidden');await loadArticles();notice('Déconnecté')};
+$('closeLogin').onclick=()=>$('adminLogin').classList.add('hidden');$('reload').onclick=()=>loadArticles().catch(e=>notice(e.message));for(const id of ['search','filter','order'])$(id).addEventListener(id==='search'?'input':'change',render);
+(async()=>{try{await checkAdmin();await loadArticles()}catch(e){notice('Erreur de connexion : '+e.message)}})();
+</script></body></html>
