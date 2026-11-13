@@ -14,6 +14,7 @@
             --accent: #6366f1;
             --accent-hover: #4f46e5;
             --border: #2a2f3d;
+            --danger: #ef4444;
         }
 
         * {
@@ -51,6 +52,7 @@
             margin-left: 1.5rem;
             font-weight: 500;
             transition: color 0.2s;
+            cursor: pointer;
         }
 
         nav a:hover {
@@ -104,6 +106,18 @@
         .card h2 {
             font-size: 1.4rem;
             margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .badge-lock {
+            font-size: 0.75rem;
+            background-color: rgba(99, 102, 241, 0.15);
+            color: var(--accent);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 600;
         }
 
         .card p {
@@ -115,19 +129,100 @@
 
         .btn {
             display: inline-block;
+            width: 100%;
             text-align: center;
             background-color: var(--accent);
             color: #fff;
             text-decoration: none;
             padding: 0.75rem 1.2rem;
             border-radius: 8px;
+            border: none;
+            font-family: inherit;
             font-weight: 600;
             font-size: 0.95rem;
+            cursor: pointer;
             transition: background-color 0.2s;
         }
 
         .btn:hover {
             background-color: var(--accent-hover);
+        }
+
+        /* Fenêtre modale pour le mot de passe */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 380px;
+            text-align: left;
+        }
+
+        .modal h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .modal p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            outline: none;
+        }
+
+        .modal input:focus {
+            border-color: var(--accent);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
         }
 
         footer {
@@ -145,7 +240,7 @@
         <div class="logo">JJCookieLabs</div>
         <nav>
             <a href="./index.html">Accueil</a>
-            <a href="./CRSHStudio/index.html">CRSHStudio</a>
+            <a href="./CRSHStudio/index.html" onclick="openPasswordModal(event)">CRSHStudio</a>
             <a href="./DragonNet/index.html">DragonNet</a>
         </nav>
     </header>
@@ -157,10 +252,10 @@
         <div class="projects-grid">
             <article class="card">
                 <div>
-                    <h2>CRSHStudio</h2>
+                    <h2>CRSHStudio <span class="badge-lock">🔒 Protégé</span></h2>
                     <p>Accédez à l'espace dédié au projet CRSHStudio, nos créations et outils.</p>
                 </div>
-                <a href="./CRSHStudio/index.html" class="btn">Ouvrir CRSHStudio &rarr;</a>
+                <button type="button" class="btn" onclick="openPasswordModal(event)">Ouvrir CRSHStudio &rarr;</button>
             </article>
 
             <article class="card">
@@ -173,9 +268,66 @@
         </div>
     </main>
 
+    <!-- Fenêtre modale de vérification -->
+    <div class="modal-overlay" id="passwordModal" onclick="closeOnOutsideClick(event)">
+        <div class="modal">
+            <h3>Accès restreint</h3>
+            <p>Veuillez saisir le mot de passe pour accéder à <strong>CRSHStudio</strong>.</p>
+            <form onsubmit="verifyPassword(event)">
+                <input type="password" id="passwordInput" placeholder="Mot de passe" autocomplete="off" required>
+                <div class="error-msg" id="errorMsg">Mot de passe incorrect.</div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Annuler</button>
+                    <button type="submit" class="btn">Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
     <footer>
         &copy; 2026 JJCookieLabs. Tous droits réservés.
     </footer>
+
+    <script>
+        const modal = document.getElementById('passwordModal');
+        const passwordInput = document.getElementById('passwordInput');
+        const errorMsg = document.getElementById('errorMsg');
+
+        function openPasswordModal(event) {
+            event.preventDefault();
+            passwordInput.value = '';
+            errorMsg.style.display = 'none';
+            modal.classList.add('active');
+            setTimeout(() => passwordInput.focus(), 50);
+        }
+
+        function closePasswordModal() {
+            modal.classList.remove('active');
+        }
+
+        function closeOnOutsideClick(event) {
+            if (event.target === modal) {
+                closePasswordModal();
+            }
+        }
+
+        function verifyPassword(event) {
+            event.preventDefault();
+            if (passwordInput.value === '6105072526') {
+                window.location.href = './CRSHStudio/index.html';
+            } else {
+                errorMsg.style.display = 'block';
+                passwordInput.value = '';
+                passwordInput.focus();
+            }
+        }
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape' && modal.classList.contains('active')) {
+                closePasswordModal();
+            }
+        });
+    </script>
 
 </body>
 </html>
