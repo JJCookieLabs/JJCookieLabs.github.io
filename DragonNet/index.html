@@ -6,155 +6,272 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>DragonNet Anarchy</title>
 <style>
-:root{font-family:system-ui,Arial,sans-serif;color-scheme:dark;background:#0b1020;color:#eef3ff}
-*{box-sizing:border-box}
-body{margin:0}
-header{padding:20px max(18px,calc((100vw - 1060px)/2));background:#14213c;border-bottom:1px solid #364b70}
-h1{margin:0;color:#81caff}
-main{max-width:1060px;margin:24px auto;padding:0 18px}
-.panel{background:#17243e;border:1px solid #354a6a;border-radius:16px;padding:22px;margin-bottom:20px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(245px,1fr));gap:14px;margin-top:16px}
-.article{background:#20304f;padding:16px;border-radius:12px;overflow-wrap:anywhere}
-.article p{white-space:pre-wrap;line-height:1.55}
-label{display:block;margin:10px 0 0}
-input,textarea,select,button{font:inherit;border-radius:9px;padding:11px}
-input,textarea,select{width:100%;margin-top:5px;background:#0b152c;color:white;border:1px solid #5c7094}
-textarea{min-height:130px;resize:vertical}
-button{border:0;background:#2389e2;color:white;cursor:pointer;margin:8px 6px 3px 0}
-button:disabled{opacity:.55;cursor:wait}
-.secondary{background:#405473}
-.danger{background:#ba3e56}
-.row{display:flex;gap:12px;flex-wrap:wrap}
-.row label{flex:1 1 180px}
-.hidden{display:none!important}
-.muted{color:#b4c3df;font-size:.92rem}
-.actions{display:flex;gap:8px;flex-wrap:wrap}
-.actions button{margin:6px 0}
-.tag{display:inline-block;background:#6a4d22;border-radius:10px;padding:4px 8px;font-size:.85rem}
-#notice{display:none;background:#285078;padding:13px max(18px,calc((100vw - 1060px)/2));overflow-wrap:anywhere}
+:root {
+  color-scheme: dark;
+  font-family: system-ui, Arial, sans-serif;
+  background: #0a1020;
+  color: #eef3ff;
+}
+* { box-sizing: border-box; }
+body { margin: 0; }
+header {
+  background: #121d35;
+  padding: 24px max(18px, calc((100vw - 1100px)/2));
+  border-bottom: 1px solid #304567;
+}
+h1 { color: #8acfff; margin: 0 0 6px; }
+main { max-width: 1100px; margin: 22px auto; padding: 0 16px; }
+.panel {
+  background: #17243e;
+  border: 1px solid #354a6b;
+  border-radius: 16px;
+  padding: 22px;
+  margin-bottom: 20px;
+}
+.muted { color: #bac9e0; font-size: .92rem; }
+.hidden { display: none !important; }
+.row { display: flex; gap: 12px; flex-wrap: wrap; }
+.row > * { flex: 1 1 180px; min-width: 0; }
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 13px;
+}
+.article {
+  background: #20304e;
+  border: 1px solid #354a6b;
+  padding: 17px;
+  border-radius: 12px;
+  overflow-wrap: anywhere;
+}
+.article p { white-space: pre-wrap; line-height: 1.6; }
+label { display: block; margin: 10px 0 3px; }
+input, textarea, select, button {
+  font: inherit;
+  border-radius: 9px;
+  padding: 10px 11px;
+}
+input, textarea, select {
+  background: #0b152b;
+  border: 1px solid #526a90;
+  color: white;
+  width: 100%;
+  margin-top: 5px;
+}
+textarea { min-height: 135px; resize: vertical; }
+button {
+  border: 0;
+  background: #258ae5;
+  color: white;
+  cursor: pointer;
+  margin: 6px 6px 6px 0;
+}
+button:disabled { opacity: .5; cursor: wait; }
+.secondary { background: #405573; }
+.danger { background: #b93e59; }
+.actions { display: flex; gap: 7px; flex-wrap: wrap; }
+.tag {
+  display: inline-block;
+  background: #32496c;
+  border-radius: 20px;
+  padding: 4px 9px;
+}
+.count-row { display: flex; gap: 12px; flex-wrap: wrap; }
+.count {
+  background: #243859;
+  border-radius: 12px;
+  padding: 12px 16px;
+  flex: 1;
+}
+.count strong { display: block; font-size: 1.4rem; }
+.admin-list { display: grid; gap: 10px; margin-top: 14px; }
+#notice {
+  display: none;
+  padding: 12px 18px;
+  background: #2c527c;
+}
 </style>
 </head>
 <body>
 
 <header>
   <h1>🐉 DragonNet Anarchy</h1>
-  <div class="muted">Publication libre · Aucun compte nécessaire · JSONB</div>
+  <div class="muted">Publication libre et anonyme · Supabase JSONB</div>
   <div id="status" class="muted">Connexion à Supabase…</div>
 </header>
 
-<div id="notice" role="status" aria-live="polite"></div>
+<div id="notice" role="status"></div>
 
 <main>
-  <section class="panel">
-    <h2>Publier un article</h2>
-    <form id="publishForm" novalidate>
-      <label>Pseudonyme
-        <input id="author" maxlength="60" value="Anonyme">
-      </label>
-      <label>Titre
-        <input id="title" maxlength="160">
-      </label>
-      <label>Catégorie
-        <input id="category" maxlength="40" value="Général">
-      </label>
-      <label>Contenu
-        <textarea id="content" maxlength="30000"></textarea>
-      </label>
-      <button type="submit" id="publishButton">Publier immédiatement</button>
-    </form>
-    <p class="muted">Les publications sont publiques. Évite de partager des données personnelles.</p>
-  </section>
 
-  <section class="panel">
-    <h2>Articles</h2>
-    <div class="row">
-      <label>Recherche
-        <input id="search" placeholder="Titre, auteur ou contenu…">
-      </label>
-      <label>Catégorie
-        <select id="filter"><option value="">Toutes</option></select>
-      </label>
-      <label>Ordre
-        <select id="order">
-          <option value="new">Plus récents</option>
-          <option value="old">Plus anciens</option>
-        </select>
-      </label>
+<section class="panel">
+  <h2>Publier un article</h2>
+
+  <form id="publishForm" novalidate>
+    <label>Pseudonyme
+      <input id="author" maxlength="60" value="Anonyme">
+    </label>
+
+    <label>Titre
+      <input id="title" maxlength="160">
+    </label>
+
+    <label>Catégorie
+      <input id="category" maxlength="40" value="Général">
+    </label>
+
+    <label>Contenu
+      <textarea id="content" maxlength="30000"></textarea>
+    </label>
+
+    <button id="publishButton" type="submit">
+      Publier immédiatement
+    </button>
+  </form>
+
+  <p class="muted">Aucun compte nécessaire. Les publications sont publiques.</p>
+</section>
+
+<section class="panel">
+  <h2>Articles publics</h2>
+
+  <div class="row">
+    <label>Recherche
+      <input id="search" placeholder="Rechercher…">
+    </label>
+
+    <label>Catégorie
+      <select id="filter">
+        <option value="">Toutes</option>
+      </select>
+    </label>
+
+    <label>Ordre
+      <select id="order">
+        <option value="new">Plus récents</option>
+        <option value="old">Plus anciens</option>
+      </select>
+    </label>
+  </div>
+
+  <button id="reload" class="secondary">Actualiser</button>
+  <p id="count" class="muted"></p>
+  <div id="articles" class="grid"></div>
+</section>
+
+<section id="adminLogin" class="panel hidden">
+  <h2>🔒 Connexion administrateur</h2>
+
+  <label>E-mail
+    <input id="email" type="email">
+  </label>
+
+  <label>Mot de passe
+    <input id="password" type="password">
+  </label>
+
+  <button id="login">Se connecter</button>
+  <button id="closeLogin" class="secondary">Fermer</button>
+</section>
+
+<section id="adminPanel" class="panel hidden">
+  <h2>🛡️ Administration</h2>
+
+  <p class="muted">
+    Masquer, réafficher et supprimer des articles.
+    Aucun compte visiteur ni bannissement.
+  </p>
+
+  <button id="logout" class="secondary">Déconnexion</button>
+
+  <div class="count-row">
+    <div class="count">
+      <strong id="statVisible">0</strong>
+      Articles visibles
     </div>
-    <button type="button" class="secondary" id="reload">Actualiser</button>
-    <div id="count" class="muted"></div>
-    <div id="articles" class="grid"></div>
-  </section>
+    <div class="count">
+      <strong id="statHidden">0</strong>
+      Articles masqués
+    </div>
+  </div>
 
-  <section id="adminLogin" class="panel hidden">
-    <h2>🔒 Connexion administrateur</h2>
-    <p class="muted">Le titre secret ouvre ce formulaire. Supabase vérifie les permissions.</p>
-    <label>E-mail
-      <input id="email" type="email" autocomplete="username">
-    </label>
-    <label>Mot de passe
-      <input id="password" type="password" autocomplete="current-password">
-    </label>
-    <button type="button" id="login">Se connecter</button>
-    <button type="button" id="closeLogin" class="secondary">Fermer</button>
-  </section>
+  <button id="refreshAdmin" class="secondary">
+    Actualiser l'administration
+  </button>
 
-  <section id="adminPanel" class="panel hidden">
-    <h2>🛡️ Administration</h2>
-    <p class="muted">Masquer, réafficher, supprimer, bannir temporairement et débannir. Pas de modification du contenu.</p>
-    <button type="button" id="logout" class="secondary">Déconnexion admin</button>
-    <h3>Bannissements actifs</h3>
-    <div id="bans"></div>
-  </section>
+  <h3>Gérer les articles</h3>
+
+  <div class="row">
+    <label>Recherche admin
+      <input id="adminSearch" placeholder="Rechercher un article…">
+    </label>
+
+    <label>Afficher
+      <select id="adminFilter">
+        <option value="all">Tous</option>
+        <option value="visible">Visibles</option>
+        <option value="hidden">Masqués</option>
+      </select>
+    </label>
+  </div>
+
+  <div id="adminArticles" class="admin-list"></div>
+</section>
+
 </main>
 
 <script>
 'use strict';
 
-const SUPABASE_URL = 'https://hkwnfxgrnyvyfprzvlyb.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_hzBek5ZmTxpaNZcQiDPwgA_i4Lhv3o0';
+const SUPABASE_URL =
+  'https://hkwnfxgrnyvyfprzvlyb.supabase.co';
+
+const SUPABASE_KEY =
+  'sb_publishable_hzBek5ZmTxpaNZcQiDPwgA_i4Lhv3o0';
 
 const $ = id => document.getElementById(id);
-let articles = [];
-let adminToken = null;
 
-function show(id, visible) {
-  $(id).classList.toggle('hidden', !visible);
+let publicArticles = [];
+let moderationArticles = [];
+let adminAuth = null;
+
+const isAdmin = () => !!adminAuth?.accessToken;
+
+function show(id, value) {
+  $(id).classList.toggle('hidden', !value);
 }
 
-function notice(message) {
-  $('notice').textContent = String(message);
+function notice(text) {
+  $('notice').textContent = String(text);
   $('notice').style.display = 'block';
 }
 
-function elem(tag, text, className) {
-  const n = document.createElement(tag);
-  if (text !== undefined) n.textContent = String(text);
-  if (className) n.className = className;
-  return n;
+function node(tag, text, className) {
+  const e = document.createElement(tag);
+  if (text !== undefined) e.textContent = String(text);
+  if (className) e.className = className;
+  return e;
 }
 
 function dateText(value) {
   return new Date(value).toLocaleString('fr-FR');
 }
 
-function visitorId() {
-  let id = localStorage.getItem('dragon_client_id');
-  if (!id) {
-    id = crypto.randomUUID();
-    localStorage.setItem('dragon_client_id', id);
-  }
-  return id;
-}
-
+// Entrée cachée vers le formulaire admin
 function isSecretTitle(value) {
-  return String(value).normalize('NFKC').toLowerCase()
+  return String(value)
+    .normalize('NFKC')
+    .toLowerCase()
     .replace(/[\u00ad\u200b-\u200f\u2060\ufeff]/g, '')
     .replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, '')
-    .replace(/\s+/g, ' ').trim() === 'admin connection';
+    .replace(/\s+/g, ' ')
+    .trim() === 'admin connection';
 }
 
-async function api(path, { method = 'GET', body, token = null } = {}) {
+// Appels API Supabase
+async function api(path, options = {}) {
+  const { method = 'GET', body, token } = options;
+
   const headers = {
     apikey: SUPABASE_KEY,
     Accept: 'application/json'
@@ -175,52 +292,100 @@ async function api(path, { method = 'GET', body, token = null } = {}) {
   });
 
   const raw = await response.text();
-  let payload;
+  let result;
 
   try {
-    payload = raw ? JSON.parse(raw) : null;
+    result = raw ? JSON.parse(raw) : null;
   } catch {
-    payload = raw;
+    result = raw;
   }
 
   if (!response.ok) {
-    if (
-      (response.status === 401 || response.status === 403) &&
-      token && token === adminToken
-    ) {
-      adminToken = null;
-      show('adminPanel', false);
-    }
-
-    throw Error(
-      (payload && (
-        payload.message ||
-        payload.msg ||
-        payload.error_description ||
-        payload.error
-      )) || ('Erreur HTTP ' + response.status)
+    const error = new Error(
+      result?.message ||
+      result?.msg ||
+      result?.error_description ||
+      result?.error ||
+      'Erreur HTTP ' + response.status
     );
+
+    error.status = response.status;
+    error.code = result?.code || '';
+
+    throw error;
   }
 
-  return payload;
+  return result;
 }
 
-async function publicRpc(name, params) {
-  return api('/rest/v1/rpc/' + name, {
-    method: 'POST',
-    body: params
+// Authentification admin
+function setAdminAuth(tokens) {
+  adminAuth = {
+    accessToken: tokens.access_token,
+    refreshToken: tokens.refresh_token,
+    expiresAt:
+      Date.now() + (Number(tokens.expires_in) || 3600) * 1000
+  };
+}
+
+function forgetAdmin() {
+  adminAuth = null;
+  moderationArticles = [];
+  show('adminPanel', false);
+  $('adminArticles').replaceChildren();
+  $('password').value = '';
+  $('status').textContent = 'Connecté · accès public';
+}
+
+async function refreshToken() {
+  if (!adminAuth?.refreshToken) {
+    throw Error('Session expirée.');
+  }
+
+  const tokens = await api(
+    '/auth/v1/token?grant_type=refresh_token',
+    {
+      method: 'POST',
+      body: {
+        refresh_token: adminAuth.refreshToken
+      }
+    }
+  );
+
+  setAdminAuth(tokens);
+}
+
+async function authorized(path, options = {}) {
+  if (!adminAuth) {
+    throw Error('Connexion admin nécessaire.');
+  }
+
+  if (Date.now() > adminAuth.expiresAt - 30000) {
+    try {
+      await refreshToken();
+    } catch {
+      forgetAdmin();
+      throw Error('Session expirée, reconnecte-toi.');
+    }
+  }
+
+  return api(path, {
+    ...options,
+    token: adminAuth.accessToken
   });
 }
 
-async function adminRpc(name, params) {
-  if (!adminToken) {
-    throw Error('Reconnecte-toi à l’administration.');
-  }
+async function adminRpc(name, body) {
+  return authorized('/rest/v1/rpc/' + name, {
+    method: 'POST',
+    body
+  });
+}
 
+async function publicRpc(name, body) {
   return api('/rest/v1/rpc/' + name, {
     method: 'POST',
-    body: params,
-    token: adminToken
+    body
   });
 }
 
@@ -229,64 +394,71 @@ async function loginAdmin() {
   const password = $('password').value;
 
   if (!email || !password) {
-    throw Error('Entre ton e-mail et ton mot de passe.');
+    throw Error('E-mail ou mot de passe manquant.');
   }
 
-  const auth = await api('/auth/v1/token?grant_type=password', {
-    method: 'POST',
-    body: { email, password }
-  });
+  // Connexion directe pour éviter les pertes de session
+  const tokens = await api(
+    '/auth/v1/token?grant_type=password',
+    {
+      method: 'POST',
+      body: { email, password }
+    }
+  );
 
-  if (!auth?.access_token) {
-    throw Error('Supabase n’a pas renvoyé de jeton utilisateur.');
-  }
-
-  const allowed = await api('/rest/v1/rpc/dragon_is_admin', {
-    method: 'POST',
-    body: {},
-    token: auth.access_token
-  });
+  // Vérification effective du rôle dans Supabase
+  const allowed = await api(
+    '/rest/v1/rpc/dragon_is_admin',
+    {
+      method: 'POST',
+      body: {},
+      token: tokens.access_token
+    }
+  );
 
   if (allowed !== true) {
-    throw Error('Connexion acceptée, mais rôle admin non reconnu.');
+    throw Error('Ce compte ne possède pas le rôle admin.');
   }
 
-  adminToken = auth.access_token;
-  $('password').value = '';
+  setAdminAuth(tokens);
 
+  $('password').value = '';
   show('adminLogin', false);
   show('adminPanel', true);
 
   await Promise.all([
-    loadArticles(),
-    loadBans()
+    loadPublicArticles(),
+    loadModeration()
   ]);
 
+  $('status').textContent = 'Connecté · administrateur';
   notice('Administration activée !');
 }
 
-async function loadArticles() {
-  const query =
-    '?select=id,data,created_at&kind=eq.article&order=created_at.desc&limit=500';
+// Articles publics
+async function loadPublicArticles() {
+  publicArticles = await api(
+    '/rest/v1/dragon_documents' +
+    '?select=id,data,created_at' +
+    '&kind=eq.article' +
+    '&order=created_at.desc' +
+    '&limit=500'
+  );
 
-  articles = await api('/rest/v1/dragon_documents' + query, {
-    token: adminToken
-  });
+  renderPublic();
 
-  renderArticles();
-
-  $('status').textContent = adminToken
+  $('status').textContent = isAdmin()
     ? 'Connecté · administrateur'
     : 'Connecté · accès public';
 }
 
-function renderArticles() {
-  const q = $('search').value.toLowerCase().trim();
-  const selected = $('filter').value;
+function renderPublic() {
+  const search = $('search').value.trim().toLowerCase();
+  const category = $('filter').value;
 
   const categories = [
     ...new Set(
-      articles.map(a => a.data?.category).filter(Boolean)
+      publicArticles.map(a => a.data?.category).filter(Boolean)
     )
   ].sort();
 
@@ -295,176 +467,173 @@ function renderArticles() {
     ...categories.map(c => new Option(c, c))
   );
 
-  $('filter').value = selected;
+  $('filter').value = category;
 
-  let visible = articles.filter(a => {
-    const d = a.data || {};
+  let list = publicArticles.filter(article => {
+    const d = article.data || {};
 
-    return (!selected || d.category === selected)
-      && (!q || [d.title, d.name, d.content].some(
-        v => String(v || '').toLowerCase().includes(q)
-      ));
+    return (
+      (!category || d.category === category) &&
+      (!search || [d.title, d.name, d.content].some(
+        v => String(v || '').toLowerCase().includes(search)
+      ))
+    );
   });
 
   if ($('order').value === 'old') {
-    visible = [...visible].reverse();
+    list = [...list].reverse();
   }
 
-  $('count').textContent = visible.length + ' article(s)';
   $('articles').replaceChildren();
+  $('count').textContent = list.length + ' article(s)';
 
-  if (!visible.length) {
-    $('articles').append(elem('p', 'Aucun article visible.'));
+  if (!list.length) {
+    $('articles').append(node('p', 'Aucun article visible.'));
   }
 
-  for (const article of visible) {
+  for (const article of list) {
     const d = article.data || {};
-    const card = elem('article', undefined, 'article');
+    const card = node('article', undefined, 'article');
 
     card.append(
-      elem('h3', d.title || 'Sans titre'),
-      elem(
+      node('h3', d.title || 'Sans titre'),
+      node(
         'div',
         `${d.name || 'Anonyme'} · ${d.category || 'Général'} · ${dateText(article.created_at)}`,
         'muted'
       ),
-      elem('p', d.content || '')
+      node('p', d.content || '')
     );
-
-    if (d.hidden === true) {
-      card.append(elem('span', 'MASQUÉ', 'tag'));
-    }
-
-    if (adminToken) {
-      const actions = elem('div', undefined, 'actions');
-
-      const button = (label, task, css = 'secondary') => {
-        const b = elem('button', label, css);
-        b.type = 'button';
-
-        b.onclick = async () => {
-          b.disabled = true;
-
-          try {
-            await task();
-          } catch (e) {
-            notice('Admin : ' + e.message);
-          } finally {
-            b.disabled = false;
-          }
-        };
-
-        actions.append(b);
-      };
-
-      button(d.hidden ? 'Réafficher' : 'Masquer', async () => {
-        await adminRpc('dragon_set_hidden', {
-          p_id: article.id,
-          p_hidden: !d.hidden
-        });
-
-        await loadArticles();
-      });
-
-      button('Supprimer', async () => {
-        if (!confirm('Supprimer définitivement cet article ?')) {
-          return;
-        }
-
-        await adminRpc('dragon_delete_article', {
-          p_id: article.id
-        });
-
-        await loadArticles();
-      }, 'danger');
-
-      if (d.visitor) {
-        button('Bannir ce navigateur', async () => {
-          const value = prompt(
-            'Durée du bannissement en heures (1 à 8760) :',
-            '24'
-          );
-
-          if (value === null) return;
-
-          const hours = Number(value);
-
-          if (
-            !Number.isInteger(hours) ||
-            hours < 1 ||
-            hours > 8760
-          ) {
-            throw Error('Durée invalide.');
-          }
-
-          await adminRpc('dragon_ban', {
-            p_visitor: d.visitor,
-            p_hours: hours
-          });
-
-          await loadBans();
-          notice('Bannissement enregistré.');
-        });
-      }
-
-      card.append(actions);
-    }
 
     $('articles').append(card);
   }
 }
 
-async function loadBans() {
-  if (!adminToken) return;
+// Articles de l'administration
+async function loadModeration() {
+  if (!isAdmin()) return;
 
-  const docs = await api(
-    '/rest/v1/dragon_documents?select=id,data,created_at&kind=eq.ban&limit=500',
-    { token: adminToken }
+  moderationArticles = await authorized(
+    '/rest/v1/dragon_documents' +
+    '?select=id,data,created_at' +
+    '&kind=eq.article' +
+    '&order=created_at.desc' +
+    '&limit=500'
   );
 
-  const active = docs.filter(
-    b => b.data?.visitor && Date.parse(b.data.until) > Date.now()
-  );
+  renderModeration();
+}
 
-  $('bans').replaceChildren();
+function renderModeration() {
+  if (!isAdmin()) return;
 
-  if (!active.length) {
-    $('bans').append(elem('p', 'Aucun bannissement actif.'));
+  const visible = moderationArticles.filter(
+    a => a.data?.hidden !== true
+  ).length;
+
+  $('statVisible').textContent = visible;
+  $('statHidden').textContent =
+    moderationArticles.length - visible;
+
+  const search = $('adminSearch').value.trim().toLowerCase();
+  const filter = $('adminFilter').value;
+
+  const list = moderationArticles.filter(article => {
+    const d = article.data || {};
+    const hidden = d.hidden === true;
+
+    if (filter === 'hidden' && !hidden) return false;
+    if (filter === 'visible' && hidden) return false;
+
+    return !search || [d.title, d.name, d.content].some(
+      v => String(v || '').toLowerCase().includes(search)
+    );
+  });
+
+  $('adminArticles').replaceChildren();
+
+  if (!list.length) {
+    $('adminArticles').append(
+      node('p', 'Aucun article dans ce filtre.')
+    );
   }
 
-  for (const ban of active) {
-    const line = elem('div', undefined, 'article');
+  for (const article of list) {
+    const d = article.data || {};
+    const hidden = d.hidden === true;
+    const card = node('div', undefined, 'article');
 
-    line.append(
-      elem('div', 'Navigateur : ' + ban.data.visitor),
-      elem('div', 'Jusqu’au ' + dateText(ban.data.until), 'muted')
+    card.append(
+      node('h3', d.title || 'Sans titre'),
+      node(
+        'div',
+        `${d.name || 'Anonyme'} · ${dateText(article.created_at)}`,
+        'muted'
+      ),
+      node('p', d.content || ''),
+      node('span', hidden ? 'Masqué' : 'Visible', 'tag')
     );
 
-    const btn = elem('button', 'Débannir', 'secondary');
-    btn.type = 'button';
+    const actions = node('div', undefined, 'actions');
 
-    btn.onclick = async () => {
-      btn.disabled = true;
+    function addButton(label, action, className = 'secondary') {
+      const btn = node('button', label, className);
+      btn.type = 'button';
 
-      try {
-        await adminRpc('dragon_unban', {
-          p_visitor: ban.data.visitor
-        });
+      btn.onclick = async () => {
+        btn.disabled = true;
 
-        await loadBans();
-        notice('Navigateur débanni.');
-      } catch (e) {
-        notice('Admin : ' + e.message);
-      } finally {
-        btn.disabled = false;
+        try {
+          await action();
+        } catch (error) {
+          notice('Administration : ' + error.message);
+        } finally {
+          btn.disabled = false;
+        }
+      };
+
+      actions.append(btn);
+    }
+
+    // Masquer / réafficher
+    addButton(hidden ? 'Réafficher' : 'Masquer', async () => {
+      await adminRpc('dragon_set_hidden', {
+        p_id: article.id,
+        p_hidden: !hidden
+      });
+
+      await Promise.all([
+        loadModeration(),
+        loadPublicArticles()
+      ]);
+
+      notice(hidden ? 'Article réaffiché.' : 'Article masqué.');
+    });
+
+    // Supprimer définitivement
+    addButton('Supprimer', async () => {
+      if (!confirm('Supprimer définitivement cet article ?')) {
+        return;
       }
-    };
 
-    line.append(btn);
-    $('bans').append(line);
+      await adminRpc('dragon_delete_article', {
+        p_id: article.id
+      });
+
+      await Promise.all([
+        loadModeration(),
+        loadPublicArticles()
+      ]);
+
+      notice('Article supprimé.');
+    }, 'danger');
+
+    card.append(actions);
+    $('adminArticles').append(card);
   }
 }
 
+// Publication sans compte
 $('publishForm').addEventListener('submit', async event => {
   event.preventDefault();
 
@@ -472,20 +641,17 @@ $('publishForm').addEventListener('submit', async event => {
 
   if (isSecretTitle(title)) {
     show('adminLogin', true);
-
-    $('adminLogin').scrollIntoView({
-      behavior: 'smooth'
-    });
-
+    $('adminLogin').scrollIntoView({ behavior: 'smooth' });
     return;
   }
 
-  const name = $('author').value.trim();
+  const name = $('author').value.trim() || 'Anonyme';
   const category = $('category').value.trim();
   const content = $('content').value.trim();
 
-  if (!title || !name || !category || !content) {
-    return notice('Remplis tous les champs.');
+  if (!title || !category || !content) {
+    notice('Remplis le titre, la catégorie et le contenu.');
+    return;
   }
 
   $('publishButton').disabled = true;
@@ -495,46 +661,48 @@ $('publishForm').addEventListener('submit', async event => {
       p_name: name,
       p_title: title,
       p_content: content,
-      p_category: category,
-      p_visitor: visitorId()
+      p_category: category
     });
 
     $('title').value = '';
     $('content').value = '';
 
-    await loadArticles();
+    await loadPublicArticles();
+
+    if (isAdmin()) {
+      await loadModeration();
+    }
 
     notice('Article publié !');
-  } catch (e) {
-    notice('Publication : ' + e.message);
+  } catch (error) {
+    notice('Publication : ' + error.message);
   } finally {
     $('publishButton').disabled = false;
   }
 });
 
+// Commandes de connexion admin
 $('login').onclick = async () => {
-  $('login').disabled = true;
+  const btn = $('login');
+  btn.disabled = true;
 
   try {
     await loginAdmin();
-  } catch (e) {
-    notice('Connexion : ' + e.message);
+  } catch (error) {
+    notice('Connexion : ' + error.message);
   } finally {
-    $('login').disabled = false;
+    btn.disabled = false;
   }
 };
 
 $('logout').onclick = async () => {
-  adminToken = null;
-  show('adminPanel', false);
-  $('bans').replaceChildren();
-
+  forgetAdmin();
   notice('Administration déconnectée.');
 
   try {
-    await loadArticles();
-  } catch (e) {
-    notice('Actualisation : ' + e.message);
+    await loadPublicArticles();
+  } catch (error) {
+    notice(error.message);
   }
 };
 
@@ -543,23 +711,41 @@ $('closeLogin').onclick = () => {
 };
 
 $('reload').onclick = () => {
-  loadArticles().catch(
-    e => notice('Actualisation : ' + e.message)
-  );
+  loadPublicArticles().catch(error => notice(error.message));
+};
+
+$('refreshAdmin').onclick = async () => {
+  try {
+    await Promise.all([
+      loadModeration(),
+      loadPublicArticles()
+    ]);
+
+    notice('Administration actualisée.');
+  } catch (error) {
+    notice(error.message);
+  }
 };
 
 for (const id of ['search', 'filter', 'order']) {
   $(id).addEventListener(
     id === 'search' ? 'input' : 'change',
-    renderArticles
+    renderPublic
   );
 }
 
-loadArticles().catch(e => {
-  $('status').textContent = 'Connexion indisponible';
-  notice('Erreur Supabase : ' + e.message);
+for (const id of ['adminSearch', 'adminFilter']) {
+  $(id).addEventListener(
+    id === 'adminSearch' ? 'input' : 'change',
+    renderModeration
+  );
+}
+
+// Démarrage
+loadPublicArticles().catch(error => {
+  $('status').textContent = 'Supabase indisponible';
+  notice('Connexion : ' + error.message);
 });
 </script>
-
 </body>
 </html>
