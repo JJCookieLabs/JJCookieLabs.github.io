@@ -1,36 +1,1006 @@
 <!doctype html>
-<html lang="fr"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>PNG Capsule · JJCookieLabs</title>
+<html lang="fr">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>PixelPocket · JJCookieLabs</title>
+
+<script>
+(function(){
+  let theme;
+  try {
+    theme = localStorage.getItem('pixelpocket-theme');
+  } catch {}
+  if(theme !== 'light' && theme !== 'dark'){
+    theme = window.matchMedia &&
+      window.matchMedia('(prefers-color-scheme: light)').matches
+      ? 'light' : 'dark';
+  }
+  document.documentElement.dataset.theme = theme;
+})();
+</script>
+
 <style>
-:root{font-family:system-ui,sans-serif;color:#eaf0ff;background:#0c1222;color-scheme:dark}*{box-sizing:border-box}body{margin:0;padding:40px 20px}main{max-width:950px;margin:auto}header{margin-bottom:32px}.brand{color:#91acff;font-size:13px;letter-spacing:2px}h1{font-size:clamp(32px,6vw,52px);margin:10px 0}p{color:#aebbd4;line-height:1.6}section{background:#141e33;border:1px solid #293650;border-radius:20px;padding:26px;margin:20px 0}h2{margin-top:0;font-size:22px}label{display:block;margin:18px 0 8px;font-weight:600}input[type=file]{width:100%;padding:12px;background:#0d1629;border:1px dashed #50617f;border-radius:10px}button,.download{background:#a5b9ff;color:#0b1633;border:0;border-radius:10px;padding:12px 18px;font:600 15px system-ui;cursor:pointer;display:inline-block;text-decoration:none;margin:14px 8px 0 0}button:disabled{opacity:.45;cursor:wait}.secondary{background:#293b5b;color:#eaf0ff}small{color:#aebbd4;display:block;line-height:1.6}#status{position:sticky;bottom:12px;padding:15px;background:#243755;border-radius:12px;white-space:pre-wrap}#status:empty{display:none}#list{max-height:250px;overflow:auto}article{display:flex;align-items:center;gap:12px;border-top:1px solid #293650;padding:10px 0}article span{flex:1;overflow-wrap:anywhere}article button{margin:0;font-size:13px}img{max-width:100%;max-height:230px;object-fit:contain;display:block;margin:16px auto;border-radius:10px}.grid{display:grid;grid-template-columns:1fr 1fr;gap:20px}.grid section{margin:0}footer{font-size:13px;margin-top:24px} @media(max-width:700px){.grid{grid-template-columns:1fr}body{padding:24px 14px}section{padding:20px}}
+:root {
+  font-family: system-ui, sans-serif;
+  color-scheme: dark;
+  --page: #0c1222;
+  --text: #eaf0ff;
+  --muted: #aebbd4;
+  --panel: #141e33;
+  --line: #293650;
+  --input: #0d1629;
+  --input-border: #50617f;
+  --accent: #a5b9ff;
+  --accent-text: #0b1633;
+  --secondary: #293b5b;
+  --status: #243755;
+  --brand: #91acff;
+  background: var(--page);
+  color: var(--text);
+}
+:root[data-theme="light"] {
+  color-scheme: light;
+  --page: #f2f5fc;
+  --text: #192640;
+  --muted: #4b5c77;
+  --panel: #fff;
+  --line: #d1daea;
+  --input: #f7f9fe;
+  --input-border: #7c8daa;
+  --accent: #3457ce;
+  --accent-text: #fff;
+  --secondary: #e4ebfa;
+  --status: #e0e9ff;
+  --brand: #3656b5;
+}
+* { box-sizing: border-box; }
+[hidden] { display: none !important; }
+body { margin: 0; padding: 40px 20px; }
+main { max-width: 950px; margin: auto; }
+header { margin-bottom: 32px; }
+.topbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 14px;
+  flex-wrap: wrap;
+}
+.brand {
+  color: var(--brand);
+  font-size: 13px;
+  letter-spacing: 2px;
+}
+h1 { font-size: clamp(32px,6vw,52px); margin: 10px 0; }
+h2 { margin-top: 0; font-size: 22px; }
+p { color: var(--muted); line-height: 1.6; }
+section {
+  background: var(--panel);
+  border: 1px solid var(--line);
+  border-radius: 20px;
+  padding: 26px;
+  margin: 20px 0;
+}
+label {
+  display: block;
+  margin: 18px 0 8px;
+  font-weight: 600;
+}
+input[type=file] {
+  width: 100%;
+  padding: 12px;
+  background: var(--input);
+  color: var(--text);
+  border: 1px dashed var(--input-border);
+  border-radius: 10px;
+}
+button {
+  background: var(--accent);
+  color: var(--accent-text);
+  border: 0;
+  border-radius: 10px;
+  padding: 12px 18px;
+  font: 600 15px system-ui;
+  cursor: pointer;
+  display: inline-block;
+  margin: 14px 8px 0 0;
+}
+button:disabled { opacity: .45; cursor: wait; }
+button:focus-visible, input:focus-visible {
+  outline: 3px solid var(--brand);
+  outline-offset: 3px;
+}
+.secondary { background: var(--secondary); color: var(--text); }
+#theme-toggle { margin: 0; white-space: nowrap; }
+small { color: var(--muted); display: block; line-height: 1.6; }
+#status {
+  position: sticky;
+  bottom: 12px;
+  padding: 15px;
+  background: var(--status);
+  border-radius: 12px;
+  white-space: pre-wrap;
+}
+#status:empty { display: none; }
+#list { max-height: 250px; overflow: auto; }
+article {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  border-top: 1px solid var(--line);
+  padding: 10px 0;
+}
+article span { flex: 1; overflow-wrap: anywhere; }
+article button { margin: 0; font-size: 13px; }
+img {
+  max-width: 100%;
+  max-height: 230px;
+  object-fit: contain;
+  display: block;
+  margin: 16px auto;
+  border-radius: 10px;
+}
+.grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+.grid section { margin: 0; }
+footer { font-size: 13px; margin-top: 24px; }
+@media(max-width:700px) {
+  .grid { grid-template-columns: 1fr; }
+  body { padding: 24px 14px; }
+  section { padding: 20px; }
+}
 </style>
-<main><header><div class="brand">JJCOOKIELABS / OUTILS LOCAUX</div><h1>PNG Capsule</h1><p>Une image à regarder. Des fichiers à emporter.<br>Intégrez un dossier dans un PNG, puis récupérez son contenu ici.</p></header>
-<div class="grid"><section><h2>1. Créer une capsule</h2><label for="cover">Image PNG</label><input id="cover" type="file" accept="image/png,.png"><img id="preview" alt="Aperçu de l’image choisie" hidden>
-<label for="files">Fichiers à intégrer</label><input id="files" type="file" multiple><label for="folder">Ou choisir un dossier</label><input id="folder" type="file" webkitdirectory multiple><small>Le dernier choix remplace la sélection précédente. Les sous-dossiers sont conservés ; les dossiers vides ne sont pas inclus.</small><p id="selection">Aucun fichier sélectionné.</p><button id="pack">Créer le PNG</button><div id="result"></div></section>
-<section><h2>2. Ouvrir une capsule</h2><label for="capsule">PNG contenant des fichiers</label><input id="capsule" type="file" accept="image/png,.png"><button id="open" class="secondary">Lire le contenu</button><p id="summary">Choisissez un PNG créé avec PNG Capsule.</p><div id="list"></div><button id="zip" hidden>Télécharger tout en ZIP</button><small>Le ZIP conserve les noms et l’arborescence. Aucun fichier extrait n’est exécuté.</small></section></div>
-<section><h2>Comment ça marche ?</h2><p>L’image garde exactement ses pixels. Les fichiers sont placés dans un bloc supplémentaire du PNG, avec compression si votre navigateur la prend en charge. Tout est traité sur votre appareil, sans connexion ni envoi à un serveur.</p><small>Les données ne sont pas chiffrées. Envoyez le PNG original comme fichier : une retouche, une capture d’écran ou une recompression peut supprimer le contenu intégré. La taille du PNG augmente avec les fichiers ajoutés. Limite de cette version : 200 Mio de données avant compression et 250 Mio par PNG.</small></section><div id="status" role="status" aria-live="polite"></div><footer>PNG Capsule v1 · JJCookieLabs · HTML autonome, sans bibliothèque externe.</footer></main>
+
+<main>
+  <header>
+    <div class="topbar">
+      <div class="brand">JJCOOKIELABS / OUTILS LOCAUX</div>
+      <button id="theme-toggle" class="secondary" type="button">
+        ☀ Mode clair
+      </button>
+    </div>
+    <h1>PixelPocket</h1>
+    <p>
+      Une image à regarder. Des fichiers à emporter.<br>
+      Intégrez un dossier dans une image, puis récupérez son contenu ici.
+    </p>
+  </header>
+
+  <div class="grid">
+    <section>
+      <h2>1. Créer une capsule</h2>
+
+      <label for="cover">Image de couverture</label>
+      <input id="cover" type="file"
+        accept=".png,.jpg,.jpeg,.bmp,.svg,.webp,.gif,.tif,.tiff,.ico">
+      <img id="preview" alt="Aperçu de l’image choisie" hidden>
+
+      <label for="files">Fichiers à intégrer</label>
+      <input id="files" type="file" multiple>
+
+      <label for="folder">Ou choisir un dossier</label>
+      <input id="folder" type="file" webkitdirectory multiple>
+
+      <small>
+        Le dernier choix remplace la sélection précédente.
+        Les sous-dossiers sont conservés ; les dossiers vides ne sont pas inclus.
+      </small>
+
+      <p id="selection">Aucun fichier sélectionné.</p>
+      <button id="pack">Créer l’image</button>
+      <div id="result"></div>
+    </section>
+
+    <section>
+      <h2>2. Ouvrir une capsule</h2>
+
+      <label for="capsule">Image contenant des fichiers</label>
+      <input id="capsule" type="file"
+        accept=".png,.jpg,.jpeg,.bmp,.svg,.webp,.gif,.tif,.tiff,.ico">
+
+      <button id="open" class="secondary">Lire le contenu</button>
+
+      <p id="summary">
+        PNG, JPG/JPEG, BMP, SVG, WebP, GIF, TIFF et ICO.
+        Compatible avec les anciennes capsules PNG.
+      </p>
+
+      <div id="list"></div>
+      <button id="zip" hidden>Télécharger tout en ZIP</button>
+
+      <small>
+        Le ZIP conserve les noms et l’arborescence.
+        Aucun fichier extrait n’est exécuté.
+      </small>
+    </section>
+  </div>
+
+  <section>
+    <h2>Comment ça marche ?</h2>
+    <p>
+      Les fichiers sont ajoutés sans réencoder l’image,
+      avec compression si votre navigateur la prend en charge.
+      Tout est traité sur votre appareil, sans connexion
+      ni envoi à un serveur.
+    </p>
+    <small>
+      Les données ne sont pas chiffrées.
+      Envoyez l’image originale comme fichier : une retouche,
+      une capture d’écran ou une recompression peut supprimer
+      le contenu intégré.
+      La taille de l’image augmente avec les fichiers ajoutés.
+      Limites : 200 Mio de données avant compression et 250 Mio par image.
+      <br>
+      PNG et WebP : bloc dédié. SVG UTF-8 : commentaire XML.
+      JPEG, BMP, GIF, TIFF et ICO : données ajoutées en fin de fichier,
+      acceptées par de nombreux lecteurs mais pas tous.
+      L’aperçu dépend des formats pris en charge par votre navigateur.
+      SVG : surcoût d’environ 33 % pour les données intégrées.
+    </small>
+  </section>
+
+  <div id="status" role="status" aria-live="polite"></div>
+
+  <footer>
+    PixelPocket v2 · JJCookieLabs · HTML autonome, sans bibliothèque externe.
+  </footer>
+</main>
+
 <script>
 'use strict';
-const $=id=>document.getElementById(id),enc=new TextEncoder(),dec=new TextDecoder('utf-8',{fatal:true}),LIMIT=200*1024*1024,PNGMAX=250*1024*1024,TYPE='jjCa',MAGIC=enc.encode('JJCAP001');
-let chosen=[],extracted=[],previewURL;
-function say(s){$('status').textContent=s}
-function size(n){return n<1024?n+' o':n<1048576?(n/1024).toFixed(1)+' Kio':(n/1048576).toFixed(1)+' Mio'}
-function concat(parts){let n=parts.reduce((a,b)=>a+b.length,0),out=new Uint8Array(n),p=0;for(const b of parts){out.set(b,p);p+=b.length}return out}
-function u32(n,le=false){let a=new Uint8Array(4);new DataView(a.buffer).setUint32(0,n,le);return a}
-function crc32(a){let c=0xffffffff;for(let b of a){c^=b;for(let i=0;i<8;i++)c=(c>>>1)^((c&1)?0xedb88320:0)}return (c^0xffffffff)>>>0}
-function chunk(type,data){let t=enc.encode(type);return concat([u32(data.length),t,data,u32(crc32(concat([t,data])))])}
-function pngChunks(bytes){const sig=[137,80,78,71,13,10,26,10];if(!sig.every((x,i)=>bytes[i]===x))throw Error('Ce fichier n’est pas un PNG.');let p=8,parts=[],end=false;while(p<bytes.length){if(p+12>bytes.length)throw Error('PNG tronqué.');let n=new DataView(bytes.buffer,bytes.byteOffset+p,4).getUint32(0);if(n>0x7fffffff||p+n+12>bytes.length)throw Error('Bloc PNG invalide.');let type=String.fromCharCode(...bytes.subarray(p+4,p+8)),data=bytes.subarray(p+8,p+8+n),crc=new DataView(bytes.buffer,bytes.byteOffset+p+8+n,4).getUint32(0);if(crc32(bytes.subarray(p+4,p+8+n))!==crc)throw Error('PNG endommagé : contrôle CRC incorrect.');parts.push({type,data,raw:bytes.subarray(p,p+n+12)});p+=n+12;if(type==='IEND'){end=true;break}}if(!end||parts[0]?.type!=='IHDR'||!parts.some(x=>x.type==='IDAT'))throw Error('Structure PNG invalide.');return parts}
-function safePath(s){if(typeof s!=='string'||!s||s.includes('\\')||s.startsWith('/')||s.includes(':')||/[\x00-\x1f]/.test(s)||s.split('/').some(p=>!p||p==='.'||p==='..'))throw Error('Nom de fichier non autorisé.');return s}
-async function transform(bytes,mode){let stream=new Blob([bytes]).stream().pipeThrough(mode);let reader=stream.getReader(),parts=[],n=0;try{while(true){let r=await reader.read();if(r.done)break;n+=r.value.length;if(n>LIMIT+2*1024*1024)throw Error('Données décompressées trop volumineuses.');parts.push(r.value)}}catch(e){await reader.cancel().catch(()=>{});throw e}return concat(parts)}
-function save(blob,name){let url=URL.createObjectURL(blob),a=document.createElement('a');a.href=url;a.download=name;a.click();setTimeout(()=>URL.revokeObjectURL(url),60000)}
-function select(input){chosen=Array.from(input.files);$('selection').textContent=chosen.length+' fichier(s) · '+size(chosen.reduce((n,f)=>n+f.size,0));$('result').replaceChildren()}
-$('files').onchange=()=>{select($('files'));$('folder').value=''};$('folder').onchange=()=>{select($('folder'));$('files').value=''};
-$('cover').onchange=()=>{if(previewURL)URL.revokeObjectURL(previewURL);let f=$('cover').files[0];$('preview').hidden=!f;if(f){previewURL=URL.createObjectURL(f);$('preview').src=previewURL}$('result').replaceChildren()};
-async function busy(id,fn){$(id).disabled=true;try{await fn()}catch(e){say('Erreur : '+e.message)}finally{$(id).disabled=false}}
-$('pack').onclick=()=>busy('pack',async()=>{let cover=$('cover').files[0],files=chosen.slice();if(!cover||!files.length)throw Error('Choisissez une image PNG et au moins un fichier.');if(files.length>65535)throw Error('Maximum : 65 535 fichiers.');if(cover.size>PNGMAX||files.reduce((n,f)=>n+f.size,0)>LIMIT)throw Error('La sélection dépasse la limite de taille.');say('Lecture et compression…');$('result').replaceChildren();let bytes=new Uint8Array(await cover.arrayBuffer()),chunks=pngChunks(bytes),names=new Set(),entries=[],bodies=[];for(let f of files){let path=safePath(f.webkitRelativePath||f.name);if(names.has(path))throw Error('Nom en double : '+path);names.add(path);entries.push({path,size:f.size});bodies.push(new Uint8Array(await f.arrayBuffer()))}let manifest=enc.encode(JSON.stringify({version:1,files:entries}));if(manifest.length>2*1024*1024)throw Error('Trop de noms de fichiers.');let raw=concat([u32(manifest.length),manifest,...bodies]),payload=raw,flag=0;if(typeof CompressionStream!=='undefined'){let zipped=await transform(raw,new CompressionStream('gzip'));if(zipped.length<raw.length){payload=zipped;flag=1}}let embedded=chunk(TYPE,concat([MAGIC,new Uint8Array([flag]),payload])),out=[bytes.subarray(0,8)];for(let c of chunks){if(c.type===TYPE)continue;if(c.type==='IEND')out.push(embedded);out.push(c.raw)}let blob=new Blob(out,{type:'image/png'});if(blob.size>PNGMAX)throw Error('Le PNG final dépasse 250 Mio.');let button=document.createElement('button');button.textContent='Télécharger le PNG · '+size(blob.size);button.onclick=()=>save(blob,cover.name.replace(/\.png$/i,'')+'_capsule.png');$('result').append(button);say('Capsule prête : '+files.length+' fichier(s). Cliquez sur Télécharger le PNG.');});
-async function decodeCapsule(bytes){let blocks=pngChunks(bytes).filter(c=>c.type===TYPE);if(blocks.length!==1)throw Error(blocks.length?'Plusieurs capsules détectées.':'Ce PNG ne contient aucune capsule JJCookieLabs.');let d=blocks[0].data;if(d.length<9||!MAGIC.every((v,i)=>d[i]===v))throw Error('Format de capsule inconnu.');let flag=d[8],raw=d.subarray(9);if(flag===1){if(typeof DecompressionStream==='undefined')throw Error('Votre navigateur ne permet pas la décompression. Essayez un navigateur récent.');raw=await transform(raw,new DecompressionStream('gzip'))}else if(flag!==0)throw Error('Compression inconnue.');if(raw.length<4||raw.length>LIMIT+2*1024*1024)throw Error('Taille de capsule incorrecte.');let m=new DataView(raw.buffer,raw.byteOffset,4).getUint32(0);if(m>2*1024*1024||4+m>raw.length)throw Error('Index invalide.');let info=JSON.parse(dec.decode(raw.subarray(4,4+m)));if(info.version!==1||!Array.isArray(info.files)||!info.files.length||info.files.length>65535)throw Error('Index non reconnu ou trop de fichiers.');let p=4+m,seen=new Set(),out=[],total=0;for(let f of info.files){safePath(f.path);if(seen.has(f.path)||!Number.isSafeInteger(f.size)||f.size<0||p+f.size>raw.length)throw Error('Entrée de capsule invalide.');seen.add(f.path);total+=f.size;if(total>LIMIT)throw Error('Contenu trop volumineux.');out.push({path:f.path,data:raw.subarray(p,p+f.size)});p+=f.size}if(p!==raw.length)throw Error('Données supplémentaires inattendues.');return out}
-$('capsule').onchange=()=>{extracted=[];$('list').replaceChildren();$('zip').hidden=true;$('summary').textContent='Cliquez sur Lire le contenu.'};
-$('open').onclick=()=>busy('open',async()=>{extracted=[];$('list').replaceChildren();$('zip').hidden=true;$('summary').textContent='';let f=$('capsule').files[0];if(!f)throw Error('Choisissez un PNG à ouvrir.');if(f.size>PNGMAX)throw Error('Ce PNG dépasse 250 Mio.');say('Vérification et lecture…');extracted=await decodeCapsule(new Uint8Array(await f.arrayBuffer()));for(let entry of extracted){let row=document.createElement('article'),label=document.createElement('span'),btn=document.createElement('button');label.textContent=entry.path+' · '+size(entry.data.length);btn.textContent='Extraire';btn.onclick=()=>save(new Blob([entry.data]),entry.path.split('/').pop());row.append(label,btn);$('list').append(row)}$('summary').textContent=extracted.length+' fichier(s) · '+size(extracted.reduce((n,e)=>n+e.data.length,0));$('zip').hidden=false;say('Contenu vérifié. Téléchargez chaque fichier ou l’ensemble en ZIP.');});
-// ZIP standard sans recompression : noms UTF-8 et arborescence préservés.
-function makeZip(entries){let locals=[],central=[],offset=0,centralSize=0;for(let entry of entries){let name=enc.encode(entry.path),data=entry.data;if(name.length>65535)throw Error('Nom trop long pour le ZIP.');let crc=crc32(data),h=new Uint8Array(30),v=new DataView(h.buffer);v.setUint32(0,0x04034b50,true);v.setUint16(4,20,true);v.setUint16(6,0x800,true);v.setUint16(12,33,true);v.setUint32(14,crc,true);v.setUint32(18,data.length,true);v.setUint32(22,data.length,true);v.setUint16(26,name.length,true);locals.push(h,name,data);let c=new Uint8Array(46),w=new DataView(c.buffer);w.setUint32(0,0x02014b50,true);w.setUint16(4,20,true);w.setUint16(6,20,true);w.setUint16(8,0x800,true);w.setUint16(14,33,true);w.setUint32(16,crc,true);w.setUint32(20,data.length,true);w.setUint32(24,data.length,true);w.setUint16(28,name.length,true);w.setUint32(42,offset,true);central.push(c,name);offset+=30+name.length+data.length;centralSize+=46+name.length}let end=new Uint8Array(22),v=new DataView(end.buffer);v.setUint32(0,0x06054b50,true);v.setUint16(8,entries.length,true);v.setUint16(10,entries.length,true);v.setUint32(12,centralSize,true);v.setUint32(16,offset,true);return new Blob([...locals,...central,end],{type:'application/zip'})}
-$('zip').onclick=()=>busy('zip',async()=>{if(!extracted.length)throw Error('Ouvrez d’abord une capsule.');save(makeZip(extracted),'capsule_extraite.zip');say('ZIP préparé pour le téléchargement.');});
-</script></html>
+
+const $ = id => document.getElementById(id);
+const enc = new TextEncoder();
+const dec = new TextDecoder('utf-8', {fatal:true});
+
+const LIMIT = 200 * 1024 * 1024;
+const PNGMAX = 250 * 1024 * 1024;
+const TYPE = 'jjCa';
+const MAGIC = enc.encode('JJCAP001');
+const TAIL = enc.encode('PIXELPOCKETv2END');
+
+const themeButton = $('theme-toggle');
+
+function updateThemeButton() {
+  const dark = document.documentElement.dataset.theme === 'dark';
+  themeButton.textContent = dark ? '☀ Mode clair' : '☾ Mode sombre';
+  themeButton.setAttribute(
+    'aria-label',
+    dark ? 'Activer le mode clair' : 'Activer le mode sombre'
+  );
+}
+
+themeButton.onclick = () => {
+  const theme = document.documentElement.dataset.theme === 'dark'
+    ? 'light' : 'dark';
+  document.documentElement.dataset.theme = theme;
+  try {
+    localStorage.setItem('pixelpocket-theme', theme);
+  } catch {}
+  updateThemeButton();
+};
+
+updateThemeButton();
+
+let chosen = [];
+let extracted = [];
+let previewURL;
+
+function say(s) {
+  $('status').textContent = s;
+}
+
+function size(n) {
+  return n < 1024 ? n + ' o'
+    : n < 1048576 ? (n / 1024).toFixed(1) + ' Kio'
+    : (n / 1048576).toFixed(1) + ' Mio';
+}
+
+function concat(parts) {
+  const n = parts.reduce((a,b) => a + b.length, 0);
+  const out = new Uint8Array(n);
+  let p = 0;
+  for(const b of parts) {
+    out.set(b, p);
+    p += b.length;
+  }
+  return out;
+}
+
+function u32(n, le=false) {
+  const a = new Uint8Array(4);
+  new DataView(a.buffer).setUint32(0, n, le);
+  return a;
+}
+
+const CRC_TABLE = Uint32Array.from({length:256}, (_,n) => {
+  for(let i=0; i<8; i++) {
+    n = (n >>> 1) ^ ((n & 1) ? 0xedb88320 : 0);
+  }
+  return n >>> 0;
+});
+
+function crc32(a) {
+  let c = 0xffffffff;
+  for(const b of a) {
+    c = (c >>> 8) ^ CRC_TABLE[(c ^ b) & 255];
+  }
+  return (c ^ 0xffffffff) >>> 0;
+}
+
+function chunk(type, data) {
+  const t = enc.encode(type);
+  return concat([
+    u32(data.length), t, data,
+    u32(crc32(concat([t,data])))
+  ]);
+}
+
+function pngChunks(bytes) {
+  const sig = [137,80,78,71,13,10,26,10];
+
+  if(!sig.every((x,i) => bytes[i] === x)) {
+    throw Error('Ce fichier n’est pas un PNG.');
+  }
+
+  let p = 8;
+  const parts = [];
+  let end = false;
+
+  while(p < bytes.length) {
+    if(p + 12 > bytes.length) throw Error('PNG tronqué.');
+
+    const n = new DataView(
+      bytes.buffer, bytes.byteOffset + p, 4
+    ).getUint32(0);
+
+    if(n > 0x7fffffff || p + n + 12 > bytes.length) {
+      throw Error('Bloc PNG invalide.');
+    }
+
+    const type = String.fromCharCode(...bytes.subarray(p+4,p+8));
+    const data = bytes.subarray(p+8,p+8+n);
+    const crc = new DataView(
+      bytes.buffer, bytes.byteOffset+p+8+n, 4
+    ).getUint32(0);
+
+    if(crc32(bytes.subarray(p+4,p+8+n)) !== crc) {
+      throw Error('PNG endommagé : contrôle CRC incorrect.');
+    }
+
+    parts.push({
+      type,
+      data,
+      raw: bytes.subarray(p,p+n+12)
+    });
+
+    p += n + 12;
+
+    if(type === 'IEND') {
+      end = true;
+      break;
+    }
+  }
+
+  if(!end || parts[0]?.type !== 'IHDR' ||
+     !parts.some(x => x.type === 'IDAT')) {
+    throw Error('Structure PNG invalide.');
+  }
+
+  return parts;
+}
+
+const formats = {
+  png:  {mime:'image/png',     ext:['png']},
+  jpeg: {mime:'image/jpeg',    ext:['jpg','jpeg']},
+  bmp:  {mime:'image/bmp',     ext:['bmp']},
+  svg:  {mime:'image/svg+xml', ext:['svg']},
+  webp: {mime:'image/webp',    ext:['webp']},
+  gif:  {mime:'image/gif',     ext:['gif']},
+  tiff: {mime:'image/tiff',    ext:['tif','tiff']},
+  ico:  {mime:'image/x-icon',  ext:['ico']}
+};
+
+function ascii(b, start, n) {
+  return String.fromCharCode(...b.subarray(start,start+n));
+}
+
+function detectFormat(b) {
+  if(b.length < 8) throw Error('Image trop courte.');
+
+  if([137,80,78,71,13,10,26,10].every((v,i) => b[i] === v)) {
+    return formats.png;
+  }
+
+  if(b[0] === 255 && b[1] === 216 && b[2] === 255) {
+    return formats.jpeg;
+  }
+
+  if(ascii(b,0,2) === 'BM') return formats.bmp;
+
+  if(ascii(b,0,4) === 'RIFF' && ascii(b,8,4) === 'WEBP') {
+    return formats.webp;
+  }
+
+  if(/^GIF8[79]a$/.test(ascii(b,0,6))) return formats.gif;
+
+  if(['II*\0','MM\0*'].includes(ascii(b,0,4))) {
+    return formats.tiff;
+  }
+
+  if(b[0] === 0 && b[1] === 0 && b[2] === 1 && b[3] === 0) {
+    return formats.ico;
+  }
+
+  try {
+    const text = dec.decode(b);
+    if(/<(?:[\w.-]+:)?svg(?:\s|\/?>)/.test(text)) {
+      return formats.svg;
+    }
+  } catch {}
+
+  throw Error(
+    'Format non reconnu. Formats : PNG, JPEG, BMP, SVG UTF-8, ' +
+    'WebP, GIF, TIFF et ICO.'
+  );
+}
+
+function read32(b, p, le=false) {
+  if(p < 0 || p+4 > b.length) throw Error('Image tronquée.');
+  return new DataView(b.buffer,b.byteOffset+p,4).getUint32(0,le);
+}
+
+function tailInfo(b) {
+  if(b.length < 24 ||
+     !TAIL.every((v,i) => b[b.length-16+i] === v)) {
+    return null;
+  }
+
+  const len = read32(b,b.length-24);
+  const crc = read32(b,b.length-20);
+  const start = b.length-24-len;
+
+  if(start < 8) throw Error('Capsule tronquée.');
+
+  const data = b.subarray(start,start+len);
+
+  if(crc32(data) !== crc) {
+    throw Error('Capsule endommagée : CRC incorrect.');
+  }
+
+  return {start,data};
+}
+
+function webpChunks(b) {
+  const end = read32(b,4,true) + 8;
+
+  if(end !== b.length) throw Error('Taille RIFF WebP incorrecte.');
+
+  const out = [];
+  let p = 12;
+
+  while(p < end) {
+    const n = read32(b,p+4,true);
+    const next = p+8+n+(n%2);
+
+    if(next > end) throw Error('Bloc WebP tronqué.');
+
+    out.push({
+      type: ascii(b,p,4),
+      data: b.subarray(p+8,p+8+n),
+      raw: b.subarray(p,next)
+    });
+
+    p = next;
+  }
+
+  return out;
+}
+
+function to64(b) {
+  const parts = [];
+  for(let p=0; p<b.length; p+=32768) {
+    parts.push(String.fromCharCode(...b.subarray(p,p+32768)));
+  }
+  return btoa(parts.join(''));
+}
+
+function from64(s) {
+  const bin = atob(s);
+  const out = new Uint8Array(bin.length);
+  for(let i=0; i<bin.length; i++) out[i] = bin.charCodeAt(i);
+  return out;
+}
+
+function svgText(b) {
+  const s = dec.decode(b);
+
+  if(/<!DOCTYPE/i.test(s)) {
+    throw Error('SVG avec DOCTYPE non pris en charge.');
+  }
+
+  const doc = new DOMParser().parseFromString(s,'image/svg+xml');
+
+  if(doc.getElementsByTagName('parsererror').length ||
+     doc.documentElement.localName !== 'svg' ||
+     doc.documentElement.namespaceURI !== 'http://www.w3.org/2000/svg') {
+    throw Error('SVG invalide : un document SVG UTF-8 est requis.');
+  }
+
+  return s;
+}
+
+const SVGTAIL = /\n?<!--PixelPocket-v2:([A-Za-z0-9+/=]+)-->\s*$/;
+
+function wrapData(d) {
+  return concat([d,u32(crc32(d))]);
+}
+
+function unwrapData(d) {
+  if(d.length < 4 ||
+     crc32(d.subarray(0,-4)) !== read32(d,d.length-4)) {
+    throw Error('Capsule endommagée : CRC incorrect.');
+  }
+  return d.subarray(0,-4);
+}
+
+function embedImage(b, d, f=detectFormat(b)) {
+  if(f === formats.png) {
+    const chunks = pngChunks(b);
+    const parts = [b.subarray(0,8)];
+
+    for(const c of chunks) {
+      if(c.type === TYPE) continue;
+      if(c.type === 'IEND') parts.push(chunk(TYPE,d));
+      parts.push(c.raw);
+    }
+
+    return concat(parts);
+  }
+
+  if(f === formats.webp) {
+    const parts = webpChunks(b)
+      .filter(c => c.type !== 'PXP2')
+      .map(c => c.raw);
+
+    const data = wrapData(d);
+
+    parts.push(concat([
+      enc.encode('PXP2'),
+      u32(data.length,true),
+      data,
+      ...(data.length%2 ? [new Uint8Array(1)] : [])
+    ]));
+
+    const body = concat([enc.encode('WEBP'),...parts]);
+
+    return concat([
+      enc.encode('RIFF'),
+      u32(body.length,true),
+      body
+    ]);
+  }
+
+  if(f === formats.svg) {
+    const text = svgText(b).replace(SVGTAIL,'');
+    return enc.encode(
+      text + '\n<!--PixelPocket-v2:' + to64(wrapData(d)) + '-->'
+    );
+  }
+
+  const old = tailInfo(b);
+  if(old) b = b.subarray(0,old.start);
+
+  return concat([
+    b,d,u32(d.length),u32(crc32(d)),TAIL
+  ]);
+}
+
+function readImageCapsule(b) {
+  const f = detectFormat(b);
+
+  if(f === formats.png) {
+    const blocks = pngChunks(b).filter(c => c.type === TYPE);
+    if(blocks.length !== 1) {
+      throw Error('Aucune capsule unique dans ce PNG.');
+    }
+    return blocks[0].data;
+  }
+
+  if(f === formats.webp) {
+    const blocks = webpChunks(b).filter(c => c.type === 'PXP2');
+    if(blocks.length !== 1) {
+      throw Error('Aucune capsule unique dans ce WebP.');
+    }
+    return unwrapData(blocks[0].data);
+  }
+
+  if(f === formats.svg) {
+    const match = svgText(b).match(SVGTAIL);
+    if(!match) throw Error('Aucune capsule PixelPocket dans ce SVG.');
+    return unwrapData(from64(match[1]));
+  }
+
+  const t = tailInfo(b);
+
+  if(!t) {
+    throw Error('Cette image ne contient aucune capsule PixelPocket.');
+  }
+
+  return t.data;
+}
+
+function safePath(s) {
+  if(typeof s !== 'string' || !s ||
+     s.includes('\\') || s.startsWith('/') || s.includes(':') ||
+     /[\x00-\x1f]/.test(s) ||
+     s.split('/').some(p => !p || p === '.' || p === '..')) {
+    throw Error('Nom de fichier non autorisé.');
+  }
+  return s;
+}
+
+async function transform(bytes, mode) {
+  const stream = new Blob([bytes]).stream().pipeThrough(mode);
+  const reader = stream.getReader();
+  const parts = [];
+  let n = 0;
+
+  try {
+    while(true) {
+      const r = await reader.read();
+      if(r.done) break;
+
+      n += r.value.length;
+
+      if(n > LIMIT + 2*1024*1024) {
+        throw Error('Données décompressées trop volumineuses.');
+      }
+
+      parts.push(r.value);
+    }
+  } catch(e) {
+    await reader.cancel().catch(() => {});
+    throw e;
+  }
+
+  return concat(parts);
+}
+
+function save(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = name;
+  a.click();
+  setTimeout(() => URL.revokeObjectURL(url),60000);
+}
+
+function select(input) {
+  chosen = Array.from(input.files);
+  $('selection').textContent =
+    chosen.length + ' fichier(s) · ' +
+    size(chosen.reduce((n,f) => n+f.size,0));
+  $('result').replaceChildren();
+}
+
+$('files').onchange = () => {
+  select($('files'));
+  $('folder').value = '';
+};
+
+$('folder').onchange = () => {
+  select($('folder'));
+  $('files').value = '';
+};
+
+$('cover').onchange = () => {
+  if(previewURL) URL.revokeObjectURL(previewURL);
+  const f = $('cover').files[0];
+  $('preview').hidden = !f;
+
+  if(f) {
+    previewURL = URL.createObjectURL(f);
+    $('preview').src = previewURL;
+  }
+
+  $('result').replaceChildren();
+};
+
+async function busy(id, fn) {
+  $(id).disabled = true;
+  try {
+    await fn();
+  } catch(e) {
+    say('Erreur : ' + e.message);
+  } finally {
+    $(id).disabled = false;
+  }
+}
+
+$('pack').onclick = () => busy('pack',async () => {
+  const cover = $('cover').files[0];
+  const files = chosen.slice();
+
+  if(!cover || !files.length) {
+    throw Error('Choisissez une image et au moins un fichier.');
+  }
+
+  if(files.length > 65535) {
+    throw Error('Maximum : 65 535 fichiers.');
+  }
+
+  if(cover.size > PNGMAX ||
+     files.reduce((n,f) => n+f.size,0) > LIMIT) {
+    throw Error('La sélection dépasse la limite de taille.');
+  }
+
+  say('Lecture et compression…');
+  $('result').replaceChildren();
+
+  const bytes = new Uint8Array(await cover.arrayBuffer());
+  const format = detectFormat(bytes);
+  const names = new Set();
+  const entries = [];
+  const bodies = [];
+
+  for(const f of files) {
+    const path = safePath(f.webkitRelativePath || f.name);
+
+    if(names.has(path)) throw Error('Nom en double : ' + path);
+
+    names.add(path);
+    entries.push({path,size:f.size});
+    bodies.push(new Uint8Array(await f.arrayBuffer()));
+  }
+
+  const manifest = enc.encode(JSON.stringify({
+    version:1,
+    files:entries
+  }));
+
+  if(manifest.length > 2*1024*1024) {
+    throw Error('Trop de noms de fichiers.');
+  }
+
+  const raw = concat([u32(manifest.length),manifest,...bodies]);
+
+  let payload = raw;
+  let flag = 0;
+
+  if(typeof CompressionStream !== 'undefined') {
+    const zipped = await transform(raw,new CompressionStream('gzip'));
+
+    if(zipped.length < raw.length) {
+      payload = zipped;
+      flag = 1;
+    }
+  }
+
+  const capsule = concat([MAGIC,new Uint8Array([flag]),payload]);
+  const out = embedImage(bytes,capsule,format);
+  const blob = new Blob([out],{type:format.mime});
+
+  if(blob.size > PNGMAX) {
+    throw Error('L’image finale dépasse 250 Mio.');
+  }
+
+  const button = document.createElement('button');
+  button.textContent = 'Télécharger l’image · ' + size(blob.size);
+
+  let ext = cover.name.split('.').pop().toLowerCase();
+  if(!format.ext.includes(ext)) ext = format.ext[0];
+
+  button.onclick = () => save(
+    blob,
+    cover.name.replace(/\.[^.]+$/,'') + '_pixelpocket.' + ext
+  );
+
+  $('result').append(button);
+
+  say(
+    'Capsule prête : ' + files.length +
+    ' fichier(s). Cliquez sur Télécharger l’image.'
+  );
+});
+
+async function decodeCapsule(bytes) {
+  const d = readImageCapsule(bytes);
+
+  if(d.length < 9 || !MAGIC.every((v,i) => d[i] === v)) {
+    throw Error('Format de capsule inconnu.');
+  }
+
+  const flag = d[8];
+  let raw = d.subarray(9);
+
+  if(flag === 1) {
+    if(typeof DecompressionStream === 'undefined') {
+      throw Error(
+        'Votre navigateur ne permet pas la décompression. ' +
+        'Essayez un navigateur récent.'
+      );
+    }
+
+    raw = await transform(raw,new DecompressionStream('gzip'));
+  } else if(flag !== 0) {
+    throw Error('Compression inconnue.');
+  }
+
+  if(raw.length < 4 || raw.length > LIMIT + 2*1024*1024) {
+    throw Error('Taille de capsule incorrecte.');
+  }
+
+  const m = read32(raw,0);
+
+  if(m > 2*1024*1024 || 4+m > raw.length) {
+    throw Error('Index invalide.');
+  }
+
+  const info = JSON.parse(dec.decode(raw.subarray(4,4+m)));
+
+  if(info.version !== 1 || !Array.isArray(info.files) ||
+     !info.files.length || info.files.length > 65535) {
+    throw Error('Index non reconnu ou trop de fichiers.');
+  }
+
+  let p = 4+m;
+  const seen = new Set();
+  const out = [];
+  let total = 0;
+
+  for(const f of info.files) {
+    safePath(f.path);
+
+    if(seen.has(f.path) || !Number.isSafeInteger(f.size) ||
+       f.size < 0 || p+f.size > raw.length) {
+      throw Error('Entrée de capsule invalide.');
+    }
+
+    seen.add(f.path);
+    total += f.size;
+
+    if(total > LIMIT) throw Error('Contenu trop volumineux.');
+
+    out.push({
+      path:f.path,
+      data:raw.subarray(p,p+f.size)
+    });
+
+    p += f.size;
+  }
+
+  if(p !== raw.length) {
+    throw Error('Données supplémentaires inattendues.');
+  }
+
+  return out;
+}
+
+$('capsule').onchange = () => {
+  extracted = [];
+  $('list').replaceChildren();
+  $('zip').hidden = true;
+  $('summary').textContent = 'Cliquez sur Lire le contenu.';
+};
+
+$('open').onclick = () => busy('open',async () => {
+  extracted = [];
+  $('list').replaceChildren();
+  $('zip').hidden = true;
+  $('summary').textContent = '';
+
+  const f = $('capsule').files[0];
+
+  if(!f) throw Error('Choisissez une image à ouvrir.');
+  if(f.size > PNGMAX) throw Error('Cette image dépasse 250 Mio.');
+
+  say('Vérification et lecture…');
+
+  extracted = await decodeCapsule(
+    new Uint8Array(await f.arrayBuffer())
+  );
+
+  for(const entry of extracted) {
+    const row = document.createElement('article');
+    const label = document.createElement('span');
+    const btn = document.createElement('button');
+
+    label.textContent = entry.path + ' · ' + size(entry.data.length);
+    btn.textContent = 'Extraire';
+
+    btn.onclick = () => save(
+      new Blob([entry.data]),
+      entry.path.split('/').pop()
+    );
+
+    row.append(label,btn);
+    $('list').append(row);
+  }
+
+  $('summary').textContent =
+    extracted.length + ' fichier(s) · ' +
+    size(extracted.reduce((n,e) => n+e.data.length,0));
+
+  $('zip').hidden = false;
+
+  say(
+    'Contenu vérifié. Téléchargez chaque fichier ' +
+    'ou l’ensemble en ZIP.'
+  );
+});
+
+// ZIP standard, noms UTF-8 et arborescence préservés.
+function makeZip(entries) {
+  const locals = [];
+  const central = [];
+  let offset = 0;
+  let centralSize = 0;
+
+  for(const entry of entries) {
+    const name = enc.encode(entry.path);
+    const data = entry.data;
+
+    if(name.length > 65535) {
+      throw Error('Nom trop long pour le ZIP.');
+    }
+
+    const crc = crc32(data);
+    const h = new Uint8Array(30);
+    const v = new DataView(h.buffer);
+
+    v.setUint32(0,0x04034b50,true);
+    v.setUint16(4,20,true);
+    v.setUint16(6,0x800,true);
+    v.setUint16(12,33,true);
+    v.setUint32(14,crc,true);
+    v.setUint32(18,data.length,true);
+    v.setUint32(22,data.length,true);
+    v.setUint16(26,name.length,true);
+
+    locals.push(h,name,data);
+
+    const c = new Uint8Array(46);
+    const w = new DataView(c.buffer);
+
+    w.setUint32(0,0x02014b50,true);
+    w.setUint16(4,20,true);
+    w.setUint16(6,20,true);
+    w.setUint16(8,0x800,true);
+    w.setUint16(14,33,true);
+    w.setUint32(16,crc,true);
+    w.setUint32(20,data.length,true);
+    w.setUint32(24,data.length,true);
+    w.setUint16(28,name.length,true);
+    w.setUint32(42,offset,true);
+
+    central.push(c,name);
+
+    offset += 30 + name.length + data.length;
+    centralSize += 46 + name.length;
+  }
+
+  const end = new Uint8Array(22);
+  const v = new DataView(end.buffer);
+
+  v.setUint32(0,0x06054b50,true);
+  v.setUint16(8,entries.length,true);
+  v.setUint16(10,entries.length,true);
+  v.setUint32(12,centralSize,true);
+  v.setUint32(16,offset,true);
+
+  return new Blob(
+    [...locals,...central,end],
+    {type:'application/zip'}
+  );
+}
+
+$('zip').onclick = () => busy('zip',async () => {
+  if(!extracted.length) throw Error('Ouvrez d’abord une capsule.');
+  save(makeZip(extracted),'capsule_extraite.zip');
+  say('ZIP préparé pour le téléchargement.');
+});
+</script>
+</html>
