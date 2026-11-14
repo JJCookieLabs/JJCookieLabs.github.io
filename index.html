@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio et DragonNet.">
+    <meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio, DragonNet et PixelPocket.">
     <title>JJCookieLabs | Accueil</title>
     <style>
         :root {
@@ -38,6 +38,8 @@
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
         }
 
         .logo {
@@ -46,10 +48,15 @@
             letter-spacing: -0.5px;
         }
 
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
         nav a {
             color: var(--text-muted);
             text-decoration: none;
-            margin-left: 1.5rem;
             font-weight: 500;
             transition: color 0.2s;
             cursor: pointer;
@@ -61,7 +68,7 @@
 
         main {
             flex: 1;
-            max-width: 900px;
+            max-width: 1050px;
             width: 100%;
             margin: 0 auto;
             padding: 4rem 1.5rem;
@@ -242,6 +249,7 @@
             <a href="./index.html">Accueil</a>
             <a href="./CRSHStudio/index.html" onclick="openPasswordModal(event)">CRSHStudio</a>
             <a href="./DragonNet/index.html">DragonNet</a>
+            <a href="./PixelPocket/index.html">PixelPocket</a>
         </nav>
     </header>
 
@@ -253,7 +261,7 @@
             <article class="card">
                 <div>
                     <h2>CRSHStudio <span class="badge-lock">🔒 Protégé</span></h2>
-                    <p>Accédez à l'espace dédié au projet CRSHStudio.</p>
+                    <p>Accédez à l'espace dédié au projet CRSHStudio, nos créations et outils.</p>
                 </div>
                 <button type="button" class="btn" onclick="openPasswordModal(event)">Ouvrir CRSHStudio &rarr;</button>
             </article>
@@ -261,9 +269,17 @@
             <article class="card">
                 <div>
                     <h2>DragonNet</h2>
-                    <p>Accédez à la plateforme du projet DragonNet.</p>
+                    <p>Accédez à la plateforme et aux ressources du projet DragonNet.</p>
                 </div>
                 <a href="./DragonNet/index.html" class="btn">Ouvrir DragonNet &rarr;</a>
+            </article>
+
+            <article class="card">
+                <div>
+                    <h2>PixelPocket</h2>
+                    <p>Découvrez l'univers et les fonctionnalités du projet PixelPocket.</p>
+                </div>
+                <a href="./PixelPocket/index.html" class="btn">Ouvrir PixelPocket &rarr;</a>
             </article>
         </div>
     </main>
