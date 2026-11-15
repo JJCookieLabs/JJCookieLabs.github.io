@@ -1,751 +1,324 @@
-
 <!doctype html>
 <html lang="fr">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DragonNet Anarchy</title>
+<title>DragonNet Anarchy — Publications libres</title>
+<meta name="description" content="DragonNet Anarchy : articles, photos et commentaires sans compte.">
 <style>
-:root {
-  color-scheme: dark;
-  font-family: system-ui, Arial, sans-serif;
-  background: #0a1020;
-  color: #eef3ff;
-}
-* { box-sizing: border-box; }
-body { margin: 0; }
-header {
-  background: #121d35;
-  padding: 24px max(18px, calc((100vw - 1100px)/2));
-  border-bottom: 1px solid #304567;
-}
-h1 { color: #8acfff; margin: 0 0 6px; }
-main { max-width: 1100px; margin: 22px auto; padding: 0 16px; }
-.panel {
-  background: #17243e;
-  border: 1px solid #354a6b;
-  border-radius: 16px;
-  padding: 22px;
-  margin-bottom: 20px;
-}
-.muted { color: #bac9e0; font-size: .92rem; }
-.hidden { display: none !important; }
-.row { display: flex; gap: 12px; flex-wrap: wrap; }
-.row > * { flex: 1 1 180px; min-width: 0; }
-.grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 13px;
-}
-.article {
-  background: #20304e;
-  border: 1px solid #354a6b;
-  padding: 17px;
-  border-radius: 12px;
-  overflow-wrap: anywhere;
-}
-.article p { white-space: pre-wrap; line-height: 1.6; }
-label { display: block; margin: 10px 0 3px; }
-input, textarea, select, button {
-  font: inherit;
-  border-radius: 9px;
-  padding: 10px 11px;
-}
-input, textarea, select {
-  background: #0b152b;
-  border: 1px solid #526a90;
-  color: white;
-  width: 100%;
-  margin-top: 5px;
-}
-textarea { min-height: 135px; resize: vertical; }
-button {
-  border: 0;
-  background: #258ae5;
-  color: white;
-  cursor: pointer;
-  margin: 6px 6px 6px 0;
-}
-button:disabled { opacity: .5; cursor: wait; }
-.secondary { background: #405573; }
-.danger { background: #b93e59; }
-.actions { display: flex; gap: 7px; flex-wrap: wrap; }
-.tag {
-  display: inline-block;
-  background: #32496c;
-  border-radius: 20px;
-  padding: 4px 9px;
-}
-.count-row { display: flex; gap: 12px; flex-wrap: wrap; }
-.count {
-  background: #243859;
-  border-radius: 12px;
-  padding: 12px 16px;
-  flex: 1;
-}
-.count strong { display: block; font-size: 1.4rem; }
-.admin-list { display: grid; gap: 10px; margin-top: 14px; }
-#notice {
-  display: none;
-  padding: 12px 18px;
-  background: #2c527c;
-}
+:root{font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;color-scheme:dark;background:#0a1020;color:#edf3ff;scroll-behavior:smooth}
+*{box-sizing:border-box}
+body{margin:0;line-height:1.5}
+button,input,textarea,select{font:inherit}
+button,a,input,textarea,select{outline-offset:3px}
+a{color:inherit}
+header{position:sticky;top:0;z-index:20;background:rgba(13,22,42,.97);border-bottom:1px solid #314562;backdrop-filter:blur(14px)}
+.navbar{max-width:1120px;margin:auto;padding:11px 18px;display:flex;align-items:center;gap:14px;flex-wrap:wrap}
+.logo{font-size:1.25rem;font-weight:850;letter-spacing:-.03em;color:#8cd0ff;text-decoration:none;white-space:nowrap}
+nav{display:flex;gap:5px;align-items:center;flex-wrap:wrap;margin-left:auto}
+nav a{display:inline-block;padding:9px 13px;border-radius:10px;text-decoration:none;color:#ccd9f0;font-weight:650;font-size:.95rem}
+nav a:hover,nav a.active{background:#263c61;color:#fff}
+nav .back{border:1px solid #506482;color:#9acdf6}
+.hero{max-width:1120px;margin:28px auto 19px;padding:0 18px}
+.eyebrow{font-size:.82rem;letter-spacing:.1em;text-transform:uppercase;color:#80baff;font-weight:750}
+h1{font-size:clamp(1.9rem,5vw,3rem);letter-spacing:-.045em;margin:7px 0 5px}
+.lead{color:#b3c6e3;margin:0;max-width:700px}
+main{max-width:1120px;margin:0 auto;padding:0 18px 70px}
+.section{scroll-margin-top:98px}
+.panel{background:#15233d;border:1px solid #30476a;border-radius:18px;padding:22px;margin-bottom:20px}
+h2{font-size:1.35rem;margin:0 0 15px;letter-spacing:-.02em}
+h3{margin:0 0 4px}
+.muted,small{color:#b6c7df}
+.row{display:flex;gap:12px;flex-wrap:wrap;align-items:end}.row>*{flex:1 1 185px;min-width:0}
+label{display:block;font-size:.92rem;font-weight:620;margin:10px 0 5px}
+input,textarea,select{width:100%;background:#0b172e;color:#f3f7ff;border:1px solid #536987;border-radius:9px;padding:11px}
+input[type=file]{padding:10px;cursor:pointer}
+textarea{min-height:120px;resize:vertical}
+button{border:0;background:#277fdf;color:#fff;border-radius:9px;padding:10px 15px;cursor:pointer;font-weight:650}
+button:hover{filter:brightness(1.12)}button:disabled{opacity:.55;cursor:wait}
+button.secondary{background:#385273}button.danger{background:#a7384e}
+.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:13px 0 0}
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));gap:14px;margin-top:16px;align-items:start}
+.article{background:#1b2c49;border:1px solid #334969;border-radius:14px;padding:18px;min-width:0;overflow-wrap:anywhere}
+.article h3{font-size:1.13rem;letter-spacing:-.01em}
+.article p{white-space:pre-wrap;line-height:1.6;margin:12px 0}
+.article .meta{font-size:.83rem;color:#adc3e0;margin-bottom:7px}
+.photos,.preview{display:flex;gap:9px;flex-wrap:wrap;margin-top:11px}
+.photos a,.preview .picture{display:block;flex:1 1 92px;max-width:160px;min-width:90px}
+.photos img,.preview img{display:block;width:100%;aspect-ratio:4/3;object-fit:cover;border-radius:10px;border:1px solid #3f5574;background:#0a1426}
+.photo-count{font-size:.82rem;color:#a6c8ee}
+.comments{border-top:1px solid #425575;margin-top:14px;padding-top:12px}
+.comments summary{cursor:pointer;color:#a6d0ff;font-weight:700;user-select:none}
+.comment-list{display:grid;gap:8px;margin-top:12px}
+.comment{padding:11px;border-radius:9px;background:#13213a;border:1px solid #354968}
+.comment b{color:#d9eaff}.comment p{margin:5px 0 0;font-size:.94rem}
+.comment-date{font-size:.75rem;color:#9eafca;margin-left:5px}
+.comment-form{margin-top:12px}
+.comment-form input,.comment-form textarea{margin:5px 0 9px}
+.comment-form textarea{min-height:75px}
+.hidden{display:none!important}
+.tag{font-size:.75rem;background:#5b4a30;border-radius:50px;padding:3px 10px;color:#ffe2b1}
+.adminrow{display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;align-items:center}
+.stats{display:flex;gap:12px;margin:12px 0 16px}.stat{flex:1;background:#203655;padding:13px;border-radius:11px}.stat strong{display:block;font-size:1.5rem}
+#notice{position:sticky;top:66px;z-index:18;margin:0 auto;display:none;padding:12px max(18px,calc((100vw - 1120px)/2));background:#294d75;overflow-wrap:anywhere}
+#status{font-size:.84rem;color:#9fb4d5}
+.about-lines{display:grid;gap:10px;color:#c3d2e9}
+footer{text-align:center;color:#93a7c6;padding:20px}
+@media(max-width:700px){.navbar{gap:8px}.logo{width:100%}nav{margin-left:0;width:100%;gap:2px}nav a{font-size:.85rem;padding:8px 10px}nav .back{margin-left:auto}#notice{top:101px}.hero{margin-top:18px}.panel{padding:16px}}
 </style>
 </head>
 <body>
-
 <header>
-  <h1>🐉 DragonNet Anarchy</h1>
-  <div class="muted">Publication libre et anonyme · Supabase JSONB</div>
-  <div id="status" class="muted">Connexion à Supabase…</div>
+  <div class="navbar">
+    <a class="logo" href="#articles">🐉 DragonNet Anarchy</a>
+    <nav aria-label="Navigation principale">
+      <a href="#articles" class="active">Article</a>
+      <a href="#publier">Publier</a>
+      <a href="#apropos">À propos</a>
+      <a class="back" href="https://jjcookielabs.github.io/">← Accueil principal</a>
+    </nav>
+  </div>
 </header>
-
-<div id="notice" role="status"></div>
-
+<div id="notice" role="status" aria-live="polite"></div>
+<div class="hero">
+  <div class="eyebrow">Communauté ouverte</div>
+  <h1>Écris, partage, discute.</h1>
+  <p class="lead">Publie sans inscription, ajoute jusqu'à trois photos et participe aux commentaires. Pas de compte nécessaire.</p>
+  <p id="status">Connexion à Supabase…</p>
+</div>
 <main>
-
-<section class="panel">
-  <h2>Publier un article</h2>
-
-  <form id="publishForm" novalidate>
-    <label>Pseudonyme
-      <input id="author" maxlength="60" value="Anonyme">
-    </label>
-
-    <label>Titre
-      <input id="title" maxlength="160">
-    </label>
-
-    <label>Catégorie
-      <input id="category" maxlength="40" value="Général">
-    </label>
-
-    <label>Contenu
-      <textarea id="content" maxlength="30000"></textarea>
-    </label>
-
-    <button id="publishButton" type="submit">
-      Publier immédiatement
-    </button>
-  </form>
-
-  <p class="muted">Aucun compte nécessaire. Les publications sont publiques.</p>
-</section>
-
-<section class="panel">
-  <h2>Articles publics</h2>
-
-  <div class="row">
-    <label>Recherche
-      <input id="search" placeholder="Rechercher…">
-    </label>
-
-    <label>Catégorie
-      <select id="filter">
-        <option value="">Toutes</option>
-      </select>
-    </label>
-
-    <label>Ordre
-      <select id="order">
-        <option value="new">Plus récents</option>
-        <option value="old">Plus anciens</option>
-      </select>
-    </label>
-  </div>
-
-  <button id="reload" class="secondary">Actualiser</button>
-  <p id="count" class="muted"></p>
-  <div id="articles" class="grid"></div>
-</section>
-
-<section id="adminLogin" class="panel hidden">
-  <h2>🔒 Connexion administrateur</h2>
-
-  <label>E-mail
-    <input id="email" type="email">
-  </label>
-
-  <label>Mot de passe
-    <input id="password" type="password">
-  </label>
-
-  <button id="login">Se connecter</button>
-  <button id="closeLogin" class="secondary">Fermer</button>
-</section>
-
-<section id="adminPanel" class="panel hidden">
-  <h2>🛡️ Administration</h2>
-
-  <p class="muted">
-    Masquer, réafficher et supprimer des articles.
-    Aucun compte visiteur ni bannissement.
-  </p>
-
-  <button id="logout" class="secondary">Déconnexion</button>
-
-  <div class="count-row">
-    <div class="count">
-      <strong id="statVisible">0</strong>
-      Articles visibles
+  <section class="section panel" id="articles">
+    <div class="adminrow"><h2>Articles</h2><button type="button" id="reload" class="secondary">↻ Actualiser</button></div>
+    <div class="row">
+      <div><label for="search">Rechercher</label><input id="search" placeholder="Titre, pseudonyme, contenu…"></div>
+      <div><label for="filter">Catégorie</label><select id="filter"><option value="">Toutes</option></select></div>
+      <div><label for="order">Trier</label><select id="order"><option value="new">Plus récents</option><option value="old">Plus anciens</option></select></div>
     </div>
-    <div class="count">
-      <strong id="statHidden">0</strong>
-      Articles masqués
+    <p id="count" class="muted"></p>
+    <div id="articleGrid" class="grid"></div>
+  </section>
+
+  <section class="section panel" id="publier">
+    <h2>Publier un article</h2>
+    <form id="publishForm" novalidate>
+      <div class="row">
+        <div><label for="author">Pseudonyme</label><input id="author" maxlength="60" value="Anonyme" autocomplete="nickname"></div>
+        <div><label for="category">Catégorie</label><input id="category" maxlength="40" value="Général"></div>
+      </div>
+      <label for="title">Titre</label><input id="title" maxlength="160" placeholder="Ton titre">
+      <label for="content">Contenu</label><textarea id="content" maxlength="30000" placeholder="Raconte quelque chose…"></textarea>
+      <label for="photos">Photos jointes (facultatif)</label>
+      <input id="photos" type="file" multiple accept=".jpg,.jpeg,.png,.gif,image/jpeg,image/png,image/gif" aria-describedby="photosHelp">
+      <small id="photosHelp">JPG/JPEG, PNG ou GIF uniquement — 3 photos maximum, 3 Mo par photo.</small>
+      <div id="preview" class="preview" aria-live="polite"></div>
+      <div class="actions"><button type="submit" id="publishButton">Publier immédiatement</button><small>Les articles et les photos sont publics.</small></div>
+    </form>
+  </section>
+
+  <section class="section panel" id="apropos">
+    <h2>À propos de DragonNet</h2>
+    <div class="about-lines">
+      <div>🐉 DragonNet Anarchy est un espace de publication libre créé par JJCookieLabs.</div>
+      <div>🗣️ Tout le monde peut publier et commenter sans créer de compte. Le pseudonyme est libre.</div>
+      <div>🖼️ Les images acceptées sont uniquement JPG, JPEG, PNG et GIF.</div>
+      <div>🛡️ L'administration peut uniquement masquer, réafficher ou supprimer un article ; elle ne modifie pas les textes.</div>
+      <div>⚠️ Ne partage pas de données privées ou de photos d'autres personnes sans leur accord. Les publications peuvent être consultées publiquement.</div>
     </div>
-  </div>
+  </section>
 
-  <button id="refreshAdmin" class="secondary">
-    Actualiser l'administration
-  </button>
-
-  <h3>Gérer les articles</h3>
-
-  <div class="row">
-    <label>Recherche admin
-      <input id="adminSearch" placeholder="Rechercher un article…">
-    </label>
-
-    <label>Afficher
-      <select id="adminFilter">
-        <option value="all">Tous</option>
-        <option value="visible">Visibles</option>
-        <option value="hidden">Masqués</option>
-      </select>
-    </label>
-  </div>
-
-  <div id="adminArticles" class="admin-list"></div>
-</section>
-
+  <section id="adminLogin" class="panel hidden">
+    <h2>🔒 Accès administrateur</h2>
+    <p class="muted">Entrée cachée, droits vérifiés par Supabase.</p>
+    <label for="email">E-mail administrateur</label><input id="email" type="email" autocomplete="username">
+    <label for="password">Mot de passe</label><input id="password" type="password" autocomplete="current-password">
+    <div class="actions"><button type="button" id="login">Se connecter</button><button type="button" id="closeLogin" class="secondary">Fermer</button></div>
+  </section>
+  <section id="adminPanel" class="panel hidden">
+    <div class="adminrow"><h2>🛡️ Administration</h2><button type="button" id="logout" class="secondary">Déconnexion</button></div>
+    <p class="muted">Masquer, réafficher ou supprimer un article. Les commentaires sont inclus dans l'article.</p>
+    <div class="stats"><div class="stat"><strong id="statVisible">0</strong>Visibles</div><div class="stat"><strong id="statHidden">0</strong>Masqués</div></div>
+    <div class="row">
+      <div><label for="adminSearch">Recherche admin</label><input id="adminSearch" placeholder="Rechercher…"></div>
+      <div><label for="adminFilter">Afficher</label><select id="adminFilter"><option value="all">Tous</option><option value="visible">Visibles</option><option value="hidden">Masqués</option></select></div>
+    </div>
+    <div class="actions"><button type="button" id="refreshAdmin" class="secondary">Actualiser l'administration</button></div>
+    <div id="adminArticles" class="grid"></div>
+  </section>
 </main>
-
+<footer>DragonNet Anarchy · JJCookieLabs</footer>
 <script>
 'use strict';
-
-const SUPABASE_URL =
-  'https://hkwnfxgrnyvyfprzvlyb.supabase.co';
-
-const SUPABASE_KEY =
-  'sb_publishable_hzBek5ZmTxpaNZcQiDPwgA_i4Lhv3o0';
-
+// Configuration publique uniquement : ne jamais ajouter de Secret key.
+const SUPABASE_URL = 'https://hkwnfxgrnyvyfprzvlyb.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_hzBek5ZmTxpaNZcQiDPwgA_i4Lhv3o0';
+const BUCKET = 'dragon-photos';
+const MAX_PHOTOS = 3;
+const MAX_PHOTO_BYTES = 3145728;
+const TYPES = {'image/jpeg':['jpg','jpeg'],'image/png':['png'],'image/gif':['gif']};
+const PATH_RE = /^posts\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|jpeg|png|gif)$/;
 const $ = id => document.getElementById(id);
-
-let publicArticles = [];
-let moderationArticles = [];
-let adminAuth = null;
-
-const isAdmin = () => !!adminAuth?.accessToken;
-
-function show(id, value) {
-  $(id).classList.toggle('hidden', !value);
-}
-
-function notice(text) {
-  $('notice').textContent = String(text);
-  $('notice').style.display = 'block';
-}
-
-function node(tag, text, className) {
-  const e = document.createElement(tag);
-  if (text !== undefined) e.textContent = String(text);
-  if (className) e.className = className;
-  return e;
-}
-
-function dateText(value) {
-  return new Date(value).toLocaleString('fr-FR');
-}
-
-// Entrée cachée vers le formulaire admin
-function isSecretTitle(value) {
-  return String(value)
-    .normalize('NFKC')
-    .toLowerCase()
-    .replace(/[\u00ad\u200b-\u200f\u2060\ufeff]/g, '')
-    .replace(/^[^a-z0-9]+|[^a-z0-9]+$/g, '')
-    .replace(/\s+/g, ' ')
-    .trim() === 'admin connection';
-}
-
-// Appels API Supabase
-async function api(path, options = {}) {
-  const { method = 'GET', body, token } = options;
-
-  const headers = {
-    apikey: SUPABASE_KEY,
-    Accept: 'application/json'
-  };
-
-  if (body !== undefined) {
-    headers['Content-Type'] = 'application/json';
-  }
-
-  if (token) {
-    headers.Authorization = 'Bearer ' + token;
-  }
-
-  const response = await fetch(SUPABASE_URL + path, {
-    method,
-    headers,
-    body: body === undefined ? undefined : JSON.stringify(body)
-  });
-
-  const raw = await response.text();
-  let result;
-
-  try {
-    result = raw ? JSON.parse(raw) : null;
-  } catch {
-    result = raw;
-  }
-
-  if (!response.ok) {
-    const error = new Error(
-      result?.message ||
-      result?.msg ||
-      result?.error_description ||
-      result?.error ||
-      'Erreur HTTP ' + response.status
-    );
-
-    error.status = response.status;
-    error.code = result?.code || '';
-
-    throw error;
-  }
-
+let publicArticles=[],moderationArticles=[],adminAuth=null;
+let previewUrls=[];
+const openComments=new Set();
+const isAdmin=()=>!!adminAuth?.accessToken;
+const show=(id,yes)=>$(id).classList.toggle('hidden',!yes);
+function node(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=String(text);if(cls)n.className=cls;return n;}
+function notice(message){$('notice').textContent=String(message);$('notice').style.display='block';}
+function dateText(s){const d=new Date(s);return Number.isNaN(d.getTime())?'Date inconnue':d.toLocaleString('fr-FR');}
+function secretTitle(value){return String(value).normalize('NFKC').toLowerCase().replace(/[\u00ad\u200b-\u200f\u2060\ufeff]/g,'').replace(/^[^a-z0-9]+|[^a-z0-9]+$/g,'').replace(/\s+/g,' ').trim()==='admin connection';}
+function cleanPaths(d){return Array.isArray(d?.photos)?d.photos.filter(s=>typeof s==='string'&&PATH_RE.test(s)).slice(0,MAX_PHOTOS):[];}
+function photoUrl(path){return SUPABASE_URL+'/storage/v1/object/public/'+BUCKET+'/'+path;}
+async function api(path,{method='GET',body,token}={}){
+  const headers={apikey:SUPABASE_KEY,Accept:'application/json'};
+  if(body!==undefined)headers['Content-Type']='application/json';
+  if(token)headers.Authorization='Bearer '+token;
+  let response;
+  try{response=await fetch(SUPABASE_URL+path,{method,headers,body:body===undefined?undefined:JSON.stringify(body)});}catch(e){throw Error('Supabase inaccessible : '+e.message);}
+  const raw=await response.text();let result;
+  try{result=raw?JSON.parse(raw):null;}catch{result=raw;}
+  if(!response.ok){const error=Error(result?.message||result?.msg||result?.error_description||result?.error||'HTTP '+response.status);error.status=response.status;error.code=result?.code;throw error;}
   return result;
 }
-
-// Authentification admin
-function setAdminAuth(tokens) {
-  adminAuth = {
-    accessToken: tokens.access_token,
-    refreshToken: tokens.refresh_token,
-    expiresAt:
-      Date.now() + (Number(tokens.expires_in) || 3600) * 1000
-  };
+const publicRpc=(name,body)=>api('/rest/v1/rpc/'+name,{method:'POST',body});
+function setAdminAuth(tokens){if(!tokens?.access_token)throw Error('Jeton utilisateur absent.');adminAuth={accessToken:tokens.access_token,refreshToken:tokens.refresh_token||null,expiresAt:Date.now()+Math.max(30,Number(tokens.expires_in)||3600)*1000};}
+function forgetAdmin(){adminAuth=null;moderationArticles=[];show('adminPanel',false);$('adminArticles').replaceChildren();$('password').value='';$('status').textContent='Connecté · accès public';}
+async function refreshToken(){if(!adminAuth?.refreshToken)throw Error('Session expirée.');setAdminAuth(await api('/auth/v1/token?grant_type=refresh_token',{method:'POST',body:{refresh_token:adminAuth.refreshToken}}));}
+async function authorized(path,{method='GET',body}={}){
+  if(!adminAuth)throw Error('Connexion admin nécessaire.');
+  if(Date.now()>adminAuth.expiresAt-30000){try{await refreshToken();}catch{forgetAdmin();throw Error('Session expirée : reconnecte-toi.');}}
+  try{return await api(path,{method,body,token:adminAuth.accessToken});}
+  catch(e){if(e.status===401&&e.code!=='42501'){try{await refreshToken();return await api(path,{method,body,token:adminAuth.accessToken});}catch{forgetAdmin();throw Error('Session expirée : reconnecte-toi.');}}throw e;}
 }
-
-function forgetAdmin() {
-  adminAuth = null;
-  moderationArticles = [];
-  show('adminPanel', false);
-  $('adminArticles').replaceChildren();
-  $('password').value = '';
-  $('status').textContent = 'Connecté · accès public';
+const adminRpc=(name,body)=>authorized('/rest/v1/rpc/'+name,{method:'POST',body});
+async function loginAdmin(){
+  const email=$('email').value.trim(),password=$('password').value;
+  if(!email||!password)throw Error('E-mail ou mot de passe manquant.');
+  const tokens=await api('/auth/v1/token?grant_type=password',{method:'POST',body:{email,password}});
+  if(!tokens?.access_token)throw Error('Aucun jeton de connexion reçu.');
+  const allowed=await api('/rest/v1/rpc/dragon_is_admin',{method:'POST',body:{},token:tokens.access_token});
+  if(allowed!==true)throw Error('Ce compte ne possède pas le rôle admin.');
+  setAdminAuth(tokens);$('password').value='';show('adminLogin',false);show('adminPanel',true);
+  await Promise.all([loadArticles(),loadModeration()]);
+  $('status').textContent='Connecté · administrateur';notice('Administration activée !');
+  $('adminPanel').scrollIntoView({behavior:'smooth'});
 }
-
-async function refreshToken() {
-  if (!adminAuth?.refreshToken) {
-    throw Error('Session expirée.');
-  }
-
-  const tokens = await api(
-    '/auth/v1/token?grant_type=refresh_token',
-    {
-      method: 'POST',
-      body: {
-        refresh_token: adminAuth.refreshToken
-      }
-    }
-  );
-
-  setAdminAuth(tokens);
+function fileExt(file){const ext=(file.name.split('.').pop()||'').toLowerCase();return TYPES[file.type]?.includes(ext)?ext:null;}
+function validatePhotos(files){
+  if(files.length>MAX_PHOTOS)throw Error('Maximum 3 photos.');
+  for(const file of files){if(!fileExt(file))throw Error('Formats autorisés : JPG, JPEG, PNG ou GIF.');if(file.size>MAX_PHOTO_BYTES)throw Error('Photo trop grande : 3 Mo maximum.');if(file.size===0)throw Error('Photo vide.');}
 }
-
-async function authorized(path, options = {}) {
-  if (!adminAuth) {
-    throw Error('Connexion admin nécessaire.');
-  }
-
-  if (Date.now() > adminAuth.expiresAt - 30000) {
-    try {
-      await refreshToken();
-    } catch {
-      forgetAdmin();
-      throw Error('Session expirée, reconnecte-toi.');
-    }
-  }
-
-  return api(path, {
-    ...options,
-    token: adminAuth.accessToken
-  });
-}
-
-async function adminRpc(name, body) {
-  return authorized('/rest/v1/rpc/' + name, {
-    method: 'POST',
-    body
-  });
-}
-
-async function publicRpc(name, body) {
-  return api('/rest/v1/rpc/' + name, {
-    method: 'POST',
-    body
-  });
-}
-
-async function loginAdmin() {
-  const email = $('email').value.trim();
-  const password = $('password').value;
-
-  if (!email || !password) {
-    throw Error('E-mail ou mot de passe manquant.');
-  }
-
-  // Connexion directe pour éviter les pertes de session
-  const tokens = await api(
-    '/auth/v1/token?grant_type=password',
-    {
-      method: 'POST',
-      body: { email, password }
-    }
-  );
-
-  // Vérification effective du rôle dans Supabase
-  const allowed = await api(
-    '/rest/v1/rpc/dragon_is_admin',
-    {
-      method: 'POST',
-      body: {},
-      token: tokens.access_token
-    }
-  );
-
-  if (allowed !== true) {
-    throw Error('Ce compte ne possède pas le rôle admin.');
-  }
-
-  setAdminAuth(tokens);
-
-  $('password').value = '';
-  show('adminLogin', false);
-  show('adminPanel', true);
-
-  await Promise.all([
-    loadPublicArticles(),
-    loadModeration()
-  ]);
-
-  $('status').textContent = 'Connecté · administrateur';
-  notice('Administration activée !');
-}
-
-// Articles publics
-async function loadPublicArticles() {
-  publicArticles = await api(
-    '/rest/v1/dragon_documents' +
-    '?select=id,data,created_at' +
-    '&kind=eq.article' +
-    '&order=created_at.desc' +
-    '&limit=500'
-  );
-
-  renderPublic();
-
-  $('status').textContent = isAdmin()
-    ? 'Connecté · administrateur'
-    : 'Connecté · accès public';
-}
-
-function renderPublic() {
-  const search = $('search').value.trim().toLowerCase();
-  const category = $('filter').value;
-
-  const categories = [
-    ...new Set(
-      publicArticles.map(a => a.data?.category).filter(Boolean)
-    )
-  ].sort();
-
-  $('filter').replaceChildren(
-    new Option('Toutes', ''),
-    ...categories.map(c => new Option(c, c))
-  );
-
-  $('filter').value = category;
-
-  let list = publicArticles.filter(article => {
-    const d = article.data || {};
-
-    return (
-      (!category || d.category === category) &&
-      (!search || [d.title, d.name, d.content].some(
-        v => String(v || '').toLowerCase().includes(search)
-      ))
-    );
-  });
-
-  if ($('order').value === 'old') {
-    list = [...list].reverse();
-  }
-
-  $('articles').replaceChildren();
-  $('count').textContent = list.length + ' article(s)';
-
-  if (!list.length) {
-    $('articles').append(node('p', 'Aucun article visible.'));
-  }
-
-  for (const article of list) {
-    const d = article.data || {};
-    const card = node('article', undefined, 'article');
-
-    card.append(
-      node('h3', d.title || 'Sans titre'),
-      node(
-        'div',
-        `${d.name || 'Anonyme'} · ${d.category || 'Général'} · ${dateText(article.created_at)}`,
-        'muted'
-      ),
-      node('p', d.content || '')
-    );
-
-    $('articles').append(card);
-  }
-}
-
-// Articles de l'administration
-async function loadModeration() {
-  if (!isAdmin()) return;
-
-  moderationArticles = await authorized(
-    '/rest/v1/dragon_documents' +
-    '?select=id,data,created_at' +
-    '&kind=eq.article' +
-    '&order=created_at.desc' +
-    '&limit=500'
-  );
-
-  renderModeration();
-}
-
-function renderModeration() {
-  if (!isAdmin()) return;
-
-  const visible = moderationArticles.filter(
-    a => a.data?.hidden !== true
-  ).length;
-
-  $('statVisible').textContent = visible;
-  $('statHidden').textContent =
-    moderationArticles.length - visible;
-
-  const search = $('adminSearch').value.trim().toLowerCase();
-  const filter = $('adminFilter').value;
-
-  const list = moderationArticles.filter(article => {
-    const d = article.data || {};
-    const hidden = d.hidden === true;
-
-    if (filter === 'hidden' && !hidden) return false;
-    if (filter === 'visible' && hidden) return false;
-
-    return !search || [d.title, d.name, d.content].some(
-      v => String(v || '').toLowerCase().includes(search)
-    );
-  });
-
-  $('adminArticles').replaceChildren();
-
-  if (!list.length) {
-    $('adminArticles').append(
-      node('p', 'Aucun article dans ce filtre.')
-    );
-  }
-
-  for (const article of list) {
-    const d = article.data || {};
-    const hidden = d.hidden === true;
-    const card = node('div', undefined, 'article');
-
-    card.append(
-      node('h3', d.title || 'Sans titre'),
-      node(
-        'div',
-        `${d.name || 'Anonyme'} · ${dateText(article.created_at)}`,
-        'muted'
-      ),
-      node('p', d.content || ''),
-      node('span', hidden ? 'Masqué' : 'Visible', 'tag')
-    );
-
-    const actions = node('div', undefined, 'actions');
-
-    function addButton(label, action, className = 'secondary') {
-      const btn = node('button', label, className);
-      btn.type = 'button';
-
-      btn.onclick = async () => {
-        btn.disabled = true;
-
-        try {
-          await action();
-        } catch (error) {
-          notice('Administration : ' + error.message);
-        } finally {
-          btn.disabled = false;
-        }
-      };
-
-      actions.append(btn);
-    }
-
-    // Masquer / réafficher
-    addButton(hidden ? 'Réafficher' : 'Masquer', async () => {
-      await adminRpc('dragon_set_hidden', {
-        p_id: article.id,
-        p_hidden: !hidden
-      });
-
-      await Promise.all([
-        loadModeration(),
-        loadPublicArticles()
-      ]);
-
-      notice(hidden ? 'Article réaffiché.' : 'Article masqué.');
-    });
-
-    // Supprimer définitivement
-    addButton('Supprimer', async () => {
-      if (!confirm('Supprimer définitivement cet article ?')) {
-        return;
-      }
-
-      await adminRpc('dragon_delete_article', {
-        p_id: article.id
-      });
-
-      await Promise.all([
-        loadModeration(),
-        loadPublicArticles()
-      ]);
-
-      notice('Article supprimé.');
-    }, 'danger');
-
-    card.append(actions);
-    $('adminArticles').append(card);
-  }
-}
-
-// Publication sans compte
-$('publishForm').addEventListener('submit', async event => {
-  event.preventDefault();
-
-  const title = $('title').value.trim();
-
-  if (isSecretTitle(title)) {
-    show('adminLogin', true);
-    $('adminLogin').scrollIntoView({ behavior: 'smooth' });
-    return;
-  }
-
-  const name = $('author').value.trim() || 'Anonyme';
-  const category = $('category').value.trim();
-  const content = $('content').value.trim();
-
-  if (!title || !category || !content) {
-    notice('Remplis le titre, la catégorie et le contenu.');
-    return;
-  }
-
-  $('publishButton').disabled = true;
-
-  try {
-    await publicRpc('dragon_publish', {
-      p_name: name,
-      p_title: title,
-      p_content: content,
-      p_category: category
-    });
-
-    $('title').value = '';
-    $('content').value = '';
-
-    await loadPublicArticles();
-
-    if (isAdmin()) {
-      await loadModeration();
-    }
-
-    notice('Article publié !');
-  } catch (error) {
-    notice('Publication : ' + error.message);
-  } finally {
-    $('publishButton').disabled = false;
-  }
+function clearPreview(){for(const url of previewUrls)URL.revokeObjectURL(url);previewUrls=[];$('preview').replaceChildren();}
+$('photos').addEventListener('change',()=>{
+  clearPreview();const files=[...$('photos').files];
+  try{validatePhotos(files);}catch(e){$('photos').value='';return notice(e.message);}
+  for(const file of files){const url=URL.createObjectURL(file);previewUrls.push(url);const wrap=node('div',undefined,'picture');const img=node('img');img.src=url;img.alt='Aperçu de '+file.name;wrap.append(img);$('preview').append(wrap);}
 });
-
-// Commandes de connexion admin
-$('login').onclick = async () => {
-  const btn = $('login');
-  btn.disabled = true;
-
-  try {
-    await loginAdmin();
-  } catch (error) {
-    notice('Connexion : ' + error.message);
-  } finally {
-    btn.disabled = false;
-  }
-};
-
-$('logout').onclick = async () => {
-  forgetAdmin();
-  notice('Administration déconnectée.');
-
-  try {
-    await loadPublicArticles();
-  } catch (error) {
-    notice(error.message);
-  }
-};
-
-$('closeLogin').onclick = () => {
-  show('adminLogin', false);
-};
-
-$('reload').onclick = () => {
-  loadPublicArticles().catch(error => notice(error.message));
-};
-
-$('refreshAdmin').onclick = async () => {
-  try {
-    await Promise.all([
-      loadModeration(),
-      loadPublicArticles()
-    ]);
-
-    notice('Administration actualisée.');
-  } catch (error) {
-    notice(error.message);
-  }
-};
-
-for (const id of ['search', 'filter', 'order']) {
-  $(id).addEventListener(
-    id === 'search' ? 'input' : 'change',
-    renderPublic
-  );
+async function uploadPhoto(file){
+  const path='posts/'+crypto.randomUUID()+'.'+fileExt(file);
+  let resp;
+  try{resp=await fetch(SUPABASE_URL+'/storage/v1/object/'+BUCKET+'/'+path,{
+    method:'POST',headers:{apikey:SUPABASE_KEY,'Content-Type':file.type,'x-upsert':'false','cache-control':'3600'},body:file
+  });}catch(e){throw Error('Téléversement impossible : '+e.message);}
+  if(!resp.ok){const raw=await resp.text();let msg;try{const o=JSON.parse(raw);msg=o.message||o.error;}catch{msg=raw;}throw Error('Photo refusée : '+(msg||'HTTP '+resp.status));}
+  return path;
 }
-
-for (const id of ['adminSearch', 'adminFilter']) {
-  $(id).addEventListener(
-    id === 'adminSearch' ? 'input' : 'change',
-    renderModeration
-  );
+async function loadArticles(){
+  publicArticles=await api('/rest/v1/dragon_documents?select=id,data,created_at&kind=eq.article&order=created_at.desc&limit=500');
+  renderArticles();$('status').textContent=isAdmin()?'Connecté · administrateur':'Connecté · accès public';
 }
-
-// Démarrage
-loadPublicArticles().catch(error => {
-  $('status').textContent = 'Supabase indisponible';
-  notice('Connexion : ' + error.message);
+function appendPhotos(parent,data){
+  const paths=cleanPaths(data);if(!paths.length)return;
+  const gallery=node('div',undefined,'photos');
+  for(const path of paths){const link=node('a');link.href=photoUrl(path);link.target='_blank';link.rel='noopener noreferrer';link.setAttribute('aria-label','Ouvrir la photo');const img=node('img');img.src=photoUrl(path);img.alt='Photo jointe à l’article';img.loading='lazy';link.append(img);gallery.append(link);}
+  parent.append(gallery);
+}
+function appendComments(card,article){
+  const comments=Array.isArray(article.data?.comments)?article.data.comments:[];
+  const details=node('details',undefined,'comments');details.open=openComments.has(article.id);
+  details.addEventListener('toggle',()=>{if(details.open)openComments.add(article.id);else openComments.delete(article.id);});
+  const summary=node('summary','💬 Commentaires ('+comments.length+')');details.append(summary);
+  const list=node('div',undefined,'comment-list');
+  if(!comments.length)list.append(node('small','Aucun commentaire pour le moment.'));
+  for(const c of comments){const item=node('div',undefined,'comment');const name=node('b',c.name||'Anonyme');const date=node('span',c.created_at?' · '+dateText(c.created_at):'','comment-date');const line=node('div');line.append(name,date);item.append(line,node('p',c.content||''));list.append(item);}
+  details.append(list);
+  const form=node('form',undefined,'comment-form');form.noValidate=true;
+  const nodelabel=node('label','Ton pseudonyme');const author=node('input');author.maxLength=60;author.placeholder='Anonyme';author.value=$('author').value.trim()||'Anonyme';nodelabel.append(author);
+  const textlabel=node('label','Ton commentaire');const body=node('textarea');body.maxLength=1500;body.placeholder='Écris un commentaire…';body.required=true;textlabel.append(body);
+  const send=node('button','Envoyer le commentaire');send.type='submit';form.append(nodelabel,textlabel,send);
+  form.addEventListener('submit',async e=>{
+    e.preventDefault();const name=author.value.trim()||'Anonyme',content=body.value.trim();if(!content)return notice('Le commentaire est vide.');
+    send.disabled=true;try{await publicRpc('dragon_add_comment',{p_article_id:article.id,p_name:name,p_content:content});openComments.add(article.id);await loadArticles();if(isAdmin())await loadModeration();notice('Commentaire publié !');}
+    catch(error){notice('Commentaire : '+error.message);}finally{send.disabled=false;}
+  });
+  details.append(form);card.append(details);
+}
+function renderArticles(){
+  const filter=$('filter').value,query=$('search').value.trim().toLowerCase();
+  const categories=[...new Set(publicArticles.map(a=>a.data?.category).filter(Boolean))].sort();
+  $('filter').replaceChildren(new Option('Toutes',''),...categories.map(x=>new Option(x,x)));$('filter').value=filter;
+  let visible=publicArticles.filter(a=>{const d=a.data||{};return(!filter||d.category===filter)&&(!query||[d.title,d.name,d.content].some(s=>String(s||'').toLowerCase().includes(query)));});
+  if($('order').value==='old')visible=[...visible].reverse();
+  $('count').textContent=visible.length+' article(s)';$('articleGrid').replaceChildren();
+  if(!visible.length)$('articleGrid').append(node('p','Aucun article visible.'));
+  for(const a of visible){const d=a.data||{},card=node('article',undefined,'article');card.append(node('h3',d.title||'Sans titre'),node('div',(d.name||'Anonyme')+' · '+(d.category||'Général')+' · '+dateText(a.created_at),'meta'),node('p',d.content||''));appendPhotos(card,d);appendComments(card,a);$('articleGrid').append(card);}
+}
+async function loadModeration(){
+  if(!isAdmin())return;
+  moderationArticles=await authorized('/rest/v1/dragon_documents?select=id,data,created_at&kind=eq.article&order=created_at.desc&limit=500');renderModeration();
+}
+async function removePhotoObjects(paths){
+  if(!paths.length)return;
+  await authorized('/storage/v1/object/'+BUCKET,{method:'DELETE',body:{prefixes:paths}});
+}
+function renderModeration(){
+  if(!isAdmin())return;
+  const visible=moderationArticles.filter(a=>a.data?.hidden!==true).length;
+  $('statVisible').textContent=visible;$('statHidden').textContent=moderationArticles.length-visible;
+  const filter=$('adminFilter').value,search=$('adminSearch').value.trim().toLowerCase();
+  const list=moderationArticles.filter(a=>{const d=a.data||{},hidden=d.hidden===true;if(filter==='hidden'&&!hidden)return false;if(filter==='visible'&&hidden)return false;return!search||[d.title,d.name,d.content].some(x=>String(x||'').toLowerCase().includes(search));});
+  $('adminArticles').replaceChildren();if(!list.length){$('adminArticles').append(node('p','Aucun article dans ce filtre.'));return;}
+  for(const a of list){const d=a.data||{},hidden=d.hidden===true,card=node('div',undefined,'article');card.append(node('h3',d.title||'Sans titre'),node('div',(d.name||'Anonyme')+' · '+dateText(a.created_at),'meta'),node('p',d.content||''));appendPhotos(card,d);card.append(node('span',hidden?'Masqué':'Visible','tag'));
+    const actions=node('div',undefined,'actions');
+    const add=(label,handler,css='secondary')=>{const btn=node('button',label,css);btn.type='button';btn.onclick=async()=>{btn.disabled=true;try{await handler();}catch(e){notice('Administration : '+e.message);}finally{btn.disabled=false;}};actions.append(btn);};
+    add(hidden?'Réafficher':'Masquer',async()=>{await adminRpc('dragon_set_hidden',{p_id:a.id,p_hidden:!hidden});await Promise.all([loadArticles(),loadModeration()]);notice(hidden?'Article réaffiché.':'Article masqué.');});
+    add('Supprimer',async()=>{
+      if(!confirm('Supprimer définitivement cet article et ses commentaires ?'))return;
+      await adminRpc('dragon_delete_article',{p_id:a.id});
+      let cleanupError=null;try{await removePhotoObjects(cleanPaths(d));}catch(e){cleanupError=e.message;}
+      await Promise.all([loadArticles(),loadModeration()]);
+      notice(cleanupError?'Article supprimé, mais nettoyage des photos à vérifier : '+cleanupError:'Article et photos supprimés.');
+    },'danger');
+    card.append(actions);$('adminArticles').append(card);
+  }
+}
+$('publishForm').addEventListener('submit',async e=>{
+  e.preventDefault();const title=$('title').value.trim();
+  if(secretTitle(title)){show('adminLogin',true);$('adminLogin').scrollIntoView({behavior:'smooth'});return;}
+  const name=$('author').value.trim()||'Anonyme',category=$('category').value.trim(),content=$('content').value.trim(),files=[...$('photos').files];
+  if(!title||!category||!content)return notice('Complète le titre, la catégorie et le contenu.');
+  try{validatePhotos(files);}catch(error){return notice(error.message);}
+  const button=$('publishButton');button.disabled=true;button.textContent='Publication en cours…';
+  try{
+    const paths=[];
+    for(const file of files)paths.push(await uploadPhoto(file));
+    await publicRpc('dragon_publish_with_photos',{p_name:name,p_title:title,p_content:content,p_category:category,p_photo_paths:paths});
+    $('title').value='';$('content').value='';$('photos').value='';clearPreview();
+    await loadArticles();if(isAdmin())await loadModeration();notice('Article publié !');
+    location.hash='articles';
+  }catch(error){notice('Publication : '+error.message+' (les photos déjà envoyées peuvent nécessiter un nettoyage dans Storage)');}
+  finally{button.disabled=false;button.textContent='Publier immédiatement';}
 });
+$('login').onclick=async()=>{const b=$('login');b.disabled=true;try{await loginAdmin();}catch(e){notice('Connexion : '+e.message);}finally{b.disabled=false;}};
+$('logout').onclick=async()=>{forgetAdmin();notice('Administration déconnectée.');try{await loadArticles();}catch(e){notice(e.message);}};
+$('closeLogin').onclick=()=>show('adminLogin',false);
+$('reload').onclick=()=>loadArticles().catch(e=>notice(e.message));
+$('refreshAdmin').onclick=async()=>{try{await Promise.all([loadModeration(),loadArticles()]);notice('Administration actualisée.');}catch(e){notice(e.message);}};
+for(const id of ['search','filter','order'])$(id).addEventListener(id==='search'?'input':'change',renderArticles);
+for(const id of ['adminSearch','adminFilter'])$(id).addEventListener(id==='adminSearch'?'input':'change',renderModeration);
+const navLinks=[...document.querySelectorAll('nav a[href^="#"]')];
+function activeLink(){for(const link of navLinks)link.classList.toggle('active',link.hash===(location.hash||'#articles'));}
+window.addEventListener('hashchange',activeLink);activeLink();
+loadArticles().catch(e=>{$('status').textContent='Supabase indisponible';notice('Chargement : '+e.message);});
 </script>
 </body>
 </html>
