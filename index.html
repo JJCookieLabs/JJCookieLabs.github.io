@@ -1,349 +1,68 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio, DragonNet et PixelPocket.">
-    <title>JJCookieLabs | Accueil</title>
-    <style>
-        :root {
-            --bg-color: #0f1115;
-            --card-bg: #181b22;
-            --text-color: #f3f4f6;
-            --text-muted: #9ca3af;
-            --accent: #6366f1;
-            --accent-hover: #4f46e5;
-            --border: #2a2f3d;
-            --danger: #ef4444;
-        }
-
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
-
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-        }
-
-        header {
-            padding: 1.5rem 5%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            border-bottom: 1px solid var(--border);
-            flex-wrap: wrap;
-            gap: 1rem;
-        }
-
-        .logo {
-            font-size: 1.4rem;
-            font-weight: 800;
-            letter-spacing: -0.5px;
-        }
-
-        nav {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1.5rem;
-        }
-
-        nav a {
-            color: var(--text-muted);
-            text-decoration: none;
-            font-weight: 500;
-            transition: color 0.2s;
-            cursor: pointer;
-        }
-
-        nav a:hover {
-            color: var(--text-color);
-        }
-
-        main {
-            flex: 1;
-            max-width: 1050px;
-            width: 100%;
-            margin: 0 auto;
-            padding: 4rem 1.5rem;
-            text-align: center;
-        }
-
-        h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
-            letter-spacing: -1px;
-        }
-
-        .subtitle {
-            color: var(--text-muted);
-            font-size: 1.15rem;
-            margin-bottom: 3.5rem;
-        }
-
-        .projects-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
-            text-align: left;
-        }
-
-        .card {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 1.8rem;
-            transition: transform 0.2s, border-color 0.2s;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-        }
-
-        .card:hover {
-            transform: translateY(-4px);
-            border-color: var(--accent);
-        }
-
-        .card h2 {
-            font-size: 1.4rem;
-            margin-bottom: 0.6rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-
-        .badge-lock {
-            font-size: 0.75rem;
-            background-color: rgba(99, 102, 241, 0.15);
-            color: var(--accent);
-            padding: 0.2rem 0.6rem;
-            border-radius: 20px;
-            font-weight: 600;
-        }
-
-        .card p {
-            color: var(--text-muted);
-            font-size: 0.95rem;
-            line-height: 1.5;
-            margin-bottom: 1.5rem;
-        }
-
-        .btn {
-            display: inline-block;
-            width: 100%;
-            text-align: center;
-            background-color: var(--accent);
-            color: #fff;
-            text-decoration: none;
-            padding: 0.75rem 1.2rem;
-            border-radius: 8px;
-            border: none;
-            font-family: inherit;
-            font-weight: 600;
-            font-size: 0.95rem;
-            cursor: pointer;
-            transition: background-color 0.2s;
-        }
-
-        .btn:hover {
-            background-color: var(--accent-hover);
-        }
-
-        /* Fenêtre modale pour le mot de passe */
-        .modal-overlay {
-            display: none;
-            position: fixed;
-            inset: 0;
-            background: rgba(0, 0, 0, 0.75);
-            backdrop-filter: blur(4px);
-            align-items: center;
-            justify-content: center;
-            z-index: 1000;
-            padding: 1rem;
-        }
-
-        .modal-overlay.active {
-            display: flex;
-        }
-
-        .modal {
-            background-color: var(--card-bg);
-            border: 1px solid var(--border);
-            border-radius: 12px;
-            padding: 2rem;
-            width: 100%;
-            max-width: 380px;
-            text-align: left;
-        }
-
-        .modal h3 {
-            margin-bottom: 0.5rem;
-            font-size: 1.3rem;
-        }
-
-        .modal p {
-            color: var(--text-muted);
-            font-size: 0.9rem;
-            margin-bottom: 1.2rem;
-        }
-
-        .modal input {
-            width: 100%;
-            padding: 0.75rem 1rem;
-            border-radius: 8px;
-            border: 1px solid var(--border);
-            background-color: var(--bg-color);
-            color: var(--text-color);
-            font-size: 1rem;
-            margin-bottom: 0.75rem;
-            outline: none;
-        }
-
-        .modal input:focus {
-            border-color: var(--accent);
-        }
-
-        .error-msg {
-            color: var(--danger);
-            font-size: 0.85rem;
-            margin-bottom: 1rem;
-            display: none;
-        }
-
-        .modal-actions {
-            display: flex;
-            gap: 0.75rem;
-        }
-
-        .btn-secondary {
-            background-color: transparent;
-            border: 1px solid var(--border);
-            color: var(--text-muted);
-        }
-
-        .btn-secondary:hover {
-            background-color: rgba(255, 255, 255, 0.05);
-            color: var(--text-color);
-        }
-
-        footer {
-            text-align: center;
-            padding: 1.5rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
-            border-top: 1px solid var(--border);
-        }
-    </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio, DragonNet et PixelPocket.">
+<title>JJCookieLabs | Accueil</title>
 </head>
 <body>
+<script>
+(function(){
+    const _0x1a = "PCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImZyIj4KPGhlYWQ+CiAgICA8bWV0YSBjaGFyc2V0PSJVVEYtOCI+CiAgICA8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMCI+CiAgICA8bWV0YSBuYW1lPSJkZXNjcmlwdGlvbiIgY29udGVudD0iSkpDb29raWVMYWJzIC0gUG9ydGFpbCBwcmluY2lwYWwsIENSU0hTdHVkaW8sIERyYWdvbk5ldCBldCBQaXhlbFBvY2tldC4iPgogICAgPHRpdGxlPkpKQ29va2llTGFicyB8IEFjY3VlaWw8L3RpdGxlPgogICAgPHN0eWxlPgogICAgICAgIDpyb290IHsKICAgICAgICAgICAgLS1iZy1jb2xvcjogIzBmMTExNTsKICAgICAgICAgICAgLS1jYXJkLWJnOiAjMTgxYjIyOwogICAgICAgICAgICAtLXRleHQtY29sb3I6ICNmM2Y0ZjY7CiAgICAgICAgICAgIC0tdGV4dC1tdXRlZDogIzljYTNhZjsKICAgICAgICAgICAgLS1hY2NlbnQ6ICM2MzY2ZjE7CiAgICAgICAgICAgIC0tYWNjZW50LWhvdmVyOiAjNGY0NmU1OwogICAgICAgICAgICAtLWJvcmRlcjogIzJhMmYzZDsKICAgICAgICAgICAgLS1kYW5nZXI6ICNlZjQ0NDQ7CiAgICAgICAgfQogICAgICAgICogeyBib3gtc2l6aW5nOiBib3JkZXItYm94OyBtYXJnaW46IDA7IHBhZGRpbmc6IDA7IH0KICAgICAgICBib2R5IHsKICAgICAgICAgICAgZm9udC1mYW1pbHk6IC1hcHBsZS1zeXN0ZW0sIEJsaW5rTWFjU3lzdGVtRm9udCwgIlNlZ29lIFVJIiwgUm9ib3RvLCBzYW5zLXNlcmlmOwogICAgICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1iZy1jb2xvcik7CiAgICAgICAgICAgIGNvbG9yOiB2YXIoLS10ZXh0LWNvbG9yKTsKICAgICAgICAgICAgbWluLWhlaWdodDogMTAwdmg7CiAgICAgICAgICAgIGRpc3BsYXk6IGZsZXg7CiAgICAgICAgICAgIGZsZXgtZGlyZWN0aW9uOiBjb2x1bW47CiAgICAgICAgfQogICAgICAgIGhlYWRlciB7CiAgICAgICAgICAgIHBhZGRpbmc6IDEuNXJlbSA1JTsKICAgICAgICAgICAgZGlzcGxheTogZmxleDsKICAgICAgICAgICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuOwogICAgICAgICAgICBhbGlnbi1pdGVtczogY2VudGVyOwogICAgICAgICAgICBib3JkZXItYm90dG9tOiAxcHggc29saWQgdmFyKC0tYm9yZGVyKTsKICAgICAgICAgICAgZmxleC13cmFwOiB3cmFwOwogICAgICAgICAgICBnYXA6IDFyaW07CiAgICAgICAgfQogICAgICAgIC5sb2dvIHsgZm9udC1zaXplOiAxLjRyZW07IGZvbnQtd2VpZ2h0OiA4MDA7IGxldHRlci1zcGFjaW5nOiAtMC41cHg7IH0KICAgICAgICBuYXYgeyBkaXNwbGF5OiBmbGV4OyBmbGV4LXdyYXA6IHdyYXA7IGdhcDogMS41cmVtOyB9CiAgICAgICAgbmF2IGEgeyBjb2xvcjogdmFyKC0tdGV4dC1tdXRlZCk7IHRleHQtZGVjb3JhdGlvbjogbm9uZTsgZm9udC13ZWlnaHQ6IDUwMDsgdHJhbnNpdGlvbjogY29sb3IgMC4yczsgY3Vyc29yOiBwb2ludGVyOyB9CiAgICAgICAgbmF2IGE6aG92ZXIgeyBjb2xvcjogdmFyKC0tdGV4dC1jb2xvcik7IH0KICAgICAgICBtYWluIHsKICAgICAgICAgICAgZmxleDogMTsKICAgICAgICAgICAgbWF4LXdpZHRoOiAxMDUwcHg7CiAgICAgICAgICAgIHdpZHRoOiAxMDAlOwogICAgICAgICAgICBtYXJnaW46IDAgYXV0bzsKICAgICAgICAgICAgcGFkZGluZzogNHJlbSAxLjVyZW07CiAgICAgICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjsKICAgICAgICB9CiAgICAgICAgaDEgeyBmb250LXNpemU6IDNyZW07IG1hcmdpbi1ib3R0b206IDFyaW07IGxldHRlci1zcGFjaW5nOiAtMXB4OyB9CiAgICAgICAgLnN1YnRpdGxlIHsgY29sb3I6IHZhcigtLXRleHQtbXV0ZWQpOyBmb250LXNpemU6IDEuMTVyZW07IG1hcmdpbi1ib3R0b206IDMuNXJlbTsgfQogICAgICAgIC5wcm9qZWN0cy1ncmlkIHsKICAgICAgICAgICAgZGlzcGxheTogZ3JpZDsKICAgICAgICAgICAgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOiByZXBlYXQoYXV0by1maXQsIG1pbm1heCgyODBweCwgMWZyKSk7CiAgICAgICAgICAgIGdhcDogMS41cmVtOwogICAgICAgICAgICB0ZXh0LWFsaWduOiBsZWZ0OwogICAgICAgIH0KICAgICAgICAuY2FyZCB7CiAgICAgICAgICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWNhcmQtYmcpOwogICAgICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOwogICAgICAgICAgICBib3JkZXItcmFkaXVzOiAxMnB4OwogICAgICAgICAgICBwYWRkaW5nOiAxLjhyZW07CiAgICAgICAgICAgIHRyYW5zaXRpb246IHRyYW5zZm9ybSAwLjJzLCBib3JkZXItY29sb3IgMC4yczsKICAgICAgICAgICAgZGlzcGxheTogZmxleDsKICAgICAgICAgICAgZmxleC1kaXJlY3Rpb246IGNvbHVtbjsKICAgICAgICAgICAganVzdGlmeS1jb250ZW50OiBzcGFjZS1iZXR3ZWVuOwogICAgICAgIH0KICAgICAgICAuY2FyZDpob3ZlciB7IHRyYW5zZm9ybTogdHJhbnNsYXRlWSgtNHB4KTsgYm9yZGVyLWNvbG9yOiB2YXIoLS1hY2NlbnQpOyB9CiAgICAgICAgLmNhcmQgaDIgeyBmb250LXNpemU6IDEuNHJlbTsgbWFyZ2luLWJvdHRvbTogMC42cmVtOyBkaXNwbGF5OiBmbGV4OyBhbGlnbi1pdGVtczogY2VudGVyOyBqdXN0aWZ5LWNvbnRlbnQ6IHNwYWNlLWJldHdlZW47IH0KICAgICAgICAuYmFkZ2UtbG9jayB7IGZvbnQtc2l6ZTogMC43NXJlbTsgYmFja2dyb3VuZC1jb2xvcjogcmdiYSg5OSwgMTAyLCAyNDEsIDAuMTUpOyBjb2xvcjogdmFyKC0tYWNjZW50KTsgcGFkZGluZzogMC4ycmVtIDAuNnJlbTsgYm9yZGVyLXJhZGl1czogMjBweDsgZm9udC13ZWlnaHQ6IDYwMDsgfQogICAgICAgIC5jYXJkIHAgeyBjb2xvcjogdmFyKC0tdGV4dC1tdXRlZCk7IGZvbnQtc2l6ZTogMC45NXJlbTsgbGluZS1oZWlnaHQ6IDEuNTsgbWFyZ2luLWJvdHRvbTogMS41cmVtOyB9CiAgICAgICAgLmJ0biB7CiAgICAgICAgICAgIGRpc3BsYXk6IGlubGluZS1ibG9jazsKICAgICAgICAgICAgd2lkdGg6IDEwMCU7CiAgICAgICAgICAgIHRleHQtYWxpZ246IGNlbnRlcjsKICAgICAgICAgICAgYmFja2dyb3VuZC1jb2xvcjogdmFyKC0tYWNjZW50KTsKICAgICAgICAgICAgY29sb3I6ICNmZmY7CiAgICAgICAgICAgIHRleHQtZGVjb3JhdGlvbjogbm9uZTsKICAgICAgICAgICAgcGFkZGluZzogMC43NXJlbSAxLjJyZW07CiAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6IDhweDsKICAgICAgICAgICAgYm9yZGVyOiBub25lOwogICAgICAgICAgICBmb250LWZhbWlseTogaW5oZXJpdDsKICAgICAgICAgICAgZm9udC13ZWlnaHQ6IDYwMDsKICAgICAgICAgICAgZm9udC1zaXplOiAwLjk1cmVtOwogICAgICAgICAgICBjdXJzb3I6IHBvaW50ZXI7CiAgICAgICAgICAgIHRyYW5zaXRpb246IGJhY2tncm91bmQtY29sb3IgMC4yczsKICAgICAgICB9CiAgICAgICAgLmJ0bjpob3ZlciB7IGJhY2tncm91bmQtY29sb3I6IHZhcigtLWFjY2VudC1ob3Zlcik7IH0KICAgICAgICAubW9kYWwtb3ZlcmxheSB7CiAgICAgICAgICAgIGRpc3BsYXk6IG5vbmU7CiAgICAgICAgICAgIHBvc2l0aW9uOiBmaXhlZDsKICAgICAgICAgICAgaW5zZXQ6IDA7CiAgICAgICAgICAgIGJhY2tncm91bmQ6IHJnYmEoMCwgMCwgMCwgMC43NSk7CiAgICAgICAgICAgIGJhY2tkcm9wLWZpbHRlcjogYmx1cig0cHgpOwogICAgICAgICAgICBhbGlnbi1pdGVtczogY2VudGVyOwogICAgICAgICAgICBqdXN0aWZ5LWNvbnRlbnQ6IGNlbnRlcjsKICAgICAgICAgICAgei1pbmRleDogMTAwMDsKICAgICAgICAgICAgcGFkZGluZzogMXJlbTsKICAgICAgICB9CiAgICAgICAgLm1vZGFsLW92ZXJsYXkuYWN0aXZlIHsgZGlzcGxheTogZmxleDsgfQogICAgICAgIC5tb2RhbCB7CiAgICAgICAgICAgIGJhY2tncm91bmQtY29sb3I6IHZhcigtLWNhcmQtYmcpOwogICAgICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOwogICAgICAgICAgICBib3JkZXItcmFkaXVzOiAxMnB4OwogICAgICAgICAgICBwYWRkaW5nOiAycmVtOwogICAgICAgICAgICB3aWR0aDogMTAwJTsKICAgICAgICAgICAgbWF4LXdpZHRoOiAzODBweDsKICAgICAgICAgICAgdGV4dC1hbGlnbjogbGVmdDsKICAgICAgICB9CiAgICAgICAgLm1vZGFsIGgzIHsgbWFyZ2luLWJvdHRvbTogMC41cmVtOyBmb250LXNpemU6IDEuM3JlbTsgfQogICAgICAgIC5tb2RhbCBwIHsgY29sb3I6IHZhcigtLXRleHQtbXV0ZWQpOyBmb250LXNpemU6IDAuOXJlbTsgbWFyZ2luLWJvdHRvbTogMS4ycmVtOyB9CiAgICAgICAgLm1vZGFsIGlucHV0IHsKICAgICAgICAgICAgd2lkdGg6IDEwMCU7CiAgICAgICAgICAgIHBhZGRpbmc6IDAuNzVyZW0gMXJlbTsKICAgICAgICAgICAgYm9yZGVyLXJhZGl1czogOHB4OwogICAgICAgICAgICBib3JkZXI6IDFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOwogICAgICAgICAgICBiYWNrZ3JvdW5kLWNvbG9yOiB2YXIoLS1iZy1jb2xvcik7CiAgICAgICAgICAgIGNvbG9yOiB2YXIoLS10ZXh0LWNvbG9yKTsKICAgICAgICAgICAgZm9udC1zaXplOiAxcmVtOwogICAgICAgICAgICBtYXJnaW4tYm90dG9tOiAwLjc1cmVtOwogICAgICAgICAgICBvdXRsaW5lOiBub25lOwogICAgICAgIH0KICAgICAgICAubW9kYWwgaW5wdXQ6Zm9jdXMgeyBib3JkZXItY29sb3I6IHZhcigtLWFjY2VudCk7IH0KICAgICAgICAuZXJyb3ItbXNnIHsgY29sb3I6IHZhcigtLWRhbmdlcik7IGZvbnQtc2l6ZTogMC44NXJlbTsgbWFyZ2luLWJvdHRvbTogMXJlbTsgZGlzcGxheTogbm9uZTsgfQogICAgICAgIC5tb2RhbC1hY3Rpb25zIHsgZGlzcGxheTogZmxleDsgZ2FwOiAwLjc1cmVtOyB9CiAgICAgICAgLmJ0bi1zZWNvbmRhcnkgeyBiYWNrZ3JvdW5kLWNvbG9yOiB0cmFuc3BhcmVudDsgYm9yZGVyOiAxcHggc29saWQgdmFyKC0tYm9yZGVyKTsgY29sb3I6IHZhcigtLXRleHQtbXV0ZWQpOyB9CiAgICAgICAgLmJ0bi1zZWNvbmRhcnk6aG92ZXIgeyBiYWNrZ3JvdW5kLWNvbG9yOiByZ2JhKDI1NSwgMjU1LCAyNTUsIDAuMDUpOyBjb2xvcjogdmFyKC0tdGV4dC1jb2xvcik7IH0KICAgICAgICBmb290ZXIgeyB0ZXh0LWFsaWduOiBjZW50ZXI7IHBhZGRpbmc6IDEuNXJlbTsgY29sb3I6IHZhcigtLXRleHQtbXV0ZWQpOyBmb250LXNpemU6IDAuODVyZW07IGJvcmRlci10b3A6IDFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyB9CiAgICA8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5PgogICAgPGhlYWRlcj4KICAgICAgICA8ZGl2IGNsYXNzPSJsb2dvIj5KSkNvb2tpZUxhYnM8L2Rpdj4KICAgICAgICA8bmF2PgogICAgICAgICAgICA8YSBocmVmPSIuL2luZGV4Lmh0bWwiPkFjY3VlaWw8L2E+CiAgICAgICAgICAgIDxhIGhyZWY9IiMiIGlkPSJuYXZDb2RlIj5DUlNIU3R1ZGlvPC9hPgogICAgICAgICAgICA8YSBocmVmPSIuL0RyYWdvbk5ldC9pbmRleC5odG1sIj5EcmFnb25OZXQ8L2E+CiAgICAgICAgICAgIDxhIGhyZWY9Ii4vUGl4ZWxQb2NrZXQvaW5kZXguaHRtbCI+UGl4ZWxQb2NrZXQ8L2E+CiAgICAgICAgPC9uYXY+CiAgICA8L2hlYWRlcj4KICAgIDxtYWluPgogICAgICAgIDxoMT5XZWxjb21lIHRvIEpKQ29va2llTGFiczwvaDE+CiAgICAgICAgPHAgY2xhc3M9InN1YnRpdGxlIj5Fc3BhY2UgY2VudHJhbCBldCBsYWJvcmF0b2lyZSBkZSBwcm9qZXRzIG51bcOpcmlxdWVzLjwvcD4KICAgICAgICA8ZGl2IGNsYXNzPSJwcm9qZWN0cy1ncmlkIj4KICAgICAgICAgICAgPGFydGljbGUgY2xhc3M9ImNhcmQiPgogICAgICAgICAgICAgICAgPGRpdj4KICAgICAgICAgICAgICAgICAgICA8aDI+Q1JTSFN0dWRpbyA8c3BhbiBjbGFzcz0iYmFkZ2UtbG9jayI+8J+UkiBQcm90w6lnw6k8L3NwYW4+PC9oMj4KICAgICAgICAgICAgICAgICAgICA8cD5BY2PDqWRleiDDoCBsJ2VzcGFjZSBkw6lkacOpIGF1IHByb2pldCBDUlNIU3R1ZGlvLCBub3MgY3LDqWF0aW9ucyBldCBvdXRpbHMuPC9wPgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICA8YnV0dG9uIHR5cGU9ImJ1dHRvbiIgY2xhc3M9ImJ0biIgaWQ9ImJ0bkNvZGUiPk91dnJpciBDUlNIU3R1ZGlvICZyYXJyOzwvYnV0dG9uPgogICAgICAgICAgICA8L2FydGljbGU+CiAgICAgICAgICAgIDxhcnRpY2xlIGNsYXNzPSJjYXJkIj4KICAgICAgICAgICAgICAgIDxkaXY+CiAgICAgICAgICAgICAgICAgICAgPGgyPkRyYWdvbk5ldDwvaDI+CiAgICAgICAgICAgICAgICAgICAgPHA+QWNjw6lkZXogw6AgbGEgcGxhdGVmb3JtZSBldCBhdXggcmVzc291cmNlcyBkdSBwcm9qZXQgRHJhZ29uTmV0LjwvcD4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgPGEgaHJlZj0iLi9EcmFnb25OZXQvaW5kZXguaHRtbCIgY2xhc3M9ImJ0biI+T3V2cmlyIERyYWdvbk5ldCAmcmFycjs8L2E+CiAgICAgICAgICAgIDwvYXJ0aWNsZT4KICAgICAgICAgICAgPGFydGljbGUgY2xhc3M9ImNhcmQiPgogICAgICAgICAgICAgICAgPGRpdj4KICAgICAgICAgICAgICAgICAgICA8aDI+UGl4ZWxQb2NrZXQ8L2gyPgogICAgICAgICAgICAgICAgICAgIDxwPkTDqWNvdXZyZXogbCd1bml2ZXJzIGV0IGxlcyBmb25jdGlvbm5hbGl0w6lzIGR1IHByb2pldCBQaXhlbFBvY2tldC48L3A+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgIDxhIGhyZWY9Ii4vUGl4ZWxQb2NrZXQvaW5kZXguaHRtbCIgY2xhc3M9ImJ0biI+T3V2cmlyIFBpeGVsUG9ja2V0ICZyYXJyOzwvYT4KICAgICAgICAgICAgPC9hcnRpY2xlPgogICAgICAgIDwvZGl2PgogICAgPC9tYWluPgogICAgPGRpdiBjbGFzcz0ibW9kYWwtb3ZlcmxheSIgaWQ9InBhc3N3b3JkTW9kYWwiPgogICAgICAgIDxkaXYgY2xhc3M9Im1vZGFsIj4KICAgICAgICAgICAgPGgzPkFjY8OocyByZXN0cmVpbnQ8L2gzPgogICAgICAgICAgICA8cD5WZXVpbGxleiBzYWlzaXIgbGUgbW90IGRlIHBhc3NlIHBvdXIgYWNjw6lkZXIgw6AgPHN0cm9uZz5DUlNIU3R1ZGlvPC9zdHJvbmc+LjwvcD4KICAgICAgICAgICAgPGZvcm0gaWQ9InB3ZEZvcm0iPgogICAgICAgICAgICAgICAgPGlucHV0IHR5cGU9InBhc3N3b3JkIiBpZD0icGFzc3dvcmRJbnB1dCIgcGxhY2Vob2xkZXI9Ik1vdCBkZSBwYXNzZSIgYXV0b2NvbXBsZXRlPSJvZmYiIHJlcXVpcmVkPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iZXJyb3ItbXNnIiBpZD0iZXJyb3JNc2ciPk1vdCBkZSBwYXNzZSBpbmNvcnJlY3QuPC9kaXY+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJtb2RhbC1hY3Rpb25zIj4KICAgICAgICAgICAgICAgICAgICA8YnV0dG9uIHR5cGU9ImJ1dHRvbiIgY2xhc3M9ImJ0biBidG4tc2Vjb25kYXJ5IiBpZD0iY2FuY2VsQnRuIj5Bbm51bGVyPC9idXR0b24+CiAgICAgICAgICAgICAgICAgICAgPGJ1dHRvbiB0eXBlPSJzdWJtaXQiIGNsYXNzPSJidG4iPlZhbGlkZXI8L2J1dHRvbj4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8L2Zvcm0+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KICAgIDxmb290ZXI+JmNvcHk7IDIwMjYgSkpDb29raWVMYWJzLiBUb3VzIGRyb2l0cyByw6lzZXJ2w6lzLjwvZm9vdGVyPgo8L2JvZHk+CjwvaHRtbD4=";
 
-    <header>
-        <div class="logo">JJCookieLabs</div>
-        <nav>
-            <a href="./index.html">Accueil</a>
-            <a href="./4f5da2/index.html" onclick="openPasswordModal(event)">CRSHStudio</a>
-            <a href="./DragonNet/index.html">DragonNet</a>
-            <a href="./PixelPocket/index.html">PixelPocket</a>
-        </nav>
-    </header>
+    const _0x2b = new TextDecoder().decode(Uint8Array.from(atob(_0x1a), c => c.charCodeAt(0)));
+    document.open();
+    document.write(_0x2b);
+    document.close();
 
-    <main>
-        <h1>Welcome to JJCookieLabs</h1>
-        <p class="subtitle">Espace central et laboratoire de projets numériques.</p>
+    const _0x3c = "1a06bc9a07b1111e044162c8d3eb660d814fa796dc2cc38184569e5d171c3e26";
+    const _0x4d = [24, 30, 4, 83, 10, 82, 83, 7, 29, 88, 95, 85, 84, 24, 92, 90, 91, 90];
 
-        <div class="projects-grid">
-            <article class="card">
-                <div>
-                    <h2>CRSHStudio <span class="badge-lock">🔒 Protégé</span></h2>
-                    <p>Accédez à l'espace dédié au projet CRSHStudio, nos créations et outils.</p>
-                </div>
-                <button type="button" class="btn" onclick="openPasswordModal(event)">Ouvrir CRSHStudio &rarr;</button>
-            </article>
+    const m = document.getElementById('passwordModal');
+    const pIn = document.getElementById('passwordInput');
+    const err = document.getElementById('errorMsg');
 
-            <article class="card">
-                <div>
-                    <h2>DragonNet</h2>
-                    <p>Accédez à la plateforme et aux ressources du projet DragonNet.</p>
-                </div>
-                <a href="./DragonNet/index.html" class="btn">Ouvrir DragonNet &rarr;</a>
-            </article>
+    function openM(e) {
+        e.preventDefault();
+        pIn.value = '';
+        err.style.display = 'none';
+        m.classList.add('active');
+        setTimeout(() => pIn.focus(), 50);
+    }
 
-            <article class="card">
-                <div>
-                    <h2>PixelPocket</h2>
-                    <p>Découvrez l'univers et les fonctionnalités du projet PixelPocket.</p>
-                </div>
-                <a href="./PixelPocket/index.html" class="btn">Ouvrir PixelPocket &rarr;</a>
-            </article>
-        </div>
-    </main>
+    function closeM() {
+        m.classList.remove('active');
+    }
 
-    <!-- Fenêtre modale de vérification -->
-    <div class="modal-overlay" id="passwordModal" onclick="closeOnOutsideClick(event)">
-        <div class="modal">
-            <h3>Accès restreint</h3>
-            <p>Veuillez saisir le mot de passe pour accéder à <strong>CRSHStudio</strong>.</p>
-            <form onsubmit="verifyPassword(event)">
-                <input type="password" id="passwordInput" placeholder="Mot de passe" autocomplete="off" required>
-                <div class="error-msg" id="errorMsg">Mot de passe incorrect.</div>
-                <div class="modal-actions">
-                    <button type="button" class="btn btn-secondary" onclick="closePasswordModal()">Annuler</button>
-                    <button type="submit" class="btn">Valider</button>
-                </div>
-            </form>
-        </div>
-    </div>
+    document.getElementById('navCode').addEventListener('click', openM);
+    document.getElementById('btnCode').addEventListener('click', openM);
+    document.getElementById('cancelBtn').addEventListener('click', closeM);
+    m.addEventListener('click', (e) => { if (e.target === m) closeM(); });
+    document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && m.classList.contains('active')) closeM(); });
 
-    <footer>
-        &copy; 2026 JJCookieLabs. Tous droits réservés.
-    </footer>
+    async function sha256(str) {
+        const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
+        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+    }
 
-    <script>
-        const modal = document.getElementById('passwordModal');
-        const passwordInput = document.getElementById('passwordInput');
-        const errorMsg = document.getElementById('errorMsg');
-
-        function openPasswordModal(event) {
-            event.preventDefault();
-            passwordInput.value = '';
-            errorMsg.style.display = 'none';
-            modal.classList.add('active');
-            setTimeout(() => passwordInput.focus(), 50);
-        }
-
-        function closePasswordModal() {
-            modal.classList.remove('active');
-        }
-
-        function closeOnOutsideClick(event) {
-            if (event.target === modal) {
-                closePasswordModal();
+    document.getElementById('pwdForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        const val = pIn.value;
+        const hash = await sha256(val);
+        if (hash === _0x3c) {
+            let dest = '';
+            for (let i = 0; i < _0x4d.length; i++) {
+                dest += String.fromCharCode(_0x4d[i] ^ val.charCodeAt(i % val.length));
             }
+            window.location.href = dest;
+        } else {
+            err.style.display = 'block';
+            pIn.value = '';
+            pIn.focus();
         }
-
-        function verifyPassword(event) {
-            event.preventDefault();
-            if (passwordInput.value === '6105072526') {
-                window.location.href = './4f5da2/index.html';
-            } else {
-                errorMsg.style.display = 'block';
-                passwordInput.value = '';
-                passwordInput.focus();
-            }
-        }
-
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape' && modal.classList.contains('active')) {
-                closePasswordModal();
-            }
-        });
-    </script>
-
+    });
+})();
+</script>
 </body>
 </html>
