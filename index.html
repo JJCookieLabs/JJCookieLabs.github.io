@@ -1,464 +1,98 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1.0">
-
-<title>JJCookieLabs | Applications et outils web</title>
-
-<meta name="description" content="Découvrez JJCookieLabs : des applications web et outils gratuits, notamment CRSH Studio, DragonNet et PixelPocket.">
+<meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio, DragonNet, PixelPocket et Lobbix.">
 <meta name="robots" content="index, follow">
-<meta name="google-site-verification" content="_7u9gxxYEgV5g1YEVNdDvF92qptoYifm0LO3arvvCwo">
-
-<link rel="canonical" href="https://jjcookielabs.github.io/">
-
+<title>JJCookieLabs | Accueil</title>
 <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23181b22'/%3E%3Ccircle cx='32' cy='32' r='21' fill='%23d97706'/%3E%3Ccircle cx='25' cy='25' r='3' fill='%23451a03'/%3E%3Ccircle cx='38' cy='23' r='2.5' fill='%23451a03'/%3E%3Ccircle cx='23' cy='37' r='2.5' fill='%23451a03'/%3E%3Ccircle cx='35' cy='36' r='3.5' fill='%23451a03'/%3E%3Ccircle cx='42' cy='31' r='2' fill='%23451a03'/%3E%3C/svg%3E">
-
-<style>
-:root {
-    --bg:#0f1115;
-    --card:#181b22;
-    --txt:#f3f4f6;
-    --mut:#9ca3af;
-    --acc:#6366f1;
-    --hov:#4f46e5;
-    --brd:#2a2f3d;
-    --err:#ef4444;
-}
-
-* {
-    box-sizing:border-box;
-    margin:0;
-    padding:0;
-}
-
-body {
-    font-family:-apple-system,BlinkMacSystemFont,
-        "Segoe UI",Roboto,sans-serif;
-    background:var(--bg);
-    color:var(--txt);
-    min-height:100vh;
-    display:flex;
-    flex-direction:column;
-}
-
-header {
-    padding:1.5rem 5%;
-    display:flex;
-    justify-content:space-between;
-    align-items:center;
-    border-bottom:1px solid var(--brd);
-    flex-wrap:wrap;
-    gap:1rem;
-}
-
-.logo {
-    font-size:1.4rem;
-    font-weight:800;
-    letter-spacing:-.5px;
-}
-
-nav {
-    display:flex;
-    flex-wrap:wrap;
-    gap:1.5rem;
-}
-
-nav a {
-    color:var(--mut);
-    text-decoration:none;
-    font-weight:500;
-    transition:color .2s;
-    cursor:pointer;
-}
-
-nav a:hover {
-    color:var(--txt);
-}
-
-main {
-    flex:1;
-    max-width:1050px;
-    width:100%;
-    margin:0 auto;
-    padding:4rem 1.5rem;
-    text-align:center;
-}
-
-h1 {
-    font-size:3rem;
-    margin-bottom:1rem;
-    letter-spacing:-1px;
-}
-
-.sub {
-    color:var(--mut);
-    font-size:1.15rem;
-    margin-bottom:3.5rem;
-}
-
-.grid {
-    display:grid;
-    grid-template-columns:
-        repeat(auto-fit,minmax(280px,1fr));
-    gap:1.5rem;
-    text-align:left;
-}
-
-.card {
-    background:var(--card);
-    border:1px solid var(--brd);
-    border-radius:12px;
-    padding:1.8rem;
-    transition:transform .2s,border-color .2s;
-    display:flex;
-    flex-direction:column;
-    justify-content:space-between;
-}
-
-.card:hover {
-    transform:translateY(-4px);
-    border-color:var(--acc);
-}
-
-.card h2 {
-    font-size:1.4rem;
-    margin-bottom:.6rem;
-    display:flex;
-    align-items:center;
-    justify-content:space-between;
-}
-
-.lock {
-    font-size:.75rem;
-    background:rgba(99,102,241,.15);
-    color:var(--acc);
-    padding:.2rem .6rem;
-    border-radius:20px;
-    font-weight:600;
-}
-
-.card p {
-    color:var(--mut);
-    font-size:.95rem;
-    line-height:1.5;
-    margin-bottom:1.5rem;
-}
-
-.btn {
-    display:inline-block;
-    width:100%;
-    text-align:center;
-    background:var(--acc);
-    color:#fff;
-    text-decoration:none;
-    padding:.75rem 1.2rem;
-    border-radius:8px;
-    border:none;
-    font-family:inherit;
-    font-weight:600;
-    font-size:.95rem;
-    cursor:pointer;
-    transition:background-color .2s;
-}
-
-.btn:hover {
-    background:var(--hov);
-}
-
-.ov {
-    display:none;
-    position:fixed;
-    inset:0;
-    background:rgba(0,0,0,.75);
-    backdrop-filter:blur(4px);
-    align-items:center;
-    justify-content:center;
-    z-index:1000;
-    padding:1rem;
-}
-
-.ov.on {
-    display:flex;
-}
-
-.mod {
-    background:var(--card);
-    border:1px solid var(--brd);
-    border-radius:12px;
-    padding:2rem;
-    width:100%;
-    max-width:380px;
-    text-align:left;
-}
-
-.mod h3 {
-    margin-bottom:.5rem;
-    font-size:1.3rem;
-}
-
-.mod p {
-    color:var(--mut);
-    font-size:.9rem;
-    margin-bottom:1.2rem;
-}
-
-.mod input {
-    width:100%;
-    padding:.75rem 1rem;
-    border-radius:8px;
-    border:1px solid var(--brd);
-    background:var(--bg);
-    color:var(--txt);
-    font-size:1rem;
-    margin-bottom:.75rem;
-    outline:none;
-}
-
-.mod input:focus {
-    border-color:var(--acc);
-}
-
-.err {
-    color:var(--err);
-    font-size:.85rem;
-    margin-bottom:1rem;
-    display:none;
-}
-
-.act {
-    display:flex;
-    gap:.75rem;
-}
-
-.sec {
-    background:transparent;
-    border:1px solid var(--brd);
-    color:var(--mut);
-}
-
-.sec:hover {
-    background:rgba(255,255,255,.05);
-    color:var(--txt);
-}
-
-footer {
-    text-align:center;
-    padding:1.5rem;
-    color:var(--mut);
-    font-size:.85rem;
-    border-top:1px solid var(--brd);
-}
-
-@media(max-width:600px) {
-    h1 {
-        font-size:2.2rem;
-    }
-
-    main {
-        padding:3rem 1rem;
-    }
-}
-</style>
 </head>
-
 <body>
-
-<header>
-    <div class="logo">JJCookieLabs</div>
-
-    <nav aria-label="Navigation principale">
-        <a href="./index.html">Accueil</a>
-        <a href="#" id="_n1">CRSHStudio</a>
-        <a href="./DragonNet/index.html">DragonNet</a>
-        <a href="./PixelPocket/index.html">PixelPocket</a>
-    </nav>
-</header>
-
-<main>
-    <h1>Welcome to JJCookieLabs</h1>
-
-    <p class="sub">
-        Espace central et laboratoire de projets numériques.
-    </p>
-
-    <div class="grid">
-
-        <article class="card">
-            <div>
-                <h2>
-                    CRSHStudio
-                    <span class="lock">&#128274; Protégé</span>
-                </h2>
-
-                <p>
-                    Accédez à l'espace dédié au projet
-                    CRSHStudio, nos créations et outils.
-                </p>
-            </div>
-
-            <button type="button" class="btn" id="_b1">
-                Ouvrir CRSHStudio &rarr;
-            </button>
-        </article>
-
-        <article class="card">
-            <div>
-                <h2>DragonNet</h2>
-
-                <p>
-                    Accédez à la plateforme et aux ressources
-                    du projet DragonNet.
-                </p>
-            </div>
-
-            <a href="./DragonNet/index.html" class="btn">
-                Ouvrir DragonNet &rarr;
-            </a>
-        </article>
-
-        <article class="card">
-            <div>
-                <h2>PixelPocket</h2>
-
-                <p>
-                    Découvrez l'univers et les fonctionnalités
-                    du projet PixelPocket.
-                </p>
-            </div>
-
-            <a href="./PixelPocket/index.html" class="btn">
-                Ouvrir PixelPocket &rarr;
-            </a>
-        </article>
-
-    </div>
-</main>
-
-<div class="ov" id="_m">
-    <div class="mod" role="dialog" aria-modal="true" aria-labelledby="_mt">
-
-        <h3 id="_mt">Accès restreint</h3>
-
-        <p>
-            Veuillez saisir le mot de passe pour accéder à
-            <strong>CRSHStudio</strong>.
-        </p>
-
-        <form id="_f">
-
-            <input
-                type="password"
-                id="_i"
-                placeholder="Mot de passe"
-                aria-label="Mot de passe"
-                autocomplete="off"
-                required
-            >
-
-            <div class="err" id="_e">
-                Mot de passe incorrect.
-            </div>
-
-            <div class="act">
-                <button type="button" class="btn sec" id="_c">
-                    Annuler
-                </button>
-
-                <button type="submit" class="btn">
-                    Valider
-                </button>
-            </div>
-
-        </form>
-    </div>
-</div>
-
-<footer>
-    &copy; 2026 JJCookieLabs. Tous droits réservés.
-</footer>
-
 <script>
-(function() {
-    const _k = [
-        24,30,4,83,5,83,83,7,29,95,
-        88,85,85,77,30,95,70,88,94
-    ];
-
-    const _v = 426674042;
-
-    const _h = s => {
-        let r = 0;
-
-        for (let i = 0; i < s.length; i++) {
-            r = (r * 131 + s.charCodeAt(i)) % 1000000007;
-        }
-
-        return r;
-    };
-
-    const m = document.getElementById('_m');
-    const p = document.getElementById('_i');
-    const e = document.getElementById('_e');
-
-    const o = ev => {
-        ev.preventDefault();
-
-        p.value = '';
-        e.style.display = 'none';
-        m.classList.add('on');
-
-        setTimeout(() => p.focus(), 50);
-    };
-
-    const c = () => {
-        m.classList.remove('on');
-    };
-
-    document.getElementById('_n1')
-        .addEventListener('click', o);
-
-    document.getElementById('_b1')
-        .addEventListener('click', o);
-
-    document.getElementById('_c')
-        .addEventListener('click', c);
-
-    m.addEventListener('click', ev => {
-        if (ev.target === m) c();
-    });
-
-    document.addEventListener('keydown', ev => {
-        if (ev.key === 'Escape' && m.classList.contains('on')) {
-            c();
-        }
-    });
-
-    document.getElementById('_f')
-        .addEventListener('submit', ev => {
-            ev.preventDefault();
-
-            const w = p.value.trim();
-
-            if (_h(w) === _v) {
-                let d = '';
-
-                for (let i = 0; i < _k.length; i++) {
-                    d += String.fromCharCode(
-                        _k[i] ^ w.charCodeAt(i % w.length)
-                    );
-                }
-
-                window.location.href = d;
-            } else {
-                e.style.display = 'block';
-                p.value = '';
-                p.focus();
-            }
-        });
+(function(){
+  const _k = [24,30,4,83,5,83,83,7,29,95,88,85,85,77,30,95,70,88,94];
+  const _v = 426674042;
+  const _h = s => {
+    let r = 0;
+    for (let i = 0; i < s.length; i++) r = (r * 131 + s.charCodeAt(i)) % 1000000007;
+    return r;
+  };
+  const _u = [
+    '<style>',
+    ':root{--bg:#0f1115;--card:#181b22;--txt:#f3f4f6;--mut:#9ca3af;--acc:#6366f1;--hov:#4f46e5;--brd:#2a2f3d;--err:#ef4444}',
+    '*{box-sizing:border-box;margin:0;padding:0}',
+    'body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif;background:var(--bg);color:var(--txt);min-height:100vh;display:flex;flex-direction:column}',
+    'header{padding:1.5rem 5%;display:flex;justify-content:space-between;align-items:center;border-bottom:1px solid var(--brd);flex-wrap:wrap;gap:1rem}',
+    '.logo{font-size:1.4rem;font-weight:800;letter-spacing:-.5px}',
+    'nav{display:flex;flex-wrap:wrap;gap:1.5rem}',
+    'nav a{color:var(--mut);text-decoration:none;font-weight:500;transition:color .2s;cursor:pointer}',
+    'nav a:hover{color:var(--txt)}',
+    'main{flex:1;max-width:1050px;width:100%;margin:0 auto;padding:4rem 1.5rem;text-align:center}',
+    'h1{font-size:3rem;margin-bottom:1rem;letter-spacing:-1px}',
+    '.sub{color:var(--mut);font-size:1.15rem;margin-bottom:3.5rem}',
+    '.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:1.5rem;text-align:left}',
+    '.card{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:1.8rem;transition:transform .2s,border-color .2s;display:flex;flex-direction:column;justify-content:space-between}',
+    '.card:hover{transform:translateY(-4px);border-color:var(--acc)}',
+    '.card h2{font-size:1.4rem;margin-bottom:.6rem;display:flex;align-items:center;justify-content:space-between}',
+    '.lock{font-size:.75rem;background:rgba(99,102,241,.15);color:var(--acc);padding:.2rem .6rem;border-radius:20px;font-weight:600}',
+    '.card p{color:var(--mut);font-size:.95rem;line-height:1.5;margin-bottom:1.5rem}',
+    '.btn{display:inline-block;width:100%;text-align:center;background:var(--acc);color:#fff;text-decoration:none;padding:.75rem 1.2rem;border-radius:8px;border:none;font-family:inherit;font-weight:600;font-size:.95rem;cursor:pointer;transition:background-color .2s}',
+    '.btn:hover{background:var(--hov)}',
+    '.ov{display:none;position:fixed;inset:0;background:rgba(0,0,0,.75);backdrop-filter:blur(4px);align-items:center;justify-content:center;z-index:1000;padding:1rem}',
+    '.ov.on{display:flex}',
+    '.mod{background:var(--card);border:1px solid var(--brd);border-radius:12px;padding:2rem;width:100%;max-width:380px;text-align:left}',
+    '.mod h3{margin-bottom:.5rem;font-size:1.3rem}',
+    '.mod p{color:var(--mut);font-size:.9rem;margin-bottom:1.2rem}',
+    '.mod input{width:100%;padding:.75rem 1rem;border-radius:8px;border:1px solid var(--brd);background:var(--bg);color:var(--txt);font-size:1rem;margin-bottom:.75rem;outline:none}',
+    '.mod input:focus{border-color:var(--acc)}',
+    '.err{color:var(--err);font-size:.85rem;margin-bottom:1rem;display:none}',
+    '.act{display:flex;gap:.75rem}',
+    '.sec{background:transparent;border:1px solid var(--brd);color:var(--mut)}',
+    '.sec:hover{background:rgba(255,255,255,.05);color:var(--txt)}',
+    'footer{text-align:center;padding:1.5rem;color:var(--mut);font-size:.85rem;border-top:1px solid var(--brd)}',
+    '</style>',
+    '<header><div class="logo">JJCookieLabs</div><nav>',
+    '<a href="./index.html">Accueil</a>',
+    '<a href="#" id="_n1">CRSHStudio</a>',
+    '<a href="./DragonNet/index.html">DragonNet</a>',
+    '<a href="./PixelPocket/index.html">PixelPocket</a>',
+    '<a href="./Lobbix/index.html">Lobbix</a>',
+    '</nav></header>',
+    '<main><h1>Welcome to JJCookieLabs</h1><p class="sub">Espace central et laboratoire de projets numériques.</p><div class="grid">',
+    '<article class="card"><div><h2>CRSHStudio <span class="lock">&#128274; Protégé</span></h2><p>Accédez à l\'espace dédié au projet CRSHStudio, nos créations et outils.</p></div><button type="button" class="btn" id="_b1">Ouvrir CRSHStudio &rarr;</button></article>',
+    '<article class="card"><div><h2>DragonNet</h2><p>Accédez à la plateforme et aux ressources du projet DragonNet.</p></div><a href="./DragonNet/index.html" class="btn">Ouvrir DragonNet &rarr;</a></article>',
+    '<article class="card"><div><h2>PixelPocket</h2><p>Découvrez l\'univers et les fonctionnalités du projet PixelPocket.</p></div><a href="./PixelPocket/index.html" class="btn">Ouvrir PixelPocket &rarr;</a></article>',
+    '<article class="card"><div><h2>Lobbix</h2><p>Accédez à l\'espace et aux fonctionnalités du projet Lobbix.</p></div><a href="./Lobbix/index.html" class="btn">Ouvrir Lobbix &rarr;</a></article>',
+    '</div></main>',
+    '<div class="ov" id="_m"><div class="mod"><h3>Accès restreint</h3><p>Veuillez saisir le mot de passe pour accéder à <strong>CRSHStudio</strong>.</p>',
+    '<form id="_f"><input type="password" id="_i" placeholder="Mot de passe" autocomplete="off" required><div class="err" id="_e">Mot de passe incorrect.</div><div class="act"><button type="button" class="btn sec" id="_c">Annuler</button><button type="submit" class="btn">Valider</button></div></form>',
+    '</div></div>',
+    '<footer>&copy; 2026 JJCookieLabs. Tous droits réservés.</footer>'
+  ].join('');
+  document.body.innerHTML = _u;
+  const m = document.getElementById('_m'), p = document.getElementById('_i'), e = document.getElementById('_e');
+  const o = ev => { ev.preventDefault(); p.value = ''; e.style.display = 'none'; m.classList.add('on'); setTimeout(() => p.focus(), 50); };
+  const c = () => m.classList.remove('on');
+  document.getElementById('_n1').addEventListener('click', o);
+  document.getElementById('_b1').addEventListener('click', o);
+  document.getElementById('_c').addEventListener('click', c);
+  m.addEventListener('click', ev => { if (ev.target === m) c(); });
+  document.addEventListener('keydown', ev => { if (ev.key === 'Escape' && m.classList.contains('on')) c(); });
+  document.getElementById('_f').addEventListener('submit', ev => {
+    ev.preventDefault();
+    const w = p.value.trim();
+    if (_h(w) === _v) {
+      let d = '';
+      for (let i = 0; i < _k.length; i++) d += String.fromCharCode(_k[i] ^ w.charCodeAt(i % w.length));
+      window.location.href = d;
+    } else {
+      e.style.display = 'block';
+      p.value = '';
+      p.focus();
+    }
+  });
 })();
 </script>
-
 </body>
 </html>
