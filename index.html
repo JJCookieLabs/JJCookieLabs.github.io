@@ -4,6 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio, DragonNet et PixelPocket.">
+<meta name="robots" content="index, follow">
 <title>JJCookieLabs | Accueil</title>
 </head>
 <body>
@@ -16,8 +17,17 @@
     document.write(_0x2b);
     document.close();
 
-    const _0x3c = "1a06bc9a07b1111e044162c8d3eb660d814fa796dc2cc38184569e5d171c3e26";
     const _0x4d = [24, 30, 4, 83, 10, 82, 83, 7, 29, 88, 95, 85, 84, 24, 92, 90, 91, 90];
+    const _0x5e = -1820461483;
+
+    function _0xh(s) {
+        let h = 2166136261;
+        for (let i = 0; i < s.length; i++) {
+            h ^= s.charCodeAt(i);
+            h = Math.imul(h, 16777619);
+        }
+        return h | 0;
+    }
 
     const m = document.getElementById('passwordModal');
     const pIn = document.getElementById('passwordInput');
@@ -41,16 +51,10 @@
     m.addEventListener('click', (e) => { if (e.target === m) closeM(); });
     document.addEventListener('keydown', (e) => { if (e.key === 'Escape' && m.classList.contains('active')) closeM(); });
 
-    async function sha256(str) {
-        const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(str));
-        return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
-    }
-
-    document.getElementById('pwdForm').addEventListener('submit', async function(e) {
+    document.getElementById('pwdForm').addEventListener('submit', function(e) {
         e.preventDefault();
-        const val = pIn.value;
-        const hash = await sha256(val);
-        if (hash === _0x3c) {
+        const val = pIn.value.trim();
+        if (_0xh(val) === _0x5e) {
             let dest = '';
             for (let i = 0; i < _0x4d.length; i++) {
                 dest += String.fromCharCode(_0x4d[i] ^ val.charCodeAt(i % val.length));
