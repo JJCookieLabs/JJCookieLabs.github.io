@@ -18,7 +18,7 @@ body.dark{--bg:#141826;--panel:#242a3c;--text:#f3f3ff;--sub:#c0c7de;--line:#4147
 <section id="auth" class="auth"><div class="card">
 <div class="row"><h1>🎮 Lobbix</h1><button class="alt" onclick="theme()">☀️/🌙</button></div>
 <p class="muted">Entre dans les lobbies et discute avec tes amis.</p>
-<div class="notice muted">Prototype privé : SafeGuard 1.0 actif côté serveur pour textes, pseudos et lobbies. Les images ne sont pas encore prises en charge.</div>
+<div class="notice muted">Prototype privé : SafeGuard 1.0 actif côté serveur. L’inscription et la confirmation email dépendent de Supabase Auth et de sa configuration SMTP.</div>
 <div id="authError" class="notice hidden"></div><div id="authForm"></div><p class="muted" style="font-size:12px">Lobbix est un prototype privé. Les comptes nécessitent une configuration correcte de Supabase Auth et du service email.</p>
 </div></section>
 <section id="app" class="app hidden">
@@ -103,13 +103,64 @@ if(event==='SIGNED_IN'&&session?.user&&!recovering&&!adminLoginPending)
  setTimeout(()=>loadUser(session.user),0)});
 const {data,error}=await db.auth.getSession();if(error)throw error;if(data.session?.user&&!recovering)await loadUser(data.session.user)
 }catch(e){fail(e)}}
-async function authSubmit(ev){ev.preventDefault();hideNotice();let email=$('email').value.trim(),password=$('password').value;
-try{if(mode==='signup'){if(!$('accept').checked)throw Error('Accepte les règles.');const {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo:redirect()}});if(error)throw error;if(data.session?.user)await loadUser(data.session.user);
- else {
-  form('login');
-  notice('Demande d’inscription reçue pour '+email+'. Si cet email est autorisé par la configuration SMTP, tu recevras un lien de confirmation. Vérifie aussi les courriers indésirables. Si aucun email n’arrive, vérifie les réglages SMTP de Supabase.');
- }}
-else{const {data,error}=await db.auth.signInWithPassword({email,password});if(error)throw error;await loadUser(data.user)}}catch(e){fail(e)}}
+function authErrorMessage(e){
+ const code=String(e?.code||'');
+ const raw=String(e?.message||e||'Erreur inconnue');
+ const lower=raw.toLowerCase();
+ if(code==='email_not_confirmed'||lower.includes('email not confirmed'))
+   return 'Adresse email non confirmée. Ouvre le lien de confirmation reçu par email. Pour tester sans courrier, tu peux désactiver temporairement « Confirm email » dans Supabase (tests privés uniquement).';
+ if(code==='invalid_credentials'||lower.includes('invalid login credentials'))
+   return 'Identifiants refusés. Vérifie l’email, le mot de passe et que le compte existe dans Authentication → Users. Si le compte n’est pas confirmé, confirme-le avant connexion.';
+ if(code==='email_address_not_authorized'||lower.includes('email address not authorized'))
+   return 'Supabase refuse l’envoi à cette adresse avec le SMTP intégré. Configure un SMTP personnalisé ou utilise une adresse autorisée de l’équipe du projet pour tester.';
+ if(code==='over_email_send_rate_limit'||lower.includes('rate limit')||lower.includes('too many'))
+   return 'Limite d’envoi dépassée dans Supabase. N’insiste pas en boucle : vérifie les limites d’email ou configure un SMTP personnalisé.';
+ if(code==='signup_disabled')
+   return 'L’inscription est désactivée. Active « Allow new users to sign up » dans les réglages Auth.';
+ return raw + (code?' (code '+code+')':'');
+}
+let authSubmitting=false;
+async function authSubmit(ev){
+ ev.preventDefault();
+ if(authSubmitting)return;
+ authSubmitting=true;
+ const email=$('email')?.value.trim();
+ const password=$('password')?.value;
+ const isSignup=mode==='signup';
+ const submit=ev.currentTarget.querySelector('button[type=submit], button:not([type])');
+ if(submit)submit.disabled=true;
+ notice(isSignup?'Création du compte dans Supabase…':'Vérification des identifiants dans Supabase…');
+ try{
+   if(!db)throw Error('Bibliothèque Supabase indisponible.');
+   if(isSignup){
+     if(!$('accept')?.checked)throw Error('Accepte les règles du prototype.');
+     const {data,error}=await db.auth.signUp({
+       email,password,options:{emailRedirectTo:redirect()}
+     });
+     if(error)throw error;
+     if(data.session?.user){
+       hideNotice();
+       await loadUser(data.session.user);
+     }else{
+       form('login');
+       notice('Inscription demandée. Aucun utilisateur connecté pour le moment : si la confirmation email est activée, vérifie le lien reçu. Si aucun email n’arrive, configure un SMTP adapté.');
+     }
+   }else{
+     const {data,error}=await db.auth.signInWithPassword({email,password});
+     if(error)throw error;
+     if(!data.session?.user)throw Error('Supabase n’a pas créé de session. Vérifie si le compte doit encore être confirmé.');
+     user=data.session.user;
+     hideNotice();
+     await loadUser(user);
+   }
+ }catch(e){
+   console.error('Erreur Supabase Auth :',e);
+   notice(authErrorMessage(e));
+ }finally{
+   authSubmitting=false;
+   if(submit?.isConnected)submit.disabled=false;
+ }
+}
 async function resendConfirmation(ev){
  ev.preventDefault();hideNotice();
  try{
@@ -121,9 +172,43 @@ async function resendConfirmation(ev){
 }
 async function forgot(ev){ev.preventDefault();try{const {error}=await db.auth.resetPasswordForEmail($('email').value.trim(),{redirectTo:redirect()});if(error)throw error;notice('Si le compte existe, un email de récupération a été envoyé.')}catch(e){fail(e)}}
 async function resetPassword(ev){ev.preventDefault();try{const {error}=await db.auth.updateUser({password:$('newPassword').value});if(error)throw error;recovering=false;const {data}=await db.auth.getUser();if(data.user)await loadUser(data.user);else form('login')}catch(e){fail(e)}}
-async function loadUser(u){if(!u||recovering)return;try{user=u;const {data,error}=await db.from('lobbix_profiles').select('id,nickname').eq('id',u.id).maybeSingle();if(error)throw error;profile=data;
-if(!profile){form('nickname');return}admin=false;adminPanelUnlocked=false;$('appNav').classList.remove('hidden');screen('app');await listRooms();page('home')
-}catch(e){form('login');fail(e)}}
+let profileLoadingId=null;
+async function loadUser(u){
+ if(!u||recovering||adminLoginPending)return;
+ if(profileLoadingId===u.id)return;
+ profileLoadingId=u.id;
+ user=u;
+ try{
+   const {data,error}=await db.from('lobbix_profiles')
+     .select('id,nickname').eq('id',u.id).maybeSingle();
+   if(error)throw error;
+   profile=data;
+   if(!profile){form('nickname');return;}
+   admin=false;
+   adminPanelUnlocked=false;
+   $('appNav').classList.remove('hidden');
+   screen('app');
+   await listRooms();
+   hideNotice('appError');
+   page('home');
+ }catch(e){
+   // IMPORTANT: A database error is NOT an authentication failure.
+   // Keep the authenticated session; do not send the user back to login.
+   console.error('Authentification établie, chargement du profil impossible :',e);
+   $('appNav').classList.add('hidden');
+   screen('app');
+   $('heading').textContent='Compte connecté';
+   $('content').innerHTML=`<div class="card"><h2>Connexion Supabase réussie</h2>
+     <p>Le compte est authentifié, mais une erreur empêche de charger Lobbix.</p>
+     <p class="muted">Il faut corriger l’accès aux données, pas te reconnecter.</p>
+     <button onclick="loadUser(user)">Réessayer de charger le profil</button>
+     <button class="alt" onclick="signout()">Se déconnecter</button></div>`;
+   notice('Erreur de chargement des données : '+(e?.message||e)+
+     (e?.code?' (code '+e.code+')':''),'appError');
+ }finally{
+   profileLoadingId=null;
+ }
+}
 async function setNickname(ev){
   ev.preventDefault();
   try {
