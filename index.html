@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio, DragonNet, PixelPocket et Lobbix.">
+    <meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio, DragonNet et PixelPocket.">
     <meta name="robots" content="index, follow">
     <title>JJCookieLabs | Accueil</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23181b22'/%3E%3Ccircle cx='32' cy='32' r='21' fill='%23d97706'/%3E%3Ccircle cx='25' cy='25' r='3' fill='%23451a03'/%3E%3Ccircle cx='38' cy='23' r='2.5' fill='%23451a03'/%3E%3Ccircle cx='23' cy='37' r='2.5' fill='%23451a03'/%3E%3Ccircle cx='35' cy='36' r='3.5' fill='%23451a03'/%3E%3Ccircle cx='42' cy='31' r='2' fill='%23451a03'/%3E%3C/svg%3E">
@@ -17,6 +17,7 @@
             --accent-hover: #4f46e5;
             --border: #2a2f3d;
             --danger: #ef4444;
+            --warning: #f59e0b;
         }
 
         * {
@@ -32,6 +33,16 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+        }
+
+        .maintenance-banner {
+            background-color: rgba(245, 158, 11, 0.12);
+            border-bottom: 1px solid rgba(245, 158, 11, 0.35);
+            color: #fbbf24;
+            text-align: center;
+            padding: 0.7rem 1rem;
+            font-size: 0.9rem;
+            font-weight: 500;
         }
 
         header {
@@ -245,6 +256,10 @@
 </head>
 <body>
 
+    <div class="maintenance-banner">
+        🛠️ Site en maintenance — Certaines fonctionnalités peuvent être temporairement indisponibles.
+    </div>
+
     <header>
         <div class="logo">JJCookieLabs</div>
         <nav>
@@ -252,7 +267,7 @@
             <a href="#" id="navCrsh">CRSHStudio</a>
             <a href="./DragonNet/index.html">DragonNet</a>
             <a href="./PixelPocket/index.html">PixelPocket</a>
-            <a href="./Lobbix/index.html">Lobbix</a>
+            <!-- <a href="./Lobbix/index.html">Lobbix</a> -->
         </nav>
     </header>
 
@@ -285,13 +300,15 @@
                 <a href="./PixelPocket/index.html" class="btn">Ouvrir PixelPocket &rarr;</a>
             </article>
 
+            <!--
             <article class="card">
                 <div>
                     <h2>Lobbix</h2>
                     <p>Accédez à l'espace et aux fonctionnalités du projet Lobbix.</p>
                 </div>
-                <--! a href="./Lobbix/index.html" class="btn">Ouvrir Lobbix &rarr;/a -->
+                <a href="./Lobbix/index.html" class="btn">Ouvrir Lobbix &rarr;</a>
             </article>
+            -->
         </div>
     </main>
 
@@ -317,7 +334,6 @@
 
     <script>
         (function () {
-            // Uniquement les éléments sensibles sont chiffrés :
             const _k = [24, 30, 4, 83, 5, 83, 83, 7, 29, 95, 88, 85, 85, 77, 30, 95, 70, 88, 94];
             const _v = 426674042;
             const _h = s => {
