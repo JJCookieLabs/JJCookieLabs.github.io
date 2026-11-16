@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio, DragonNet, PixelPocket et Lobbix.">
+    <meta name="robots" content="index, follow">
+    <title>JJCookieLabs | Accueil</title>
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23181b22'/%3E%3Ccircle cx='32' cy='32' r='21' fill='%23d97706'/%3E%3Ccircle cx='25' cy='25' r='3' fill='%23451a03'/%3E%3Ccircle cx='38' cy='23' r='2.5' fill='%23451a03'/%3E%3Ccircle cx='23' cy='37' r='2.5' fill='%23451a03'/%3E%3Ccircle cx='35' cy='36' r='3.5' fill='%23451a03'/%3E%3Ccircle cx='42' cy='31' r='2' fill='%23451a03'/%3E%3C/svg%3E">
+    <style>
+        :root {
+            --bg-color: #0f1115;
+            --card-bg: #181b22;
+            --text-color: #f3f4f6;
+            --text-muted: #9ca3af;
+            --accent: #6366f1;
+            --accent-hover: #4f46e5;
+            --border: #2a2f3d;
+            --danger: #ef4444;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        header {
+            padding: 1.5rem 5%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .logo {
+            font-size: 1.4rem;
+            font-weight: 800;
+            letter-spacing: -0.5px;
+        }
+
+        nav {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 1.5rem;
+        }
+
+        nav a {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        nav a:hover {
+            color: var(--text-color);
+        }
+
+        main {
+            flex: 1;
+            max-width: 1050px;
+            width: 100%;
+            margin: 0 auto;
+            padding: 4rem 1.5rem;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            letter-spacing: -1px;
+        }
+
+        .subtitle {
+            color: var(--text-muted);
+            font-size: 1.15rem;
+            margin-bottom: 3.5rem;
+        }
+
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            text-align: left;
+        }
+
+        .card {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.8rem;
+            transition: transform 0.2s, border-color 0.2s;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card:hover {
+            transform: translateY(-4px);
+            border-color: var(--accent);
+        }
+
+        .card h2 {
+            font-size: 1.4rem;
+            margin-bottom: 0.6rem;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .badge-lock {
+            font-size: 0.75rem;
+            background-color: rgba(99, 102, 241, 0.15);
+            color: var(--accent);
+            padding: 0.2rem 0.6rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .card p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+            line-height: 1.5;
+            margin-bottom: 1.5rem;
+        }
+
+        .btn {
+            display: inline-block;
+            width: 100%;
+            text-align: center;
+            background-color: var(--accent);
+            color: #fff;
+            text-decoration: none;
+            padding: 0.75rem 1.2rem;
+            border-radius: 8px;
+            border: none;
+            font-family: inherit;
+            font-weight: 600;
+            font-size: 0.95rem;
+            cursor: pointer;
+            transition: background-color 0.2s;
+        }
+
+        .btn:hover {
+            background-color: var(--accent-hover);
+        }
+
+        /* Fenêtre modale pour le mot de passe */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.75);
+            backdrop-filter: blur(4px);
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+            padding: 1rem;
+        }
+
+        .modal-overlay.active {
+            display: flex;
+        }
+
+        .modal {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 2rem;
+            width: 100%;
+            max-width: 380px;
+            text-align: left;
+        }
+
+        .modal h3 {
+            margin-bottom: 0.5rem;
+            font-size: 1.3rem;
+        }
+
+        .modal p {
+            color: var(--text-muted);
+            font-size: 0.9rem;
+            margin-bottom: 1.2rem;
+        }
+
+        .modal input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-size: 1rem;
+            margin-bottom: 0.75rem;
+            outline: none;
+        }
+
+        .modal input:focus {
+            border-color: var(--accent);
+        }
+
+        .error-msg {
+            color: var(--danger);
+            font-size: 0.85rem;
+            margin-bottom: 1rem;
+            display: none;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 0.75rem;
+        }
+
+        .btn-secondary {
+            background-color: transparent;
+            border: 1px solid var(--border);
+            color: var(--text-muted);
+        }
+
+        .btn-secondary:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            color: var(--text-color);
+        }
+
+        footer {
+            text-align: center;
+            padding: 1.5rem;
+            color: var(--text-muted);
+            font-size: 0.85rem;
+            border-top: 1px solid var(--border);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <div class="logo">JJCookieLabs</div>
+        <nav>
+            <a href="./index.html">Accueil</a>
+            <a href="#" id="navCrsh">CRSHStudio</a>
+            <a href="./DragonNet/index.html">DragonNet</a>
+            <a href="./PixelPocket/index.html">PixelPocket</a>
+            <a href="./Lobbix/index.html">Lobbix</a>
+        </nav>
+    </header>
+
+    <main>
+        <h1>Welcome to JJCookieLabs</h1>
+        <p class="subtitle">Espace central et laboratoire de projets numériques.</p>
+
+        <div class="projects-grid">
+            <article class="card">
+                <div>
+                    <h2>CRSHStudio <span class="badge-lock">🔒 Protégé</span></h2>
+                    <p>Accédez à l'espace dédié au projet CRSHStudio, nos créations et outils.</p>
+                </div>
+                <button type="button" class="btn" id="btnCrsh">Ouvrir CRSHStudio &rarr;</button>
+            </article>
+
+            <article class="card">
+                <div>
+                    <h2>DragonNet</h2>
+                    <p>Accédez à la plateforme et aux ressources du projet DragonNet.</p>
+                </div>
+                <a href="./DragonNet/index.html" class="btn">Ouvrir DragonNet &rarr;</a>
+            </article>
+
+            <article class="card">
+                <div>
+                    <h2>PixelPocket</h2>
+                    <p>Découvrez l'univers et les fonctionnalités du projet PixelPocket.</p>
+                </div>
+                <a href="./PixelPocket/index.html" class="btn">Ouvrir PixelPocket &rarr;</a>
+            </article>
+
+            <article class="card">
+                <div>
+                    <h2>Lobbix</h2>
+                    <p>Accédez à l'espace et aux fonctionnalités du projet Lobbix.</p>
+                </div>
+                <a href="./Lobbix/index.html" class="btn">Ouvrir Lobbix &rarr;</a>
+            </article>
+        </div>
+    </main>
+
+    <!-- Fenêtre modale de vérification -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <h3>Accès restreint</h3>
+            <p>Veuillez saisir le mot de passe pour accéder à <strong>CRSHStudio</strong>.</p>
+            <form id="pwdForm">
+                <input type="password" id="passwordInput" placeholder="Mot de passe" autocomplete="off" required>
+                <div class="error-msg" id="errorMsg">Mot de passe incorrect.</div>
+                <div class="modal-actions">
+                    <button type="button" class="btn btn-secondary" id="cancelBtn">Annuler</button>
+                    <button type="submit" class="btn">Valider</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <footer>
+        &copy; 2026 JJCookieLabs. Tous droits réservés.
+    </footer>
+
+    <script>
+        (function () {
+            const _k = [24, 30, 4, 83, 5, 83, 83, 7, 29, 95, 88, 85, 85, 77, 30, 95, 70, 88, 94];
+            const _v = 426674042;
+            const _h = s => {
+                let r = 0;
+                for (let i = 0; i < s.length; i++) r = (r * 131 + s.charCodeAt(i)) % 1000000007;
+                return r;
+            };
+
+            const modal = document.getElementById('passwordModal');
+            const input = document.getElementById('passwordInput');
+            const error = document.getElementById('errorMsg');
+
+            function openModal(e) {
+                e.preventDefault();
+                input.value = '';
+                error.style.display = 'none';
+                modal.classList.add('active');
+                setTimeout(() => input.focus(), 50);
+            }
+
+            function closeModal() {
+                modal.classList.remove('active');
+            }
+
+            document.getElementById('navCrsh').addEventListener('click', openModal);
+            document.getElementById('btnCrsh').addEventListener('click', openModal);
+            document.getElementById('cancelBtn').addEventListener('click', closeModal);
+            modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
+            document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
+
+            document.getElementById('pwdForm').addEventListener('submit', e => {
+                e.preventDefault();
+                const val = input.value.trim();
+                if (_h(val) === _v) {
+                    let dest = '';
+                    for (let i = 0; i < _k.length; i++) {
+                        dest += String.fromCharCode(_k[i] ^ val.charCodeAt(i % val.length));
+                    }
+                    window.location.href = dest;
+                } else {
+                    error.style.display = 'block';
+                    input.value = '';
+                    input.focus();
+                }
+            });
+        })();
+    </script>
+
+</body>
+</html>
