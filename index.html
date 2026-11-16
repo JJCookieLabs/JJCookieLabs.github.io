@@ -252,7 +252,7 @@
             <a href="#" id="navCrsh">CRSHStudio</a>
             <a href="./DragonNet/index.html">DragonNet</a>
             <a href="./PixelPocket/index.html">PixelPocket</a>
-            <a href="./Lobbix/index.html">Lobbix</a>
+            <a href="#" id="navLobbix">Lobbix</a>
         </nav>
     </header>
 
@@ -287,10 +287,10 @@
 
             <article class="card">
                 <div>
-                    <h2>Lobbix</h2>
+                    <h2>Lobbix <span class="badge-lock">🔒 Protégé</span></h2>
                     <p>Accédez à l'espace et aux fonctionnalités du projet Lobbix.</p>
                 </div>
-                <a href="./Lobbix/index.html" class="btn">Ouvrir Lobbix &rarr;</a>
+                <button type="button" class="btn" id="btnLobbix">Ouvrir Lobbix &rarr;</button>
             </article>
         </div>
     </main>
@@ -299,7 +299,7 @@
     <div class="modal-overlay" id="passwordModal">
         <div class="modal">
             <h3>Accès restreint</h3>
-            <p>Veuillez saisir le mot de passe pour accéder à <strong>CRSHStudio</strong>.</p>
+            <p>Veuillez saisir le mot de passe pour accéder à <strong id="modalTarget">CRSHStudio</strong>.</p>
             <form id="pwdForm">
                 <input type="password" id="passwordInput" placeholder="Mot de passe" autocomplete="off" required>
                 <div class="error-msg" id="errorMsg">Mot de passe incorrect.</div>
@@ -317,20 +317,35 @@
 
     <script>
         (function () {
-            const _k = [24, 30, 4, 83, 5, 83, 83, 7, 29, 95, 88, 85, 85, 77, 30, 95, 70, 88, 94];
-            const _v = 426674042;
             const _h = s => {
                 let r = 0;
                 for (let i = 0; i < s.length; i++) r = (r * 131 + s.charCodeAt(i)) % 1000000007;
                 return r;
             };
 
+            const _targets = {
+                crsh: {
+                    name: 'CRSHStudio',
+                    v: 426674042,
+                    k: [24, 30, 4, 83, 5, 83, 83, 7, 29, 95, 88, 85, 85, 77, 30, 95, 70, 88, 94]
+                },
+                lobbix: {
+                    name: 'Lobbix',
+                    v: 287595570,
+                    k: [31, 26, 124, 87, 94, 87, 91, 72, 31, 95, 88, 85, 85, 77, 30, 95, 70, 88, 94]
+                }
+            };
+
+            let currentKey = 'crsh';
             const modal = document.getElementById('passwordModal');
+            const targetLabel = document.getElementById('modalTarget');
             const input = document.getElementById('passwordInput');
             const error = document.getElementById('errorMsg');
 
-            function openModal(e) {
+            function openModal(key, e) {
                 e.preventDefault();
+                currentKey = key;
+                targetLabel.textContent = _targets[key].name;
                 input.value = '';
                 error.style.display = 'none';
                 modal.classList.add('active');
@@ -341,8 +356,11 @@
                 modal.classList.remove('active');
             }
 
-            document.getElementById('navCrsh').addEventListener('click', openModal);
-            document.getElementById('btnCrsh').addEventListener('click', openModal);
+            document.getElementById('navCrsh').addEventListener('click', e => openModal('crsh', e));
+            document.getElementById('btnCrsh').addEventListener('click', e => openModal('crsh', e));
+            document.getElementById('navLobbix').addEventListener('click', e => openModal('lobbix', e));
+            document.getElementById('btnLobbix').addEventListener('click', e => openModal('lobbix', e));
+
             document.getElementById('cancelBtn').addEventListener('click', closeModal);
             modal.addEventListener('click', e => { if (e.target === modal) closeModal(); });
             document.addEventListener('keydown', e => { if (e.key === 'Escape' && modal.classList.contains('active')) closeModal(); });
@@ -350,10 +368,11 @@
             document.getElementById('pwdForm').addEventListener('submit', e => {
                 e.preventDefault();
                 const val = input.value.trim();
-                if (_h(val) === _v) {
+                const cfg = _targets[currentKey];
+                if (_h(val) === cfg.v) {
                     let dest = '';
-                    for (let i = 0; i < _k.length; i++) {
-                        dest += String.fromCharCode(_k[i] ^ val.charCodeAt(i % val.length));
+                    for (let i = 0; i < cfg.k.length; i++) {
+                        dest += String.fromCharCode(cfg.k[i] ^ val.charCodeAt(i % val.length));
                     }
                     window.location.href = dest;
                 } else {
