@@ -3,428 +3,366 @@
 <html lang="fr">
 <head>
 <meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<title>DragonNet Anarchy — Publications libres</title>
-<meta name="description" content="DragonNet Anarchy : articles, photos et commentaires sans compte.">
-<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101c35'/%3E%3Cpath d='M17 12h15c16 0 25 10 25 20S48 56 32 56H17V12zm13 12v20h3c8 0 12-5 12-12s-4-8-12-8h-3z' fill='%2365cfff' fill-rule='evenodd'/%3E%3Cpath d='m43 14 5-9 5 13' fill='%2327e5c3'/%3E%3Ccircle cx='52' cy='31' r='3' fill='%2327e5c3'/%3E%3C/svg%3E">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="DragonNet Anarchy — publications, photos et commentaires libres">
+<title>DragonNet Anarchy</title>
+<link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23101c35'/%3E%3Cpath d='M17 12h15c16 0 25 10 25 20S48 56 32 56H17V12zm13 12v20h3c8 0 12-5 12-12s-4-8-12-8h-3z' fill='%2365cfff' fill-rule='evenodd'/%3E%3C/svg%3E">
+
 <style>
-:root{
-  font-family:Inter,system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
+:root {
   color-scheme:dark;
+  font-family:system-ui,Arial,sans-serif;
   background:#0a1020;
   color:#edf3ff;
-  scroll-behavior:smooth
+  scroll-behavior:smooth;
 }
-*{box-sizing:border-box}
-body{margin:0;line-height:1.5}
-button,input,textarea,select{font:inherit}
-button,a,input,textarea,select{outline-offset:3px}
-a{color:inherit}
-header{
-  position:sticky;
-  top:0;
-  z-index:20;
-  background:rgba(13,22,42,.97);
+* {box-sizing:border-box}
+body {margin:0;line-height:1.5}
+button,input,textarea,select {font:inherit}
+button,a,input,textarea,select {outline-offset:3px}
+a {color:inherit}
+header {
+  position:sticky;top:0;z-index:20;
+  background:#101a30;
   border-bottom:1px solid #314562;
-  backdrop-filter:blur(14px)
 }
-.navbar{
-  max-width:1120px;
-  margin:auto;
-  padding:11px 18px;
-  display:flex;
-  align-items:center;
-  gap:14px;
-  flex-wrap:wrap
+.navbar {
+  max-width:1120px;margin:auto;padding:12px 18px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
 }
-.logo{
-  font-size:1.25rem;
-  font-weight:850;
-  letter-spacing:-.03em;
-  color:#8cd0ff;
-  text-decoration:none;
-  white-space:nowrap
+.logo {
+  font-size:1.25rem;font-weight:800;
+  text-decoration:none;color:#8cd0ff;
 }
-nav{
-  display:flex;
-  gap:5px;
-  align-items:center;
-  flex-wrap:wrap;
-  margin-left:auto
+nav {display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+nav a {
+  padding:9px 13px;border-radius:10px;
+  text-decoration:none;color:#ccd9f0;font-weight:650;
 }
-nav a{
-  display:inline-block;
-  padding:9px 13px;
-  border-radius:10px;
-  text-decoration:none;
-  color:#ccd9f0;
-  font-weight:650;
-  font-size:.95rem
+nav a:hover,nav a.active {background:#263c61;color:white}
+nav .back {border:1px solid #506482;color:#9acdf6}
+.hero {max-width:1120px;margin:28px auto;padding:0 18px}
+h1 {font-size:clamp(2rem,5vw,3rem);margin:5px 0}
+h2 {font-size:1.35rem;margin:0 0 15px}
+h3 {margin:0 0 5px}
+main {max-width:1120px;margin:auto;padding:0 18px 60px}
+.section {scroll-margin-top:100px}
+.panel {
+  background:#15233d;border:1px solid #30476a;
+  border-radius:17px;padding:22px;margin-bottom:20px;
 }
-nav a:hover,nav a.active{background:#263c61;color:#fff}
-nav .back{border:1px solid #506482;color:#9acdf6}
-.hero{max-width:1120px;margin:28px auto 19px;padding:0 18px}
-.eyebrow{
-  font-size:.82rem;
-  letter-spacing:.1em;
-  text-transform:uppercase;
-  color:#80baff;
-  font-weight:750
+.muted,small {color:#b6c7df}
+.row {display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.row>* {flex:1 1 180px;min-width:0}
+label {display:block;font-size:.92rem;margin:10px 0 5px}
+input,textarea,select {
+  width:100%;padding:11px;border-radius:9px;
+  background:#0b172e;color:white;border:1px solid #536987;
 }
-h1{
-  font-size:clamp(1.9rem,5vw,3rem);
-  letter-spacing:-.045em;
-  margin:7px 0 5px
+textarea {min-height:120px;resize:vertical}
+button {
+  border:0;background:#277fdf;color:white;
+  padding:10px 15px;border-radius:9px;
+  cursor:pointer;font-weight:650;
 }
-.lead{color:#b3c6e3;margin:0;max-width:700px}
-main{max-width:1120px;margin:0 auto;padding:0 18px 70px}
-.section{scroll-margin-top:98px}
-.panel{
-  background:#15233d;
-  border:1px solid #30476a;
-  border-radius:18px;
-  padding:22px;
-  margin-bottom:20px
-}
-h2{font-size:1.35rem;margin:0 0 15px;letter-spacing:-.02em}
-h3{margin:0 0 4px}
-.muted,small{color:#b6c7df}
-.row{display:flex;gap:12px;flex-wrap:wrap;align-items:end}
-.row>*{flex:1 1 185px;min-width:0}
-label{display:block;font-size:.92rem;font-weight:620;margin:10px 0 5px}
-input,textarea,select{
-  width:100%;
-  background:#0b172e;
-  color:#f3f7ff;
-  border:1px solid #536987;
-  border-radius:9px;
-  padding:11px
-}
-input[type=file]{padding:10px;cursor:pointer}
-textarea{min-height:120px;resize:vertical}
-button{
-  border:0;
-  background:#277fdf;
-  color:#fff;
-  border-radius:9px;
-  padding:10px 15px;
-  cursor:pointer;
-  font-weight:650
-}
-button:hover{filter:brightness(1.12)}
-button:disabled{opacity:.55;cursor:wait}
-button.secondary{background:#385273}
-button.danger{background:#a7384e}
-.actions{display:flex;gap:8px;align-items:center;flex-wrap:wrap;margin:13px 0 0}
-.grid{
+button:hover {filter:brightness(1.1)}
+button:disabled {opacity:.5;cursor:wait}
+button.secondary {background:#385273}
+button.danger {background:#a7384e}
+.actions {display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.grid {
   display:grid;
-  grid-template-columns:repeat(auto-fill,minmax(min(100%,330px),1fr));
-  gap:14px;
-  margin-top:16px;
-  align-items:start
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));
+  gap:14px;margin-top:16px;align-items:start;
 }
-.article{
-  background:#1b2c49;
-  border:1px solid #334969;
-  border-radius:14px;
-  padding:18px;
-  min-width:0;
-  overflow-wrap:anywhere
+.article,.comment-admin-card {
+  background:#1b2c49;border:1px solid #334969;
+  border-radius:13px;padding:17px;
+  overflow-wrap:anywhere;
 }
-.article h3{font-size:1.13rem;letter-spacing:-.01em}
-.article p{white-space:pre-wrap;line-height:1.6;margin:12px 0}
-.article .meta{font-size:.83rem;color:#adc3e0;margin-bottom:7px}
-.photos,.preview{display:flex;gap:9px;flex-wrap:wrap;margin-top:11px}
-.photos a,.preview .picture{
-  display:block;
-  flex:1 1 92px;
-  max-width:160px;
-  min-width:90px
+.article p,.comment-admin-card p {
+  white-space:pre-wrap;line-height:1.6;
 }
-.photos img,.preview img{
-  display:block;
-  width:100%;
-  aspect-ratio:4/3;
-  object-fit:cover;
-  border-radius:10px;
-  border:1px solid #3f5574;
-  background:#0a1426
+.meta {font-size:.83rem;color:#adc3e0;margin:7px 0}
+.hidden {display:none!important}
+.tag {
+  background:#594323;color:#ffe2b1;
+  border-radius:20px;padding:4px 9px;font-size:.78rem;
+  display:inline-block;
 }
-.photo-count{font-size:.82rem;color:#a6c8ee}
-.comments{border-top:1px solid #425575;margin-top:14px;padding-top:12px}
-.comments summary{
-  cursor:pointer;
-  color:#a6d0ff;
-  font-weight:700;
-  user-select:none
+.admin-badge {
+  background:#1a4d7a;border:1px solid #62a9ee;
+  border-radius:20px;padding:3px 9px;
+  color:#e7f5ff;font-size:.75rem;font-weight:800;
+  display:inline-block;margin-left:7px;
 }
-.comment-list{display:grid;gap:8px;margin-top:12px}
-.comment{
-  padding:11px;
-  border-radius:9px;
-  background:#13213a;
-  border:1px solid #354968
+.photos,.preview {
+  display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;
 }
-.comment b{color:#d9eaff}
-.comment p{margin:5px 0 0;font-size:.94rem}
-.comment-date{font-size:.75rem;color:#9eafca;margin-left:5px}
-.comment-form{margin-top:12px}
-.comment-form input,.comment-form textarea{margin:5px 0 9px}
-.comment-form textarea{min-height:75px}
-.hidden{display:none!important}
-.tag{
-  font-size:.75rem;
-  background:#5b4a30;
-  border-radius:50px;
-  padding:3px 10px;
-  color:#ffe2b1
+.photos a,.preview img {width:110px;max-width:100%}
+.photos img,.preview img {
+  width:110px;height:90px;object-fit:cover;
+  border-radius:9px;border:1px solid #425a7c;
 }
-.admin-badge{
-  display:inline-flex;
-  align-items:center;
-  vertical-align:middle;
-  margin-left:9px;
-  padding:3px 9px;
-  border:1px solid #62a9ee;
-  border-radius:999px;
-  background:#1a4d7a;
-  color:#e7f5ff;
-  font-size:.72rem;
-  font-weight:850;
-  letter-spacing:.04em
+.comments {
+  margin-top:15px;padding-top:12px;
+  border-top:1px solid #405575;
 }
-.adminrow{
-  display:flex;
-  justify-content:space-between;
-  gap:12px;
-  flex-wrap:wrap;
-  align-items:center
+.comments summary {
+  cursor:pointer;color:#9ed0ff;font-weight:700;
 }
-.stats{display:flex;gap:12px;margin:12px 0 16px}
-.stat{flex:1;background:#203655;padding:13px;border-radius:11px}
-.stat strong{display:block;font-size:1.5rem}
-#notice{
-  position:sticky;
-  top:66px;
-  z-index:18;
-  margin:0 auto;
-  display:none;
-  padding:12px max(18px,calc((100vw - 1120px)/2));
-  background:#294d75;
-  overflow-wrap:anywhere
+.comment-list {display:grid;gap:8px;margin:12px 0}
+.comment {
+  background:#13213a;border:1px solid #354968;
+  border-radius:9px;padding:11px;
 }
-#status{font-size:.84rem;color:#9fb4d5}
-.about-lines{display:grid;gap:10px;color:#c3d2e9}
-footer{text-align:center;color:#93a7c6;padding:20px}
-@media(max-width:700px){
-  .navbar{gap:8px}
-  .logo{width:100%}
-  nav{margin-left:0;width:100%;gap:2px}
-  nav a{font-size:.85rem;padding:8px 10px}
-  nav .back{margin-left:auto}
-  #notice{top:101px}
-  .hero{margin-top:18px}
-  .panel{padding:16px}
+.comment p {margin:5px 0}
+.comment-date {color:#9eafca;font-size:.75rem}
+.comment-form textarea {min-height:75px}
+.adminrow {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
+}
+.stats {display:flex;gap:12px;margin:14px 0}
+.stat {
+  flex:1;background:#203655;border-radius:11px;padding:13px;
+}
+.stat strong {display:block;font-size:1.5rem}
+.comment-admin-panel {
+  margin-top:25px;padding-top:22px;
+  border-top:1px solid #405677;
+}
+.comment-parent {font-size:.84rem;color:#acd0fa}
+.comment-count {margin:12px 0;color:#c6d6ee}
+#notice {
+  position:sticky;top:65px;z-index:19;
+  background:#294d75;padding:12px 18px;display:none;
+}
+.about-lines {display:grid;gap:10px;color:#c3d2e9}
+footer {text-align:center;padding:20px;color:#93a7c6}
+@media(max-width:700px) {
+  .logo {width:100%}
+  nav {margin-left:0;width:100%}
+  nav a {padding:8px;font-size:.85rem}
+  .panel {padding:16px}
+  #notice {top:105px}
 }
 </style>
 </head>
+
 <body>
+
 <header>
   <div class="navbar">
     <a class="logo" href="#articles">🐉 DragonNet Anarchy</a>
-    <nav aria-label="Navigation principale">
+    <nav>
       <a href="#articles" class="active">Article</a>
       <a href="#publier">Publier</a>
       <a href="#apropos">À propos</a>
-      <a class="back" href="https://jjcookielabs.github.io/">
+      <a href="https://jjcookielabs.github.io/" class="back">
         ← Accueil principal
       </a>
     </nav>
   </div>
 </header>
 
-<div id="notice" role="status" aria-live="polite"></div>
+<div id="notice" role="status"></div>
 
 <div class="hero">
-  <div class="eyebrow">Communauté ouverte</div>
   <h1>Écris, partage, discute.</h1>
-  <p class="lead">
-    Publie sans inscription, ajoute jusqu'à trois photos
-    et participe aux commentaires. Pas de compte nécessaire.
+  <p class="muted">
+    DragonNet Anarchy — publications et commentaires sans compte.
   </p>
   <p id="status">Connexion à Supabase…</p>
 </div>
 
 <main>
-  <section class="section panel" id="articles">
+
+<section id="articles" class="section panel">
+  <div class="adminrow">
+    <h2>Articles</h2>
+    <button id="reload" class="secondary">↻ Actualiser</button>
+  </div>
+
+  <div class="row">
+    <div>
+      <label>Recherche</label>
+      <input id="search" placeholder="Rechercher un article…">
+    </div>
+    <div>
+      <label>Catégorie</label>
+      <select id="filter">
+        <option value="">Toutes</option>
+      </select>
+    </div>
+    <div>
+      <label>Ordre</label>
+      <select id="order">
+        <option value="new">Plus récents</option>
+        <option value="old">Plus anciens</option>
+      </select>
+    </div>
+  </div>
+
+  <p id="count" class="muted"></p>
+  <div id="articleGrid" class="grid"></div>
+</section>
+
+<section id="publier" class="section panel">
+  <h2>Publier un article</h2>
+
+  <form id="publishForm" novalidate>
+    <div class="row">
+      <div>
+        <label>Pseudonyme</label>
+        <input id="author" maxlength="60" value="Anonyme">
+      </div>
+      <div>
+        <label>Catégorie</label>
+        <input id="category" maxlength="40" value="Général">
+      </div>
+    </div>
+
+    <label>Titre</label>
+    <input id="title" maxlength="160">
+
+    <label>Contenu</label>
+    <textarea id="content" maxlength="30000"></textarea>
+
+    <label>Photos jointes</label>
+    <input id="photos" type="file" multiple
+      accept=".jpg,.jpeg,.png,.gif,image/jpeg,image/png,image/gif">
+
+    <small>JPG/JPEG, PNG ou GIF — 3 photos maximum, 3 Mo chacune.</small>
+
+    <div id="preview" class="preview"></div>
+
+    <div class="actions">
+      <button id="publishButton" type="submit">
+        Publier immédiatement
+      </button>
+    </div>
+  </form>
+</section>
+
+<section id="apropos" class="section panel">
+  <h2>À propos</h2>
+  <div class="about-lines">
+    <div>🐉 DragonNet est un espace de publication libre créé par JJCookieLabs.</div>
+    <div>💬 Les visiteurs peuvent publier et commenter sans compte.</div>
+    <div>🖼️ Les articles acceptent des photos JPG/JPEG, PNG et GIF.</div>
+    <div>🛡️ L'administration peut masquer ou supprimer des articles, ainsi que supprimer individuellement des commentaires.</div>
+    <div>⚠️ Ne publie pas de données personnelles ou de photos d'autrui sans autorisation.</div>
+  </div>
+</section>
+
+<section id="adminLogin" class="panel hidden">
+  <h2>🔒 Accès administrateur</h2>
+
+  <label>E-mail</label>
+  <input id="email" type="email" autocomplete="username">
+
+  <label>Mot de passe</label>
+  <input id="password" type="password" autocomplete="current-password">
+
+  <div class="actions">
+    <button id="login">Se connecter</button>
+    <button id="closeLogin" class="secondary">Fermer</button>
+  </div>
+</section>
+
+<section id="adminPanel" class="panel hidden">
+  <div class="adminrow">
+    <h2>🛡️ Administration</h2>
+    <button id="logout" class="secondary">Déconnexion</button>
+  </div>
+
+  <div class="stats">
+    <div class="stat">
+      <strong id="statVisible">0</strong>
+      Articles visibles
+    </div>
+    <div class="stat">
+      <strong id="statHidden">0</strong>
+      Articles masqués
+    </div>
+  </div>
+
+  <div class="row">
+    <div>
+      <label>Recherche d'article</label>
+      <input id="adminSearch" placeholder="Rechercher…">
+    </div>
+    <div>
+      <label>État</label>
+      <select id="adminFilter">
+        <option value="all">Tous</option>
+        <option value="visible">Visibles</option>
+        <option value="hidden">Masqués</option>
+      </select>
+    </div>
+  </div>
+
+  <div class="actions">
+    <button id="refreshAdmin" class="secondary">
+      Actualiser l'administration
+    </button>
+  </div>
+
+  <div id="adminArticles" class="grid"></div>
+
+  <!-- MODÉRATION DES COMMENTAIRES -->
+
+  <div class="comment-admin-panel">
     <div class="adminrow">
-      <h2>Articles</h2>
-      <button type="button" id="reload" class="secondary">
+      <h2>💬 Modération des commentaires</h2>
+      <button id="refreshComments" class="secondary">
         ↻ Actualiser
       </button>
     </div>
 
+    <p class="muted">
+      Supprime un commentaire précis sans supprimer
+      l'article ni les autres commentaires.
+    </p>
+
     <div class="row">
       <div>
-        <label for="search">Rechercher</label>
-        <input id="search" placeholder="Titre, pseudonyme, contenu…">
+        <label>Rechercher un commentaire</label>
+        <input id="adminCommentSearch"
+          placeholder="Texte, pseudonyme ou article…">
       </div>
+
       <div>
-        <label for="filter">Catégorie</label>
-        <select id="filter"><option value="">Toutes</option></select>
+        <label>Filtrer par article</label>
+        <select id="adminCommentArticle">
+          <option value="">Tous les articles</option>
+        </select>
       </div>
+
       <div>
-        <label for="order">Trier</label>
-        <select id="order">
+        <label>État de l'article</label>
+        <select id="adminCommentStatus">
+          <option value="all">Tous</option>
+          <option value="visible">Articles visibles</option>
+          <option value="hidden">Articles masqués</option>
+        </select>
+      </div>
+
+      <div>
+        <label>Ordre</label>
+        <select id="adminCommentSort">
           <option value="new">Plus récents</option>
           <option value="old">Plus anciens</option>
         </select>
       </div>
     </div>
 
-    <p id="count" class="muted"></p>
-    <div id="articleGrid" class="grid"></div>
-  </section>
+    <p id="adminCommentCount" class="comment-count"></p>
+    <div id="adminComments" class="grid"></div>
+  </div>
+</section>
 
-  <section class="section panel" id="publier">
-    <h2>Publier un article</h2>
-    <form id="publishForm" novalidate>
-      <div class="row">
-        <div>
-          <label for="author">Pseudonyme</label>
-          <input id="author" maxlength="60" value="Anonyme"
-                 autocomplete="nickname">
-        </div>
-        <div>
-          <label for="category">Catégorie</label>
-          <input id="category" maxlength="40" value="Général">
-        </div>
-      </div>
-
-      <label for="title">Titre</label>
-      <input id="title" maxlength="160" placeholder="Ton titre">
-
-      <label for="content">Contenu</label>
-      <textarea id="content" maxlength="30000"
-        placeholder="Raconte quelque chose…"></textarea>
-
-      <label for="photos">Photos jointes (facultatif)</label>
-      <input id="photos" type="file" multiple
-        accept=".jpg,.jpeg,.png,.gif,image/jpeg,image/png,image/gif"
-        aria-describedby="photosHelp">
-
-      <small id="photosHelp">
-        JPG/JPEG, PNG ou GIF uniquement —
-        3 photos maximum, 3 Mo par photo.
-      </small>
-
-      <div id="preview" class="preview" aria-live="polite"></div>
-
-      <div class="actions">
-        <button type="submit" id="publishButton">
-          Publier immédiatement
-        </button>
-        <small>Les articles et les photos sont publics.</small>
-      </div>
-    </form>
-  </section>
-
-  <section class="section panel" id="apropos">
-    <h2>À propos de DragonNet</h2>
-    <div class="about-lines">
-      <div>
-        🐉 DragonNet Anarchy est un espace de publication libre
-        créé par JJCookieLabs.
-      </div>
-      <div>
-        🗣️ Tout le monde peut publier et commenter sans créer de compte.
-        Le pseudonyme est libre.
-      </div>
-      <div>
-        🖼️ Les images acceptées sont uniquement JPG, JPEG, PNG et GIF.
-      </div>
-      <div>
-        🛡️ L'administration peut uniquement masquer, réafficher
-        ou supprimer un article ; elle ne modifie pas les textes.
-        Ses propres publications portent un badge ADMIN
-        vérifié par Supabase.
-      </div>
-      <div>
-        ⚠️ Ne partage pas de données privées ou de photos
-        d'autres personnes sans leur accord.
-        Les publications peuvent être consultées publiquement.
-      </div>
-    </div>
-  </section>
-
-  <section id="adminLogin" class="panel hidden">
-    <h2>🔒 Accès administrateur</h2>
-    <p class="muted">
-      Entrée cachée, droits vérifiés par Supabase.
-    </p>
-
-    <label for="email">E-mail administrateur</label>
-    <input id="email" type="email" autocomplete="username">
-
-    <label for="password">Mot de passe</label>
-    <input id="password" type="password"
-           autocomplete="current-password">
-
-    <div class="actions">
-      <button type="button" id="login">Se connecter</button>
-      <button type="button" id="closeLogin" class="secondary">
-        Fermer
-      </button>
-    </div>
-  </section>
-
-  <section id="adminPanel" class="panel hidden">
-    <div class="adminrow">
-      <h2>🛡️ Administration</h2>
-      <button type="button" id="logout" class="secondary">
-        Déconnexion
-      </button>
-    </div>
-
-    <p class="muted">
-      Masquer, réafficher ou supprimer un article.
-      Les commentaires sont inclus dans l'article.
-    </p>
-
-    <div class="stats">
-      <div class="stat">
-        <strong id="statVisible">0</strong>
-        Visibles
-      </div>
-      <div class="stat">
-        <strong id="statHidden">0</strong>
-        Masqués
-      </div>
-    </div>
-
-    <div class="row">
-      <div>
-        <label for="adminSearch">Recherche admin</label>
-        <input id="adminSearch" placeholder="Rechercher…">
-      </div>
-      <div>
-        <label for="adminFilter">Afficher</label>
-        <select id="adminFilter">
-          <option value="all">Tous</option>
-          <option value="visible">Visibles</option>
-          <option value="hidden">Masqués</option>
-        </select>
-      </div>
-    </div>
-
-    <div class="actions">
-      <button type="button" id="refreshAdmin" class="secondary">
-        Actualiser l'administration
-      </button>
-    </div>
-
-    <div id="adminArticles" class="grid"></div>
-  </section>
 </main>
 
 <footer>DragonNet Anarchy · JJCookieLabs</footer>
@@ -432,7 +370,8 @@ footer{text-align:center;color:#93a7c6;padding:20px}
 <script>
 'use strict';
 
-// CONFIGURATION SUPABASE PUBLIQUE
+// CONFIGURATION SUPABASE
+
 const SUPABASE_URL =
   'https://hkwnfxgrnyvyfprzvlyb.supabase.co';
 
@@ -440,17 +379,6 @@ const SUPABASE_KEY =
   'sb_publishable_hzBek5ZmTxpaNZcQiDPwgA_i4Lhv3o0';
 
 const BUCKET = 'dragon-photos';
-const MAX_PHOTOS = 3;
-const MAX_PHOTO_BYTES = 3145728;
-
-const TYPES = {
-  'image/jpeg': ['jpg','jpeg'],
-  'image/png': ['png'],
-  'image/gif': ['gif']
-};
-
-const PATH_RE =
-  /^posts\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|jpeg|png|gif)$/;
 
 const $ = id => document.getElementById(id);
 
@@ -460,10 +388,11 @@ let adminAuth = null;
 let previewUrls = [];
 
 const openComments = new Set();
+
 const isAdmin = () => !!adminAuth?.accessToken;
 
-function show(id, yes) {
-  $(id).classList.toggle('hidden', !yes);
+function show(id, value) {
+  $(id).classList.toggle('hidden', !value);
 }
 
 function node(tag, text, cls) {
@@ -478,24 +407,26 @@ function notice(message) {
   $('notice').style.display = 'block';
 }
 
-function dateText(s) {
-  const d = new Date(s);
-  return Number.isNaN(d.getTime())
+function dateText(value) {
+  const date = new Date(value);
+  return Number.isNaN(date.getTime())
     ? 'Date inconnue'
-    : d.toLocaleString('fr-FR');
+    : date.toLocaleString('fr-FR');
 }
 
-// NOUVEAU CODE SECRET ADMINISTRATEUR
 function secretTitle(value) {
-  return String(value).normalize('NFC').trim()
-    === '©JJCookieLabs-Administration';
+  return String(value).normalize('NFC').trim() ===
+    '©JJCookieLabs-Administration';
 }
 
-function cleanPaths(d) {
-  return Array.isArray(d?.photos)
-    ? d.photos.filter(s =>
-        typeof s === 'string' && PATH_RE.test(s)
-      ).slice(0, MAX_PHOTOS)
+const PATH_RE =
+  /^posts\/[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}\.(jpg|jpeg|png|gif)$/;
+
+function cleanPaths(data) {
+  return Array.isArray(data?.photos)
+    ? data.photos.filter(p =>
+        typeof p === 'string' && PATH_RE.test(p)
+      ).slice(0, 3)
     : [];
 }
 
@@ -505,13 +436,13 @@ function photoUrl(path) {
     BUCKET + '/' + path;
 }
 
-// API SUPABASE
+// APPELS SUPABASE
+
 async function api(path, {
   method = 'GET',
   body,
   token
 } = {}) {
-
   const headers = {
     apikey: SUPABASE_KEY,
     Accept: 'application/json'
@@ -559,30 +490,31 @@ async function api(path, {
 
     error.status = response.status;
     error.code = result?.code;
-
     throw error;
   }
 
   return result;
 }
 
-const publicRpc = (name, body) =>
-  api('/rest/v1/rpc/' + name, {
+function publicRpc(name, params) {
+  return api('/rest/v1/rpc/' + name, {
     method: 'POST',
-    body
+    body: params
   });
+}
 
 // AUTHENTIFICATION ADMIN
+
 function setAdminAuth(tokens) {
   if (!tokens?.access_token) {
-    throw Error('Jeton utilisateur absent.');
+    throw Error('Jeton administrateur absent');
   }
 
   adminAuth = {
     accessToken: tokens.access_token,
-    refreshToken: tokens.refresh_token || null,
+    refreshToken: tokens.refresh_token,
     expiresAt: Date.now() +
-      Math.max(30, Number(tokens.expires_in) || 3600) * 1000
+      (Number(tokens.expires_in) || 3600) * 1000
   };
 }
 
@@ -593,47 +525,46 @@ function forgetAdmin() {
   show('adminPanel', false);
 
   $('adminArticles').replaceChildren();
+  $('adminComments').replaceChildren();
   $('password').value = '';
   $('status').textContent = 'Connecté · accès public';
 }
 
 async function refreshToken() {
   if (!adminAuth?.refreshToken) {
-    throw Error('Session expirée.');
+    throw Error('Session expirée');
   }
 
-  setAdminAuth(
-    await api('/auth/v1/token?grant_type=refresh_token', {
+  const tokens = await api(
+    '/auth/v1/token?grant_type=refresh_token',
+    {
       method: 'POST',
       body: {
         refresh_token: adminAuth.refreshToken
       }
-    })
+    }
   );
+
+  setAdminAuth(tokens);
 }
 
-async function authorized(path, {
-  method = 'GET',
-  body
-} = {}) {
-
+async function authorized(path, options = {}) {
   if (!adminAuth) {
-    throw Error('Connexion admin nécessaire.');
+    throw Error('Connexion administrateur nécessaire');
   }
 
-  if (Date.now() > adminAuth.expiresAt - 30000) {
+  if (Date.now() >= adminAuth.expiresAt - 30000) {
     try {
       await refreshToken();
     } catch {
       forgetAdmin();
-      throw Error('Session expirée : reconnecte-toi.');
+      throw Error('Session expirée. Reconnecte-toi.');
     }
   }
 
   try {
     return await api(path, {
-      method,
-      body,
+      ...options,
       token: adminAuth.accessToken
     });
   } catch (e) {
@@ -642,13 +573,12 @@ async function authorized(path, {
         await refreshToken();
 
         return await api(path, {
-          method,
-          body,
+          ...options,
           token: adminAuth.accessToken
         });
       } catch {
         forgetAdmin();
-        throw Error('Session expirée : reconnecte-toi.');
+        throw Error('Session expirée. Reconnecte-toi.');
       }
     }
 
@@ -656,18 +586,19 @@ async function authorized(path, {
   }
 }
 
-const adminRpc = (name, body) =>
-  authorized('/rest/v1/rpc/' + name, {
+function adminRpc(name, params) {
+  return authorized('/rest/v1/rpc/' + name, {
     method: 'POST',
-    body
+    body: params
   });
+}
 
 async function loginAdmin() {
   const email = $('email').value.trim();
   const password = $('password').value;
 
   if (!email || !password) {
-    throw Error('E-mail ou mot de passe manquant.');
+    throw Error('E-mail ou mot de passe manquant');
   }
 
   const tokens = await api(
@@ -677,10 +608,6 @@ async function loginAdmin() {
       body: { email, password }
     }
   );
-
-  if (!tokens?.access_token) {
-    throw Error('Aucun jeton de connexion reçu.');
-  }
 
   const allowed = await api(
     '/rest/v1/rpc/dragon_is_admin',
@@ -692,7 +619,7 @@ async function loginAdmin() {
   );
 
   if (allowed !== true) {
-    throw Error('Ce compte ne possède pas le rôle admin.');
+    throw Error('Ce compte ne possède pas le rôle admin');
   }
 
   setAdminAuth(tokens);
@@ -715,31 +642,31 @@ async function loginAdmin() {
 }
 
 // PHOTOS
+
 function fileExt(file) {
   const ext = (file.name.split('.').pop() || '').toLowerCase();
-  return TYPES[file.type]?.includes(ext) ? ext : null;
+
+  const allowed = {
+    'image/jpeg': ['jpg', 'jpeg'],
+    'image/png': ['png'],
+    'image/gif': ['gif']
+  };
+
+  return allowed[file.type]?.includes(ext) ? ext : null;
 }
 
 function validatePhotos(files) {
-  if (files.length > MAX_PHOTOS) {
-    throw Error('Maximum 3 photos.');
+  if (files.length > 3) {
+    throw Error('Maximum 3 photos');
   }
 
   for (const file of files) {
     if (!fileExt(file)) {
-      throw Error(
-        'Formats autorisés : JPG, JPEG, PNG ou GIF.'
-      );
+      throw Error('Format autorisé : JPG, JPEG, PNG ou GIF');
     }
 
-    if (file.size > MAX_PHOTO_BYTES) {
-      throw Error(
-        'Photo trop grande : 3 Mo maximum.'
-      );
-    }
-
-    if (file.size === 0) {
-      throw Error('Photo vide.');
+    if (file.size > 3145728 || file.size === 0) {
+      throw Error('Chaque photo doit faire entre 1 octet et 3 Mo');
     }
   }
 }
@@ -769,14 +696,11 @@ $('photos').addEventListener('change', () => {
     const url = URL.createObjectURL(file);
     previewUrls.push(url);
 
-    const wrap = node('div', undefined, 'picture');
     const img = node('img');
-
     img.src = url;
-    img.alt = 'Aperçu de ' + file.name;
+    img.alt = file.name;
 
-    wrap.append(img);
-    $('preview').append(wrap);
+    $('preview').append(img);
   }
 });
 
@@ -784,48 +708,55 @@ async function uploadPhoto(file) {
   const path =
     'posts/' + crypto.randomUUID() + '.' + fileExt(file);
 
-  let resp;
-
-  try {
-    resp = await fetch(
-      SUPABASE_URL +
-      '/storage/v1/object/' +
-      BUCKET + '/' + path,
-      {
-        method: 'POST',
-        headers: {
-          apikey: SUPABASE_KEY,
-          'Content-Type': file.type,
-          'x-upsert': 'false',
-          'cache-control': '3600'
-        },
-        body: file
-      }
-    );
-  } catch (e) {
-    throw Error('Téléversement impossible : ' + e.message);
-  }
-
-  if (!resp.ok) {
-    const raw = await resp.text();
-    let msg;
-
-    try {
-      const o = JSON.parse(raw);
-      msg = o.message || o.error;
-    } catch {
-      msg = raw;
+  const response = await fetch(
+    SUPABASE_URL +
+    '/storage/v1/object/' +
+    BUCKET + '/' + path,
+    {
+      method: 'POST',
+      headers: {
+        apikey: SUPABASE_KEY,
+        'Content-Type': file.type,
+        'x-upsert': 'false'
+      },
+      body: file
     }
+  );
 
-    throw Error(
-      'Photo refusée : ' + (msg || 'HTTP ' + resp.status)
-    );
+  if (!response.ok) {
+    const data = await response.json().catch(() => ({}));
+    throw Error(data.message || 'Téléversement refusé');
   }
 
   return path;
 }
 
-// CHARGEMENT DES ARTICLES
+function appendPhotos(parent, data) {
+  const paths = cleanPaths(data);
+  if (!paths.length) return;
+
+  const gallery = node('div', undefined, 'photos');
+
+  for (const path of paths) {
+    const link = node('a');
+    link.href = photoUrl(path);
+    link.target = '_blank';
+    link.rel = 'noopener noreferrer';
+
+    const img = node('img');
+    img.src = photoUrl(path);
+    img.loading = 'lazy';
+    img.alt = 'Photo jointe';
+
+    link.append(img);
+    gallery.append(link);
+  }
+
+  parent.append(gallery);
+}
+
+// ARTICLES
+
 async function loadArticles() {
   publicArticles = await api(
     '/rest/v1/dragon_documents' +
@@ -842,88 +773,102 @@ async function loadArticles() {
     : 'Connecté · accès public';
 }
 
-function appendPhotos(parent, data) {
-  const paths = cleanPaths(data);
+function renderArticles() {
+  const search = $('search').value.trim().toLowerCase();
+  const category = $('filter').value;
 
-  if (!paths.length) return;
+  const categories = [...new Set(
+    publicArticles.map(a => a.data?.category).filter(Boolean)
+  )].sort();
 
-  const gallery = node('div', undefined, 'photos');
+  $('filter').replaceChildren(
+    new Option('Toutes', ''),
+    ...categories.map(c => new Option(c, c))
+  );
 
-  for (const path of paths) {
-    const link = node('a');
+  $('filter').value = category;
 
-    link.href = photoUrl(path);
-    link.target = '_blank';
-    link.rel = 'noopener noreferrer';
+  let articles = publicArticles.filter(a => {
+    const d = a.data || {};
 
-    link.setAttribute(
-      'aria-label',
-      'Ouvrir la photo'
-    );
+    return (!category || d.category === category)
+      && (!search || [d.title, d.name, d.content].some(
+        v => String(v || '').toLowerCase().includes(search)
+      ));
+  });
 
-    const img = node('img');
-
-    img.src = photoUrl(path);
-    img.alt = 'Photo jointe à l’article';
-    img.loading = 'lazy';
-
-    link.append(img);
-    gallery.append(link);
+  if ($('order').value === 'old') {
+    articles = [...articles].reverse();
   }
 
-  parent.append(gallery);
+  $('count').textContent = articles.length + ' article(s)';
+  $('articleGrid').replaceChildren();
+
+  if (!articles.length) {
+    $('articleGrid').append(node('p', 'Aucun article.'));
+  }
+
+  for (const article of articles) {
+    const d = article.data || {};
+    const card = node('article', undefined, 'article');
+
+    const meta = node(
+      'div',
+      `${d.name || 'Anonyme'} · ${d.category || 'Général'} · ${dateText(article.created_at)}`,
+      'meta'
+    );
+
+    if (d.author_admin === true) {
+      meta.append(node('span', '✓ ADMIN', 'admin-badge'));
+    }
+
+    card.append(
+      node('h3', d.title || 'Sans titre'),
+      meta,
+      node('p', d.content || '')
+    );
+
+    appendPhotos(card, d);
+    appendComments(card, article);
+
+    $('articleGrid').append(card);
+  }
 }
 
-// COMMENTAIRES
+// COMMENTAIRES PUBLICS
+
 function appendComments(card, article) {
   const comments = Array.isArray(article.data?.comments)
     ? article.data.comments
     : [];
 
   const details = node('details', undefined, 'comments');
-
   details.open = openComments.has(article.id);
 
   details.addEventListener('toggle', () => {
-    if (details.open) {
-      openComments.add(article.id);
-    } else {
-      openComments.delete(article.id);
-    }
+    if (details.open) openComments.add(article.id);
+    else openComments.delete(article.id);
   });
 
-  const summary = node(
-    'summary',
-    '💬 Commentaires (' + comments.length + ')'
+  details.append(
+    node('summary', `💬 Commentaires (${comments.length})`)
   );
-
-  details.append(summary);
 
   const list = node('div', undefined, 'comment-list');
 
   if (!comments.length) {
-    list.append(node(
-      'small',
-      'Aucun commentaire pour le moment.'
-    ));
+    list.append(node('small', 'Aucun commentaire.'));
   }
 
   for (const c of comments) {
     const item = node('div', undefined, 'comment');
-    const name = node('b', c.name || 'Anonyme');
-
-    const date = node(
-      'span',
-      c.created_at ? ' · ' + dateText(c.created_at) : '',
-      'comment-date'
-    );
-
-    const line = node('div');
-
-    line.append(name, date);
 
     item.append(
-      line,
+      node('b', c.name || 'Anonyme'),
+      node('span',
+        c.created_at ? ' · ' + dateText(c.created_at) : '',
+        'comment-date'
+      ),
       node('p', c.content || '')
     );
 
@@ -933,47 +878,39 @@ function appendComments(card, article) {
   details.append(list);
 
   const form = node('form', undefined, 'comment-form');
-  form.noValidate = true;
 
-  const nodelabel = node('label', 'Ton pseudonyme');
-  const author = node('input');
+  const name = node('input');
+  name.placeholder = 'Ton pseudonyme';
+  name.maxLength = 60;
+  name.value = $('author').value.trim() || 'Anonyme';
 
-  author.maxLength = 60;
-  author.placeholder = 'Anonyme';
-  author.value = $('author').value.trim() || 'Anonyme';
-
-  nodelabel.append(author);
-
-  const textlabel = node('label', 'Ton commentaire');
   const body = node('textarea');
-
   body.maxLength = 1500;
   body.placeholder = 'Écris un commentaire…';
-  body.required = true;
 
-  textlabel.append(body);
-
-  const send = node('button', 'Envoyer le commentaire');
+  const send = node('button', 'Envoyer');
   send.type = 'submit';
 
-  form.append(nodelabel, textlabel, send);
+  form.append(
+    node('label', 'Pseudonyme'),
+    name,
+    node('label', 'Commentaire'),
+    body,
+    send
+  );
 
-  form.addEventListener('submit', async e => {
-    e.preventDefault();
+  form.onsubmit = async event => {
+    event.preventDefault();
 
-    const name = author.value.trim() || 'Anonyme';
     const content = body.value.trim();
-
-    if (!content) {
-      return notice('Le commentaire est vide.');
-    }
+    if (!content) return notice('Commentaire vide');
 
     send.disabled = true;
 
     try {
       await publicRpc('dragon_add_comment', {
         p_article_id: article.id,
-        p_name: name,
+        p_name: name.value.trim() || 'Anonyme',
         p_content: content
       });
 
@@ -986,97 +923,19 @@ function appendComments(card, article) {
       }
 
       notice('Commentaire publié !');
-
-    } catch (error) {
-      notice('Commentaire : ' + error.message);
+    } catch (e) {
+      notice('Commentaire : ' + e.message);
     } finally {
       send.disabled = false;
     }
-  });
+  };
 
   details.append(form);
   card.append(details);
 }
 
-// AFFICHAGE PUBLIC
-function renderArticles() {
-  const filter = $('filter').value;
-  const query = $('search').value.trim().toLowerCase();
+// MODÉRATION DES ARTICLES
 
-  const categories = [
-    ...new Set(
-      publicArticles
-        .map(a => a.data?.category)
-        .filter(Boolean)
-    )
-  ].sort();
-
-  $('filter').replaceChildren(
-    new Option('Toutes', ''),
-    ...categories.map(x => new Option(x, x))
-  );
-
-  $('filter').value = filter;
-
-  let visible = publicArticles.filter(a => {
-    const d = a.data || {};
-
-    return (!filter || d.category === filter) &&
-      (!query || [d.title, d.name, d.content].some(s =>
-        String(s || '').toLowerCase().includes(query)
-      ));
-  });
-
-  if ($('order').value === 'old') {
-    visible = [...visible].reverse();
-  }
-
-  $('count').textContent = visible.length + ' article(s)';
-  $('articleGrid').replaceChildren();
-
-  if (!visible.length) {
-    $('articleGrid').append(
-      node('p', 'Aucun article visible.')
-    );
-  }
-
-  for (const a of visible) {
-    const d = a.data || {};
-    const card = node('article', undefined, 'article');
-    const meta = node('div', undefined, 'meta');
-
-    meta.append(node(
-      'span',
-      (d.name || 'Anonyme') +
-      ' · ' +
-      (d.category || 'Général') +
-      ' · ' +
-      dateText(a.created_at)
-    ));
-
-    // BADGE ADMIN
-    if (d.author_admin === true) {
-      meta.append(node(
-        'span',
-        '✓ ADMIN',
-        'admin-badge'
-      ));
-    }
-
-    card.append(
-      node('h3', d.title || 'Sans titre'),
-      meta,
-      node('p', d.content || '')
-    );
-
-    appendPhotos(card, d);
-    appendComments(card, a);
-
-    $('articleGrid').append(card);
-  }
-}
-
-// ADMINISTRATION
 async function loadModeration() {
   if (!isAdmin()) return;
 
@@ -1089,221 +948,294 @@ async function loadModeration() {
   );
 
   renderModeration();
-}
-
-async function removePhotoObjects(paths) {
-  if (!paths.length) return;
-
-  await authorized(
-    '/storage/v1/object/' + BUCKET,
-    {
-      method: 'DELETE',
-      body: { prefixes: paths }
-    }
-  );
+  renderAdminComments();
 }
 
 function renderModeration() {
   if (!isAdmin()) return;
 
-  const visible = moderationArticles.filter(
+  const visibleCount = moderationArticles.filter(
     a => a.data?.hidden !== true
   ).length;
 
-  $('statVisible').textContent = visible;
-
+  $('statVisible').textContent = visibleCount;
   $('statHidden').textContent =
-    moderationArticles.length - visible;
+    moderationArticles.length - visibleCount;
 
-  const filter = $('adminFilter').value;
   const search = $('adminSearch').value.trim().toLowerCase();
+  const filter = $('adminFilter').value;
 
-  const list = moderationArticles.filter(a => {
+  const articles = moderationArticles.filter(a => {
     const d = a.data || {};
     const hidden = d.hidden === true;
 
     if (filter === 'hidden' && !hidden) return false;
     if (filter === 'visible' && hidden) return false;
 
-    return !search ||
-      [d.title, d.name, d.content].some(x =>
-        String(x || '').toLowerCase().includes(search)
-      );
+    return !search || [d.title, d.name, d.content].some(
+      v => String(v || '').toLowerCase().includes(search)
+    );
   });
 
   $('adminArticles').replaceChildren();
 
-  if (!list.length) {
-    $('adminArticles').append(
-      node('p', 'Aucun article dans ce filtre.')
-    );
-
-    return;
-  }
-
-  for (const a of list) {
-    const d = a.data || {};
+  for (const article of articles) {
+    const d = article.data || {};
     const hidden = d.hidden === true;
 
     const card = node('div', undefined, 'article');
-    const meta = node('div', undefined, 'meta');
-
-    meta.append(node(
-      'span',
-      (d.name || 'Anonyme') +
-      ' · ' +
-      dateText(a.created_at)
-    ));
-
-    if (d.author_admin === true) {
-      meta.append(node(
-        'span',
-        '✓ ADMIN',
-        'admin-badge'
-      ));
-    }
 
     card.append(
       node('h3', d.title || 'Sans titre'),
-      meta,
-      node('p', d.content || '')
+      node('p', d.content || ''),
+      node('span', hidden ? 'Masqué' : 'Visible', 'tag')
     );
-
-    appendPhotos(card, d);
-
-    card.append(node(
-      'span',
-      hidden ? 'Masqué' : 'Visible',
-      'tag'
-    ));
 
     const actions = node('div', undefined, 'actions');
 
-    const add = (
-      label,
-      handler,
-      css = 'secondary'
-    ) => {
-      const btn = node('button', label, css);
-      btn.type = 'button';
-
-      btn.onclick = async () => {
-        btn.disabled = true;
-
-        try {
-          await handler();
-        } catch (e) {
-          notice('Administration : ' + e.message);
-        } finally {
-          btn.disabled = false;
-        }
-      };
-
-      actions.append(btn);
-    };
-
-    add(
+    const toggle = node(
+      'button',
       hidden ? 'Réafficher' : 'Masquer',
-      async () => {
+      'secondary'
+    );
+
+    toggle.onclick = async () => {
+      toggle.disabled = true;
+
+      try {
         await adminRpc('dragon_set_hidden', {
-          p_id: a.id,
+          p_id: article.id,
           p_hidden: !hidden
         });
 
         await Promise.all([
-          loadArticles(),
-          loadModeration()
+          loadModeration(),
+          loadArticles()
         ]);
 
-        notice(
-          hidden
-            ? 'Article réaffiché.'
-            : 'Article masqué.'
-        );
+        notice(hidden ? 'Article réaffiché' : 'Article masqué');
+      } catch (e) {
+        notice(e.message);
+      } finally {
+        toggle.disabled = false;
       }
-    );
+    };
 
-    add(
-      'Supprimer',
-      async () => {
-        if (!confirm(
-          'Supprimer définitivement cet article et ses commentaires ?'
-        )) {
-          return;
-        }
+    const del = node('button', 'Supprimer', 'danger');
 
+    del.onclick = async () => {
+      if (!confirm('Supprimer définitivement cet article ?')) {
+        return;
+      }
+
+      del.disabled = true;
+
+      try {
         await adminRpc('dragon_delete_article', {
-          p_id: a.id
+          p_id: article.id
         });
 
-        let cleanupError = null;
-
-        try {
-          await removePhotoObjects(cleanPaths(d));
-        } catch (e) {
-          cleanupError = e.message;
-        }
-
         await Promise.all([
-          loadArticles(),
-          loadModeration()
+          loadModeration(),
+          loadArticles()
         ]);
 
-        notice(
-          cleanupError
-            ? 'Article supprimé, mais nettoyage des photos à vérifier : ' +
-              cleanupError
-            : 'Article et photos supprimés.'
-        );
-      },
+        notice('Article supprimé');
+      } catch (e) {
+        notice(e.message);
+      } finally {
+        del.disabled = false;
+      }
+    };
+
+    actions.append(toggle, del);
+    card.append(actions);
+    $('adminArticles').append(card);
+  }
+
+  if (!articles.length) {
+    $('adminArticles').append(
+      node('p', 'Aucun article dans ce filtre.')
+    );
+  }
+}
+
+// NOUVELLE MODÉRATION DES COMMENTAIRES
+
+function renderAdminComments() {
+  if (!isAdmin()) return;
+
+  const articleSelect = $('adminCommentArticle');
+  const previous = articleSelect.value;
+
+  articleSelect.replaceChildren(
+    new Option('Tous les articles', '')
+  );
+
+  const withComments = moderationArticles.filter(
+    a => Array.isArray(a.data?.comments) && a.data.comments.length
+  );
+
+  for (const article of withComments) {
+    articleSelect.append(
+      new Option(article.data?.title || 'Sans titre', article.id)
+    );
+  }
+
+  articleSelect.value =
+    [...articleSelect.options].some(o => o.value === previous)
+      ? previous
+      : '';
+
+  const chosen = articleSelect.value;
+  const status = $('adminCommentStatus').value;
+  const search = $('adminCommentSearch').value.trim().toLowerCase();
+  const sort = $('adminCommentSort').value;
+
+  const all = [];
+
+  for (const article of moderationArticles) {
+    const comments = Array.isArray(article.data?.comments)
+      ? article.data.comments
+      : [];
+
+    for (const comment of comments) {
+      all.push({ article, comment });
+    }
+  }
+
+  const filtered = all.filter(({ article, comment }) => {
+    if (chosen && article.id !== chosen) return false;
+
+    const hidden = article.data?.hidden === true;
+
+    if (status === 'hidden' && !hidden) return false;
+    if (status === 'visible' && hidden) return false;
+
+    const text = [
+      comment.name,
+      comment.content,
+      article.data?.title
+    ].join(' ').toLowerCase();
+
+    return !search || text.includes(search);
+  });
+
+  filtered.sort((a, b) => {
+    const x = Date.parse(a.comment.created_at) || 0;
+    const y = Date.parse(b.comment.created_at) || 0;
+    return sort === 'old' ? x - y : y - x;
+  });
+
+  $('adminCommentCount').textContent =
+    `${filtered.length} commentaire(s) sur ${all.length}`;
+
+  $('adminComments').replaceChildren();
+
+  if (!filtered.length) {
+    $('adminComments').append(
+      node('p', 'Aucun commentaire dans ce filtre.')
+    );
+    return;
+  }
+
+  for (const { article, comment } of filtered.slice(0, 500)) {
+    const card = node('div', undefined, 'comment-admin-card');
+
+    card.append(
+      node(
+        'div',
+        'Article : ' + (article.data?.title || 'Sans titre'),
+        'comment-parent'
+      ),
+      node(
+        'div',
+        (comment.name || 'Anonyme') +
+          ' · ' + dateText(comment.created_at),
+        'meta'
+      ),
+      node('p', comment.content || '')
+    );
+
+    if (article.data?.hidden === true) {
+      card.append(node('span', 'Article masqué', 'tag'));
+    }
+
+    const del = node(
+      'button',
+      'Supprimer ce commentaire',
       'danger'
     );
 
-    card.append(actions);
-    $('adminArticles').append(card);
+    if (!comment.id) {
+      del.disabled = true;
+      del.title =
+        'Ancien commentaire sans identifiant individuel';
+    } else {
+      del.onclick = async () => {
+        if (!confirm('Supprimer définitivement ce commentaire ?')) {
+          return;
+        }
+
+        del.disabled = true;
+
+        try {
+          await adminRpc('dragon_delete_comment', {
+            p_article_id: article.id,
+            p_comment_id: comment.id
+          });
+
+          await Promise.all([
+            loadModeration(),
+            loadArticles()
+          ]);
+
+          notice('Commentaire supprimé !');
+        } catch (e) {
+          notice('Suppression : ' + e.message);
+        } finally {
+          del.disabled = false;
+        }
+      };
+    }
+
+    card.append(del);
+    $('adminComments').append(card);
   }
 }
 
 // PUBLICATION
-$('publishForm').addEventListener('submit', async e => {
-  e.preventDefault();
+
+$('publishForm').onsubmit = async event => {
+  event.preventDefault();
 
   const title = $('title').value.trim();
 
-  // ACCÈS SECRET ADMIN
   if (secretTitle(title)) {
     show('adminLogin', true);
-
     $('adminLogin').scrollIntoView({
       behavior: 'smooth'
     });
-
     return;
   }
 
-  const name =
-    $('author').value.trim() || 'Anonyme';
-
+  const name = $('author').value.trim() || 'Anonyme';
   const category = $('category').value.trim();
   const content = $('content').value.trim();
   const files = [...$('photos').files];
 
   if (!title || !category || !content) {
-    return notice(
-      'Complète le titre, la catégorie et le contenu.'
-    );
+    return notice('Remplis le titre, la catégorie et le contenu');
   }
 
   try {
     validatePhotos(files);
-  } catch (error) {
-    return notice(error.message);
+  } catch (e) {
+    return notice(e.message);
   }
 
   const button = $('publishButton');
-
   button.disabled = true;
-  button.textContent = 'Publication en cours…';
 
   try {
     const paths = [];
@@ -1312,7 +1244,7 @@ $('publishForm').addEventListener('submit', async e => {
       paths.push(await uploadPhoto(file));
     }
 
-    const payload = {
+    const params = {
       p_name: name,
       p_title: title,
       p_content: content,
@@ -1320,21 +1252,16 @@ $('publishForm').addEventListener('submit', async e => {
       p_photo_paths: paths
     };
 
-    // L'admin publie avec son jeton utilisateur.
-    // Supabase attribue le badge, pas le HTML.
     if (isAdmin()) {
       await authorized(
         '/rest/v1/rpc/dragon_publish_with_photos',
         {
           method: 'POST',
-          body: payload
+          body: params
         }
       );
     } else {
-      await publicRpc(
-        'dragon_publish_with_photos',
-        payload
-      );
+      await publicRpc('dragon_publish_with_photos', params);
     }
 
     $('title').value = '';
@@ -1344,117 +1271,94 @@ $('publishForm').addEventListener('submit', async e => {
     clearPreview();
 
     await loadArticles();
-
-    if (isAdmin()) {
-      await loadModeration();
-    }
+    if (isAdmin()) await loadModeration();
 
     notice('Article publié !');
-
     location.hash = 'articles';
-
-  } catch (error) {
-    notice(
-      'Publication : ' +
-      error.message +
-      ' (les photos déjà envoyées peuvent nécessiter ' +
-      'un nettoyage dans Storage)'
-    );
+  } catch (e) {
+    notice('Publication : ' + e.message);
   } finally {
     button.disabled = false;
-    button.textContent = 'Publier immédiatement';
   }
-});
+};
 
 // BOUTONS
+
 $('login').onclick = async () => {
-  const b = $('login');
-  b.disabled = true;
+  $('login').disabled = true;
 
   try {
     await loginAdmin();
   } catch (e) {
     notice('Connexion : ' + e.message);
   } finally {
-    b.disabled = false;
+    $('login').disabled = false;
   }
 };
 
 $('logout').onclick = async () => {
   forgetAdmin();
-  notice('Administration déconnectée.');
-
-  try {
-    await loadArticles();
-  } catch (e) {
-    notice(e.message);
-  }
+  await loadArticles();
+  notice('Déconnecté');
 };
 
-$('closeLogin').onclick = () =>
-  show('adminLogin', false);
+$('closeLogin').onclick = () => show('adminLogin', false);
 
 $('reload').onclick = () =>
   loadArticles().catch(e => notice(e.message));
 
-$('refreshAdmin').onclick = async () => {
-  try {
-    await Promise.all([
-      loadModeration(),
-      loadArticles()
-    ]);
+$('refreshAdmin').onclick = () =>
+  loadModeration().catch(e => notice(e.message));
 
-    notice('Administration actualisée.');
+$('refreshComments').onclick = () =>
+  loadModeration().catch(e => notice(e.message));
 
-  } catch (e) {
-    notice(e.message);
-  }
-};
-
-for (const id of [
-  'search',
-  'filter',
-  'order'
-]) {
+for (const id of ['search', 'filter', 'order']) {
   $(id).addEventListener(
     id === 'search' ? 'input' : 'change',
     renderArticles
   );
 }
 
-for (const id of [
-  'adminSearch',
-  'adminFilter'
-]) {
+for (const id of ['adminSearch', 'adminFilter']) {
   $(id).addEventListener(
     id === 'adminSearch' ? 'input' : 'change',
     renderModeration
   );
 }
 
+for (const id of [
+  'adminCommentSearch',
+  'adminCommentArticle',
+  'adminCommentStatus',
+  'adminCommentSort'
+]) {
+  $(id).addEventListener(
+    id === 'adminCommentSearch' ? 'input' : 'change',
+    renderAdminComments
+  );
+}
+
 // NAVIGATION
-const navLinks = [
-  ...document.querySelectorAll('nav a[href^="#"]')
-];
 
 function activeLink() {
-  for (const link of navLinks) {
-    link.classList.toggle(
-      'active',
-      link.hash === (location.hash || '#articles')
-    );
-  }
+  const current = location.hash || '#articles';
+
+  document.querySelectorAll('nav a[href^="#"]').forEach(link => {
+    link.classList.toggle('active', link.hash === current);
+  });
 }
 
 window.addEventListener('hashchange', activeLink);
-
 activeLink();
 
 // DÉMARRAGE
+
 loadArticles().catch(e => {
-  $('status').textContent = 'Supabase indisponible';
+  $('status').textContent = 'Connexion indisponible';
   notice('Chargement : ' + e.message);
 });
+
 </script>
 </body>
 </html>
