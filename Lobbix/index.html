@@ -1,1108 +1,303 @@
-
 <!DOCTYPE html>
 <html lang="fr">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lobbix V0.7 — JJCookieLabs</title>
+<title>Lobbix V0.8 — SafeGuard 1.0</title>
 <style>
-:root {
-  font-family:system-ui,Arial,sans-serif;
-  --bg:#f5f6fb;--panel:#fff;--text:#202238;
-  --sub:#68718a;--line:#e0e3ec;--accent:#655be0;
-  color-scheme:light;
-}
-body.dark {
-  --bg:#141826;--panel:#242a3c;--text:#f3f3ff;
-  --sub:#c0c7de;--line:#41475b;--accent:#a296ff;
-  color-scheme:dark;
-}
-*{box-sizing:border-box}
-body{background:var(--bg);color:var(--text);margin:0}
-button,input,textarea,select{font:inherit}
-button {
-  border:0;border-radius:11px;padding:10px 14px;
-  color:white;background:var(--accent);cursor:pointer;
-}
-button.alt {
-  color:var(--text);background:var(--panel);
-  border:1px solid var(--line);
-}
-button:disabled{opacity:.5}
-input,textarea,select {
-  padding:11px;width:100%;background:var(--panel);
-  border:1px solid var(--line);border-radius:11px;color:var(--text);
-}
-label{display:block;margin:12px 0 5px}
-.hidden{display:none!important}
-.card {
-  background:var(--panel);border:1px solid var(--line);
-  padding:22px;border-radius:18px;margin:12px 0;
-}
-.muted{color:var(--sub);font-size:14px}
-.row {
-  display:flex;align-items:center;justify-content:space-between;
-  gap:10px;flex-wrap:wrap;
-}
-.grid {
-  display:grid;
-  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:14px;
-}
-.notice {
-  padding:13px;border:1px solid var(--line);
-  border-radius:12px;margin:12px 0;
-  overflow-wrap:anywhere;white-space:pre-line;
-}
-.auth{min-height:100dvh;display:grid;place-items:center;padding:20px}
-.auth>.card{width:min(440px,100%)}
-.auth h1{margin-top:0}
-.app{display:flex;min-height:100dvh}
-.nav {
-  width:210px;flex-shrink:0;background:var(--panel);
-  border-right:1px solid var(--line);padding:20px 12px;
-}
-.nav button{display:block;width:100%;margin:5px 0;text-align:left}
-.main{padding:22px;width:100%;max-width:1100px;margin:auto}
-.wide{width:100%}
+:root{font-family:system-ui,Arial;--bg:#f5f6fb;--panel:#fff;--text:#202238;--sub:#68718a;--line:#e0e3ec;--accent:#655be0;color-scheme:light}
+body.dark{--bg:#141826;--panel:#242a3c;--text:#f3f3ff;--sub:#c0c7de;--line:#41475b;--accent:#a296ff;color-scheme:dark}
+*{box-sizing:border-box}body{background:var(--bg);color:var(--text);margin:0}button,input,textarea,select{font:inherit}button{border:0;border-radius:11px;padding:10px 14px;color:white;background:var(--accent);cursor:pointer}button.alt{color:var(--text);background:var(--panel);border:1px solid var(--line)}button:disabled{opacity:.5}input,textarea,select{padding:11px;width:100%;background:var(--panel);border:1px solid var(--line);border-radius:11px;color:var(--text)}label{display:block;margin:12px 0 5px}.hidden{display:none!important}.card{background:var(--panel);border:1px solid var(--line);padding:22px;border-radius:18px;margin:12px 0}.muted{color:var(--sub);font-size:14px}.row{display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:14px}.notice{padding:13px;border:1px solid var(--line);border-radius:12px;margin:12px 0;overflow-wrap:anywhere;white-space:pre-line}.auth{min-height:100dvh;display:grid;place-items:center;padding:20px}.auth>.card{width:min(440px,100%)}.auth h1{margin-top:0}.app{display:flex;min-height:100dvh}.nav{width:210px;flex-shrink:0;background:var(--panel);border-right:1px solid var(--line);padding:20px 12px}.nav button{display:block;width:100%;margin:5px 0;text-align:left}.main{padding:22px;width:100%;max-width:1100px;margin:auto}.wide{width:100%}.room{position:fixed;z-index:10;inset:0;display:flex;flex-direction:column;color:white;background:linear-gradient(125deg,#384879,#182339);--shade:.48}.room.gridbg{background-image:linear-gradient(#ffffff15 1px,transparent 1px),linear-gradient(90deg,#ffffff15 1px,transparent 1px),linear-gradient(125deg,#384879,#182339);background-size:35px 35px,35px 35px,cover}.room.waves{background:radial-gradient(ellipse at 5% 10%,#587daf,transparent 65%),radial-gradient(ellipse at 90% 85%,#7459a3,transparent 60%),#21283f}.room::before{content:"";position:absolute;inset:0;background:rgba(0,7,28,var(--shade));pointer-events:none}.room>*{position:relative}.roomtop{padding:12px 15px;background:#11162b80;display:flex;align-items:center;justify-content:space-between}.roomtop button{background:#ffffff2b;border:1px solid #ffffff55}.roomlayout{flex:1;min-height:0;padding:10px;display:grid;gap:10px;grid-template-columns:145px 1fr minmax(280px,420px)}.glass{border-radius:15px;border:1px solid #ffffff38;background:#141c38a0;backdrop-filter:blur(12px);padding:14px;min-height:0}.mini{display:flex;flex-direction:column;gap:7px}.mini button{background:#ffffff24;text-align:left}.work{overflow:auto}.chat{display:flex;flex-direction:column}.messages{flex:1;min-height:100px;overflow:auto}.msg{margin:9px 0;padding:10px;background:#ffffff19;border-radius:12px;overflow-wrap:anywhere}.msg.me{background:#8777ff60}.msg small{color:#d7daec}.composer{display:flex;gap:8px}.room input,.room textarea,.room select{background:#ffffff24;border-color:#ffffff64;color:white}.room option{background:#252b45}.room input::placeholder{color:#d7d9eb}.room .alt{background:#ffffff29;color:white;border-color:#ffffff55}.room .muted{color:#d3d8eb}canvas{width:100%;background:white;touch-action:none;border-radius:10px}
+@media(max-width:790px){.roomlayout{grid-template-columns:1fr;grid-template-rows:auto minmax(130px,.7fr) minmax(220px,1.2fr)}.mini{flex-direction:row;overflow:auto}.mini button{white-space:nowrap}}
+@media(max-width:540px){.app{padding-bottom:65px}.nav{position:fixed;bottom:0;left:0;width:100%;height:62px;z-index:5;display:flex;padding:5px;justify-content:space-around;border-top:1px solid var(--line)}.nav button{width:auto;font-size:11px;padding:8px}.main{padding:14px}.roomlayout{gap:7px;padding:7px}}
 
-/* LOBBY IMMERSIF */
-.room {
-  position:fixed;z-index:10;inset:0;
-  display:flex;flex-direction:column;color:white;
-  background:linear-gradient(125deg,#384879,#182339);
-  --shade:.48;
-}
-.room.gridbg {
-  background-image:
-    linear-gradient(#ffffff15 1px,transparent 1px),
-    linear-gradient(90deg,#ffffff15 1px,transparent 1px),
-    linear-gradient(125deg,#384879,#182339);
-  background-size:35px 35px,35px 35px,cover;
-}
-.room.waves {
-  background:
-    radial-gradient(ellipse at 5% 10%,#587daf,transparent 65%),
-    radial-gradient(ellipse at 90% 85%,#7459a3,transparent 60%),
-    #21283f;
-}
-.room::before {
-  content:"";position:absolute;inset:0;
-  background:rgba(0,7,28,var(--shade));
-  pointer-events:none;
-}
-.room>*{position:relative}
-.roomtop {
-  padding:12px 15px;background:#11162b80;
-  display:flex;align-items:center;justify-content:space-between;
-  gap:10px;
-}
-.roomtop button {
-  background:#ffffff2b;border:1px solid #ffffff55;
-}
-.roomlayout {
-  flex:1;min-height:0;padding:10px;
-  display:grid;gap:10px;
-  grid-template-columns:145px 1fr minmax(280px,420px);
-}
-.glass {
-  border-radius:15px;border:1px solid #ffffff38;
-  background:#141c38a0;backdrop-filter:blur(12px);
-  padding:14px;min-height:0;
-}
-.mini{display:flex;flex-direction:column;gap:7px}
-.mini button{background:#ffffff24;text-align:left}
-.work{overflow:auto}
-.chat{display:flex;flex-direction:column}
-.messages{flex:1;min-height:100px;overflow:auto}
-.msg {
-  margin:9px 0;padding:10px;background:#ffffff19;
-  border-radius:12px;overflow-wrap:anywhere;
-}
-.msg.me{background:#8777ff60}
-.msg small{color:#d7daec}
-.composer{display:flex;gap:8px}
-.room input,.room textarea,.room select {
-  background:#ffffff24;border-color:#ffffff64;color:white;
-}
-.room option{background:#252b45}
-.room input::placeholder{color:#d7d9eb}
-.room .alt {
-  background:#ffffff29;color:white;border-color:#ffffff55;
-}
-.room .muted{color:#d3d8eb}
-canvas {
-  width:100%;background:white;
-  touch-action:none;border-radius:10px;
-}
-@media(max-width:790px) {
-  .roomlayout {
-    grid-template-columns:1fr;
-    grid-template-rows:auto minmax(130px,.7fr) minmax(220px,1.2fr);
-  }
-  .mini{flex-direction:row;overflow:auto}
-  .mini button{white-space:nowrap}
-}
-@media(max-width:540px) {
-  .app{padding-bottom:65px}
-  .nav {
-    position:fixed;bottom:0;left:0;width:100%;height:62px;
-    z-index:5;display:flex;padding:5px;
-    justify-content:space-around;border-top:1px solid var(--line);
-  }
-  .nav h2{display:none}
-  .nav button{width:auto;font-size:11px;padding:8px}
-  .main{padding:14px}
-  .roomlayout{gap:7px;padding:7px}
-}
+.admin-login-note{font-size:13px;line-height:1.5;color:var(--sub)}
 </style>
 </head>
 <body>
-
-<section id="auth" class="auth">
-  <div class="card">
-    <div class="row">
-      <h1>🎮 Lobbix</h1>
-      <button class="alt" onclick="theme()">☀️/🌙</button>
-    </div>
-    <p class="muted">Entre dans les lobbies et discute avec tes amis.</p>
-    <div class="notice muted">
-      Prototype privé. SafeGuard serveur n'est pas encore actif.
-    </div>
-    <div id="authError" class="notice hidden"></div>
-    <div id="authForm"></div>
-  </div>
-</section>
-
+<section id="auth" class="auth"><div class="card">
+<div class="row"><h1>🎮 Lobbix</h1><button class="alt" onclick="theme()">☀️/🌙</button></div>
+<p class="muted">Entre dans les lobbies et discute avec tes amis.</p>
+<div class="notice muted">Prototype privé : SafeGuard 1.0 actif côté serveur pour textes, pseudos et lobbies. Les images ne sont pas encore prises en charge.</div>
+<div id="authError" class="notice hidden"></div><div id="authForm"></div><p class="muted" style="font-size:12px">Lobbix est un prototype privé. Les comptes nécessitent une configuration correcte de Supabase Auth et du service email.</p>
+</div></section>
 <section id="app" class="app hidden">
-  <nav class="nav" id="appNav">
-    <h2>🎮 Lobbix</h2>
-    <button class="alt" onclick="page('home')">🏠 Accueil</button>
-    <button class="alt" onclick="page('explore')">🧭 Explorer</button>
-    <button class="alt" onclick="page('create')">➕ Créer</button>
-    <button class="alt" onclick="page('profile')">👤 Profil</button>
-  </nav>
-  <main class="main">
-    <div class="row">
-      <h1 id="heading">Accueil</h1>
-      <button class="alt" onclick="theme()">🌓 Thème</button>
-    </div>
-    <div id="appError" class="notice hidden"></div>
-    <div id="content"></div>
-  </main>
+<nav class="nav" id="appNav"><h2>🎮 Lobbix</h2><button class="alt" onclick="page('home')">🏠 Accueil</button><button class="alt" onclick="page('explore')">🧭 Explorer</button><button class="alt" onclick="page('create')">➕ Créer</button><button class="alt" onclick="page('profile')">👤 Profil</button></nav>
+<main class="main"><div class="row"><h1 id="heading">Accueil</h1><button class="alt" onclick="theme()">🌓 Thème</button></div><div id="appError" class="notice hidden"></div><div id="content"></div></main>
 </section>
-
 <section id="room" class="room hidden">
-  <div class="roomtop">
-    <div>
-      <strong id="roomName">Lobby</strong>
-      <div id="count" class="muted">0/25 joueurs</div>
-    </div>
-    <button onclick="leaveRoom()">← Quitter le lobby</button>
-  </div>
-  <div class="roomlayout">
-    <nav class="glass mini">
-      <button onclick="activity('home')">🏠 Lobby</button>
-      <button onclick="activity('players')">👥 Joueurs</button>
-      <button onclick="activity('draw')">🎨 Dessin</button>
-      <button onclick="activity('wheel')">🎡 Roue</button>
-      <button onclick="activity('poll')">📊 Sondage</button>
-      <button onclick="activity('games')">🎮 Jeux</button>
-    </nav>
-    <div class="glass work" id="workspace"></div>
-    <div class="glass chat">
-      <h3>💬 Discussion</h3>
-      <div id="messages" class="messages"></div>
-      <div class="composer">
-        <input id="message" maxlength="2000"
-          placeholder="Message…"
-          onkeydown="if(event.key==='Enter')send()">
-        <button onclick="send()">Envoyer</button>
-      </div>
-    </div>
-  </div>
+<div class="roomtop"><div><strong id="roomName">Lobby</strong><div id="count" class="muted">0/25 joueurs</div></div><button onclick="leaveRoom()">← Quitter le lobby</button></div>
+<div class="roomlayout"><nav class="glass mini"><button onclick="activity('home')">🏠 Lobby</button><button onclick="activity('players')">👥 Joueurs</button><button onclick="activity('draw')">🎨 Dessin</button><button onclick="activity('wheel')">🎡 Roue</button><button onclick="activity('poll')">📊 Sondage</button><button onclick="activity('games')">🎮 Jeux</button></nav>
+<div class="glass work" id="workspace"></div><div class="glass chat"><h3>💬 Discussion · 🛡️ SafeGuard</h3><div id="messages" class="messages"></div><div id="sgNotice" style="font-size:12px;padding:4px 0;color:#ffdc91" role="status" aria-live="polite"></div><div class="composer"><input id="message" maxlength="2000" placeholder="Message…" onkeydown="if(event.key==='Enter')send()"><button onclick="send()">Envoyer</button></div></div></div>
 </section>
-
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.js"></script>
 <script>
 'use strict';
-
 const URL_SUPA='https://hkwnfxgrnyvyfprzvlyb.supabase.co';
 const PUBLIC_KEY='sb_publishable_hzBek5ZmTxpaNZcQiDPwgA_i4Lhv3o0';
-const ADMIN_COMMAND='©JJCookie-Administration';
-
 const $=id=>document.getElementById(id);
-const safe=x=>String(x??'').replace(
-  /[&<>"']/g,
-  c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c])
-);
+const safe=x=>String(x??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
 const redirect=()=>location.origin+location.pathname;
-
-let db=null,user=null,profile=null;
-let mode='login',currentPage='home';
-let lobbies=[],lobby=null,joinedAt='',members=[];
-let poller=null,recovering=false;
-let adminPanelUnlocked=false,adminLoginPending=false;
-let commandBuffer='';
-
-if(localStorage.getItem('lobbix-theme')==='dark')
-  document.body.classList.add('dark');
-
-function theme(){
-  document.body.classList.toggle('dark');
-  localStorage.setItem(
-    'lobbix-theme',
-    document.body.classList.contains('dark')?'dark':'light'
-  );
-}
-function notice(text,target='authError'){
-  const el=$(target);
-  el.textContent=text;
-  el.classList.remove('hidden');
-}
-function hideNotice(target='authError'){
-  $(target).classList.add('hidden');
-}
+let db=null,user=null,profile=null,admin=false,mode='login',currentPage='home',lobbies=[],lobby=null,joinedAt='',members=[],poller=null,recovering=false,drawing=false,adminLoginPending=false,adminPanelUnlocked=false,commandBuffer='';
+if(localStorage.getItem('lobbix-theme')==='dark')document.body.classList.add('dark');
+function theme(){document.body.classList.toggle('dark');localStorage.setItem('lobbix-theme',document.body.classList.contains('dark')?'dark':'light')}
+function notice(text,target='authError'){const el=$(target);el.textContent=text;el.classList.remove('hidden')}
+function hideNotice(target='authError'){$(target).classList.add('hidden')}
 function fail(e,target){
-  console.error('Lobbix:',e);
-  let text=e?.message||String(e);
-  if(e?.code)text+=' (code '+e.code+')';
-  if(e?.status)text+=' [HTTP '+e.status+']';
-  notice(text,target||'authError');
+ console.error('Lobbix :',e);
+ let detail = e?.message || String(e);
+ if(e?.code) detail += ' (code '+e.code+')';
+ if(e?.status) detail += ' [HTTP '+e.status+']';
+ if(target !== 'appError' && (mode==='signup'||mode==='forgot')){
+  const m = detail.toLowerCase();
+  if(m.includes('rate limit')||m.includes('too many'))
+   detail += '\nLimite d’envoi atteinte : attends avant de recommencer ou configure un SMTP personnalisé.';
+  else if(m.includes('email')||m.includes('smtp')||m.includes('sending'))
+   detail += '\nVérifie Authentication → Email et SMTP : le serveur intégré Supabase limite l’envoi aux adresses autorisées de ton équipe.';
+ }
+ notice(detail,target || 'authError');
 }
-function screen(name){
-  $('auth').classList.toggle('hidden',name!=='auth');
-  $('app').classList.toggle('hidden',name!=='app');
-  $('room').classList.toggle('hidden',name!=='room');
-}
-
-// AUTHENTIFICATION
-
-function form(next){
-  mode=next;
-  screen('auth');
-  hideNotice();
-
-  let html=mode==='admin'?'':`
-    <div class="row">
-      <button class="alt" onclick="form('login')">Connexion</button>
-      <button class="alt" onclick="form('signup')">Inscription</button>
-    </div>
-  `;
-
-  if(mode==='admin'){
-    html+=`
-      <h2>🛡️ Accès administrateur</h2>
-      <p class="muted">
-        Connecte-toi avec un compte qui possède déjà le rôle admin.
-      </p>
-      <form onsubmit="adminSignIn(event)">
-        <label>Email administrateur</label>
-        <input id="adminEmail" type="email" required
-          autocomplete="username">
-        <label>Mot de passe</label>
-        <input id="adminPassword" type="password" required
-          autocomplete="current-password">
-        <p><button class="wide">Connexion administrateur</button></p>
-      </form>
-      <button class="alt" onclick="cancelAdminLogin()">Annuler</button>
-    `;
-  }
-  else if(mode==='login'||mode==='signup'){
-    html+=`
-      <form onsubmit="authSubmit(event)">
-        <label>Email</label>
-        <input id="email" type="email" required autocomplete="email">
-        <label>Mot de passe</label>
-        <input id="password" type="password"
-          minlength="${mode==='signup'?8:1}" required>
-    `;
-    if(mode==='signup'){
-      html+=`
-        <p class="muted">
-          Une confirmation par email peut être nécessaire.
-        </p>
-        <label>
-          <input id="accept" type="checkbox"
-            style="width:auto" required>
-          J'accepte les règles de démonstration de Lobbix.
-        </label>
-      `;
+async function safeguard(payload){
+  if(!db) throw Error('Connexion Supabase indisponible');
+  const {data,error}=await db.functions.invoke('lobbix-safeguard',{body:payload});
+  let result=data;
+  if(error){
+    if(error.context && typeof error.context.json==='function'){
+      try {result=await error.context.json();}catch(e){console.warn('SafeGuard HTTP',e)}
     }
-    html+=`
-        <p><button class="wide">
-          ${mode==='login'?'Se connecter':'Créer mon compte'}
-        </button></p>
-      </form>
-    `;
-    if(mode==='login'){
-      html+=`
-        <button class="alt" onclick="form('forgot')">
-          Mot de passe oublié ?
-        </button>
-        <button class="alt" onclick="form('resend')">
-          Renvoyer la confirmation
-        </button>
-      `;
-    }
+    if(!result || typeof result!=='object')throw Error(error.message || 'SafeGuard indisponible');
   }
-  else if(mode==='forgot'||mode==='resend'){
-    html+=`
-      <form onsubmit="${mode==='forgot'?'forgot':'resendConfirmation'}(event)">
-        <h3>${mode==='forgot'?'Mot de passe oublié':'Confirmation email'}</h3>
-        <input id="email" type="email" required placeholder="Email">
-        <p><button class="wide">Envoyer l'email</button></p>
-      </form>
-    `;
-  }
-  else if(mode==='reset'){
-    html+=`
-      <form onsubmit="resetPassword(event)">
-        <h3>Nouveau mot de passe</h3>
-        <input id="newPassword" type="password" minlength="8" required>
-        <p><button class="wide">Enregistrer</button></p>
-      </form>
-    `;
-  }
-  else if(mode==='nickname'){
-    html+=`
-      <form onsubmit="setNickname(event)">
-        <h3>Créer ton profil</h3>
-        <input id="nickname" required maxlength="24"
-          pattern="[A-Za-z0-9_]{3,24}"
-          placeholder="Pseudonyme unique">
-        <p>3 à 24 caractères : lettres, chiffres et _</p>
-        <label>
-          <input id="accept" type="checkbox"
-            style="width:auto" required>
-          J'accepte les règles de démonstration.
-        </label>
-        <p><button class="wide">Continuer</button></p>
-      </form>
-    `;
-  }
-  $('authForm').innerHTML=html;
+  if(!result || typeof result!=='object')throw Error('Réponse SafeGuard illisible');
+  return result;
 }
-
-async function startup(){
+function screen(name){$('auth').classList.toggle('hidden',name!=='auth');$('app').classList.toggle('hidden',name!=='app');$('room').classList.toggle('hidden',name!=='room')}
+function form(modeName){mode=modeName;screen('auth');hideNotice();let s = mode==='admin' ? '' : '<div class="row"><button class="alt" onclick="form(\'login\')">Connexion</button><button class="alt" onclick="form(\'signup\')">Inscription</button></div>';
+if(mode==='admin'){
+ s += `<h2>🛡️ Accès administrateur</h2>
+ <p class="admin-login-note">Connecte-toi avec un compte Supabase disposant déjà du rôle <code>admin</code>.</p>
+ <form onsubmit="adminSignIn(event)">
+ <label>Email du compte administrateur</label>
+ <input id="adminEmail" type="email" required autocomplete="username">
+ <label>Mot de passe</label>
+ <input id="adminPassword" type="password" required autocomplete="current-password">
+ <p><button class="wide">Se connecter à l’administration</button></p>
+ </form>
+ <button class="alt" onclick="cancelAdminLogin()">Annuler</button>`;
+}
+else if(mode==='login'||mode==='signup'){s+=`<form onsubmit="authSubmit(event)"><label>Email</label><input id="email" type="email" required autocomplete="email"><label>Mot de passe</label><input id="password" type="password" minlength="${mode==='signup'?8:1}" required autocomplete="${mode==='signup'?'new-password':'current-password'}">`;
+if(mode==='signup')s+='<p class="muted">Un email de confirmation pourra être nécessaire. Le serveur email Supabase de test ne fonctionne pas pour toutes les adresses.</p><label><input id="accept" type="checkbox" style="width:auto" required> J’accepte les règles du prototype (respect des autres, aucun harcèlement, ni données personnelles d’autrui).</label>';
+s+=`<p><button class="wide">${mode==='login'?'Se connecter':'Créer mon compte'}</button></p></form>`;
+if(mode==='login')s+='<button class="alt" onclick="form(\'forgot\')">Mot de passe oublié ?</button> <button class="alt" onclick="form(\'resend\')">Renvoyer la confirmation</button>';
+}else if(mode==='resend')s+='<form onsubmit="resendConfirmation(event)"><h3>Renvoyer le lien de confirmation</h3><input id="email" type="email" required placeholder="Adresse email"><p><button class="wide">Renvoyer le lien</button></p></form>';
+else if(mode==='forgot')s+='<form onsubmit="forgot(event)"><h3>Réinitialisation</h3><input id="email" type="email" required placeholder="Adresse email"><p><button class="wide">Envoyer un lien</button></p></form>';
+else if(mode==='reset')s+='<form onsubmit="resetPassword(event)"><h3>Nouveau mot de passe</h3><input id="newPassword" type="password" minlength="8" required placeholder="Nouveau mot de passe"><p><button class="wide">Enregistrer</button></p></form>';
+else if(mode==='nickname')s+='<form onsubmit="setNickname(event)"><h3>Créer ton profil</h3><input id="nickname" required maxlength="24" pattern="[A-Za-z0-9_]{3,24}" placeholder="Pseudonyme unique"><p><label><input id="accept" type="checkbox" style="width:auto" required> J’accepte les règles du prototype.</label></p><button class="wide">Continuer</button></form>';
+$('authForm').innerHTML=s}
+async function startup(){form('login');if(!window.supabase?.createClient){notice('Impossible de charger Supabase JS. Vérifie Internet et le bloqueur de scripts.');return}
+try{db=window.supabase.createClient(URL_SUPA,PUBLIC_KEY,{auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true,storageKey:'lobbix-email-v06'}});
+db.auth.onAuthStateChange((event,session)=>{if(event==='PASSWORD_RECOVERY'){recovering=true;user=session?.user??user;form('reset');return}if(event==='SIGNED_OUT'){
+ user=null;profile=null;admin=false;adminPanelUnlocked=false;lobby=null;clearInterval(poller);
+ if(!adminLoginPending)form('login');
+}
+if(event==='SIGNED_IN'&&session?.user&&!recovering&&!adminLoginPending)
+ setTimeout(()=>loadUser(session.user),0)});
+const {data,error}=await db.auth.getSession();if(error)throw error;if(data.session?.user&&!recovering)await loadUser(data.session.user)
+}catch(e){fail(e)}}
+async function authSubmit(ev){ev.preventDefault();hideNotice();let email=$('email').value.trim(),password=$('password').value;
+try{if(mode==='signup'){if(!$('accept').checked)throw Error('Accepte les règles.');const {data,error}=await db.auth.signUp({email,password,options:{emailRedirectTo:redirect()}});if(error)throw error;if(data.session?.user)await loadUser(data.session.user);
+ else {
   form('login');
-
-  if(!window.supabase?.createClient){
-    notice('Bibliothèque Supabase introuvable. Vérifie Internet.');
-    return;
-  }
-
-  try{
-    db=window.supabase.createClient(URL_SUPA,PUBLIC_KEY,{
-      auth:{
-        persistSession:true,
-        autoRefreshToken:true,
-        detectSessionInUrl:true,
-        storageKey:'lobbix-email-v07'
-      }
-    });
-
-    db.auth.onAuthStateChange((event,session)=>{
-      if(event==='PASSWORD_RECOVERY'){
-        recovering=true;
-        user=session?.user??user;
-        form('reset');
-        return;
-      }
-      if(event==='SIGNED_OUT'){
-        user=null;
-        profile=null;
-        adminPanelUnlocked=false;
-        lobby=null;
-        clearInterval(poller);
-        if(!adminLoginPending)form('login');
-      }
-      if(event==='SIGNED_IN'&&session?.user
-          &&!recovering&&!adminLoginPending){
-        setTimeout(()=>loadUser(session.user),0);
-      }
-    });
-
-    const {data,error}=await db.auth.getSession();
-    if(error)throw error;
-    if(data.session?.user&&!recovering)
-      await loadUser(data.session.user);
-  }catch(e){fail(e)}
-}
-
-async function authSubmit(ev){
-  ev.preventDefault();
-  hideNotice();
-  const email=$('email').value.trim();
-  const password=$('password').value;
-
-  try{
-    if(mode==='signup'){
-      if(!$('accept').checked)throw Error('Accepte les règles.');
-
-      const {data,error}=await db.auth.signUp({
-        email,password,
-        options:{emailRedirectTo:redirect()}
-      });
-      if(error)throw error;
-
-      if(data.session?.user){
-        await loadUser(data.session.user);
-      }else{
-        form('login');
-        notice(
-          'Demande d’inscription reçue. Vérifie ton email. '+
-          'Si aucun message n’arrive, vérifie la configuration SMTP de Supabase.'
-        );
-      }
-    }else{
-      const {data,error}=await db.auth.signInWithPassword({
-        email,password
-      });
-      if(error)throw error;
-      await loadUser(data.user);
-    }
-  }catch(e){fail(e)}
-}
-
+  notice('Demande d’inscription reçue pour '+email+'. Si cet email est autorisé par la configuration SMTP, tu recevras un lien de confirmation. Vérifie aussi les courriers indésirables. Si aucun email n’arrive, vérifie les réglages SMTP de Supabase.');
+ }}
+else{const {data,error}=await db.auth.signInWithPassword({email,password});if(error)throw error;await loadUser(data.user)}}catch(e){fail(e)}}
 async function resendConfirmation(ev){
-  ev.preventDefault();
-  try{
-    const {error}=await db.auth.resend({
-      type:'signup',
-      email:$('email').value.trim(),
-      options:{emailRedirectTo:redirect()}
-    });
-    if(error)throw error;
-    notice('Demande de renvoi effectuée. Vérifie ta boîte email.');
-  }catch(e){fail(e)}
+ ev.preventDefault();hideNotice();
+ try{
+  const email=$('email').value.trim();
+  const {error}=await db.auth.resend({type:'signup',email,options:{emailRedirectTo:redirect()}});
+  if(error)throw error;
+  notice('Si cette adresse attend une confirmation et que Supabase peut lui envoyer un email, le lien a été renvoyé.');
+ }catch(e){fail(e)}
 }
-
-async function forgot(ev){
-  ev.preventDefault();
-  try{
-    const {error}=await db.auth.resetPasswordForEmail(
-      $('email').value.trim(),
-      {redirectTo:redirect()}
-    );
-    if(error)throw error;
-    notice('Si le compte existe, un lien de récupération sera envoyé.');
-  }catch(e){fail(e)}
-}
-
-async function resetPassword(ev){
-  ev.preventDefault();
-  try{
-    const {error}=await db.auth.updateUser({
-      password:$('newPassword').value
-    });
-    if(error)throw error;
-    recovering=false;
-    const {data}=await db.auth.getUser();
-    if(data.user)await loadUser(data.user);
-    else form('login');
-  }catch(e){fail(e)}
-}
-
-async function loadUser(u){
-  if(!u||recovering||adminLoginPending)return;
-
-  try{
-    user=u;
-    const {data,error}=await db.from('lobbix_profiles')
-      .select('id,nickname')
-      .eq('id',u.id)
-      .maybeSingle();
-    if(error)throw error;
-
-    profile=data;
-    if(!profile){
-      form('nickname');
-      return;
-    }
-
-    adminPanelUnlocked=false;
-    $('appNav').classList.remove('hidden');
-    screen('app');
-    await listRooms();
-    page('home');
-  }catch(e){
-    form('login');
-    fail(e);
-  }
-}
-
+async function forgot(ev){ev.preventDefault();try{const {error}=await db.auth.resetPasswordForEmail($('email').value.trim(),{redirectTo:redirect()});if(error)throw error;notice('Si le compte existe, un email de récupération a été envoyé.')}catch(e){fail(e)}}
+async function resetPassword(ev){ev.preventDefault();try{const {error}=await db.auth.updateUser({password:$('newPassword').value});if(error)throw error;recovering=false;const {data}=await db.auth.getUser();if(data.user)await loadUser(data.user);else form('login')}catch(e){fail(e)}}
+async function loadUser(u){if(!u||recovering)return;try{user=u;const {data,error}=await db.from('lobbix_profiles').select('id,nickname').eq('id',u.id).maybeSingle();if(error)throw error;profile=data;
+if(!profile){form('nickname');return}admin=false;adminPanelUnlocked=false;$('appNav').classList.remove('hidden');screen('app');await listRooms();page('home')
+}catch(e){form('login');fail(e)}}
 async function setNickname(ev){
   ev.preventDefault();
-  try{
+  try {
     const nick=$('nickname').value.trim();
-    if(!/^[A-Za-z0-9_]{3,24}$/.test(nick))
-      throw Error('Pseudonyme invalide.');
-
-    const {error}=await db.rpc('lobbix_set_nickname',{
-      p_nickname:nick
-    });
-    if(error)throw error;
+    if(!/^[A-Za-z0-9_]{3,24}$/.test(nick)) throw Error('Pseudo invalide');
+    const answer=await safeguard({action:'nickname',nickname:nick});
+    if(!answer.ok)throw Error(answer.reason||answer.message||'Pseudonyme refusé');
     await loadUser(user);
   }catch(e){fail(e)}
 }
-
-// LOBBIES
-
-async function listRooms(){
-  const {data,error}=await db.rpc('lobbix_list_public');
-  if(error)throw error;
-  lobbies=data||[];
-}
-
-function roomCard(r){
-  return `
-    <div class="card">
-      <h3>${r.is_random?'🎲':'🎮'} ${safe(r.name)}</h3>
-      <p class="muted">
-        ${safe(r.description||'')} · ${r.current_players}/25 joueurs
-      </p>
-      <button onclick="joinRoom('${r.id}')">Rejoindre</button>
-    </div>
-  `;
-}
-
-function page(p){
-  if(p==='admin'&&!adminPanelUnlocked){
-    alert('Connexion administrateur obligatoire.');
-    return;
-  }
-
-  currentPage=p;
-  $('heading').textContent={
-    home:'Accueil',explore:'Explorer',create:'Créer un lobby',
-    profile:'Profil',admin:'Administration'
-  }[p]||'Lobbix';
-
-  let html='';
-
-  if(p==='home'){
-    html=`
-      <div class="row">
-        <h2>Bonjour ${safe(profile.nickname)} !</h2>
-        <button onclick="page('create')">+ Créer</button>
-      </div>
-      <div class="grid">
-        ${lobbies.map(roomCard).join('')||'Aucun lobby visible'}
-      </div>
-    `;
-  }
-  if(p==='explore'){
-    html=`
-      <input id="query" placeholder="Rechercher un lobby…"
-        oninput="filterRooms()">
-      <div id="results" class="grid">
-        ${lobbies.map(roomCard).join('')}
-      </div>
-      <button onclick="refreshList()">Actualiser</button>
-    `;
-  }
-  if(p==='create'){
-    html=`
-      <div class="card">
-        <h2>Créer un lobby public</h2>
-        <form onsubmit="createRoom(event)">
-          <label>Nom</label>
-          <input id="rName" maxlength="60" required>
-          <label>Description</label>
-          <textarea id="rDesc" maxlength="150"></textarea>
-          <label>Durée</label>
-          <select id="rHours">
-            <option value="">Permanent</option>
-            <option value="1">1 heure</option>
-            <option value="6">6 heures</option>
-            <option value="24">24 heures</option>
-          </select>
-          <label>Supprimer si vide après (1–30 min)</label>
-          <input id="rEmpty" type="number" min="1" max="30" value="30">
-          <p class="muted">
-            Prototype : suppression automatique et lobbies privés à venir.
-          </p>
-          <button>Créer et rejoindre</button>
-        </form>
-      </div>
-    `;
-  }
-  if(p==='profile'){
-    html=`
-      <div class="card">
-        <h2>👤 ${safe(profile.nickname)}</h2>
-        <p>${safe(user.email||'')}</p>
-        <button onclick="signout()">Déconnexion</button>
-      </div>
-    `;
-  }
-  $('content').innerHTML=html;
-  if(p==='admin')showAdmin();
-}
-
-function filterRooms(){
-  const q=$('query').value.toLowerCase();
-  $('results').innerHTML=lobbies
-    .filter(x=>x.name.toLowerCase().includes(q))
-    .map(roomCard).join('')||'Aucun lobby';
-}
-
-async function refreshList(){
-  try{
-    await listRooms();
-    page(currentPage);
-  }catch(e){fail(e,'appError')}
-}
-
+async function listRooms(){const {data,error}=await db.rpc('lobbix_list_public');if(error)throw error;lobbies=data||[]}
+function roomCard(r){return `<div class="card"><h3>${r.is_random?'🎲':'🎮'} ${safe(r.name)}</h3><p class="muted">${safe(r.description||'')} · ${r.current_players}/25 joueurs</p><button onclick="joinRoom('${r.id}')">Rejoindre</button></div>`}
+function page(p){if(p==='admin'&&!adminPanelUnlocked){alert('Accès administrateur : authentification requise.');return}currentPage=p;$('heading').textContent={home:'Accueil',explore:'Explorer',create:'Créer un lobby',profile:'Profil',admin:'Administration'}[p]||'Lobbix';let html='';
+if(p==='home')html=`<div class="row"><h2>Bonjour ${safe(profile.nickname)} !</h2><button onclick="page('create')">+ Créer</button></div><div class="grid">${lobbies.map(roomCard).join('')||'<p>Aucun lobby visible</p>'}</div>`;
+if(p==='explore')html=`<input id="query" placeholder="Rechercher un lobby…" oninput="filterRooms()"><div id="results" class="grid">${lobbies.map(roomCard).join('')}</div><p><button onclick="refreshList()">Actualiser</button></p>`;
+if(p==='create')html='<div class="card"><h2>Créer un lobby public</h2><form onsubmit="createRoom(event)"><label>Nom</label><input id="rName" maxlength="60" required><label>Description</label><textarea id="rDesc" maxlength="150"></textarea><label>Durée</label><select id="rHours"><option value="">Permanent</option><option value="1">1 heure</option><option value="6">6 heures</option><option value="24">24 heures</option></select><label>Suppression si vide : 1 à 30 minutes (pas encore automatisée)</label><input id="rEmpty" type="number" min="1" max="30" value="30"><p class="muted">Version de test : lobbies privés non disponibles.</p><button>Créer et rejoindre</button></form></div>';
+if(p==='profile')html=`<div class="card"><h2>👤 ${safe(profile.nickname)}</h2><p>${safe(user.email||'')}</p><button onclick="signout()">Déconnexion</button></div>`;
+$('content').innerHTML=html;if(p==='admin')showAdmin()}
+function filterRooms(){const q=$('query').value.toLowerCase();$('results').innerHTML=lobbies.filter(x=>x.name.toLowerCase().includes(q)).map(roomCard).join('')||'Aucun lobby'}
+async function refreshList(){try{await listRooms();page(currentPage)}catch(e){fail(e,'appError')}}
 async function createRoom(ev){
   ev.preventDefault();
-  try{
+  try {
     const name=$('rName').value.trim();
-    const {data,error}=await db.rpc('lobbix_create_lobby',{
-      p_name:name,
-      p_description:$('rDesc').value,
-      p_public:true,
-      p_hours:$('rHours').value?Number($('rHours').value):null,
-      p_empty_minutes:Number($('rEmpty').value)
+    const reply=await safeguard({
+      action:'lobby',
+      name,
+      description:$('rDesc').value,
+      hours:$('rHours').value?Number($('rHours').value):null,
+      empty_minutes:Number($('rEmpty').value)
     });
-    if(error)throw error;
-    await joinRoom(data,name);
+    if(!reply.ok)throw Error(reply.reason||reply.message||'Lobby refusé');
+    await joinRoom(reply.lobby_id,name);
   }catch(e){fail(e,'appError')}
 }
-
-async function joinRoom(id,name){
-  try{
-    const {error}=await db.rpc('lobbix_join_public',{
-      p_lobby:id
-    });
-    if(error)throw error;
-
-    const r=await db.from('lobbix_members')
-      .select('joined_at')
-      .eq('lobby_id',id)
-      .eq('user_id',user.id)
-      .maybeSingle();
-    if(r.error)throw r.error;
-
-    joinedAt=r.data?.joined_at||new Date().toISOString();
-    lobby={
-      id,
-      name:name||lobbies.find(x=>x.id===id)?.name||'Lobby'
-    };
-    $('roomName').textContent='🎮 '+lobby.name;
-    screen('room');
-    setWall(localStorage.getItem('lobbix-bg')||'aurora');
-    activity('home');
-    await updateRoom();
-
-    clearInterval(poller);
-    poller=setInterval(updateRoom,3000);
-  }catch(e){fail(e,'appError')}
-}
-
-async function leaveRoom(){
-  clearInterval(poller);
-  poller=null;
-  try{
-    const {error}=await db.rpc('lobbix_leave');
-    if(error)throw error;
-  }catch(e){console.error(e)}
-
-  lobby=null;
-  screen('app');
-  await refreshList();
-  page('home');
-}
-
-// MESSAGES
-
-async function updateRoom(){
-  if(!lobby)return;
-
-  try{
-    const [a,b]=await Promise.all([
-      db.from('lobbix_messages')
-        .select('id,sender_id,body,created_at,deleted_at')
-        .eq('lobby_id',lobby.id)
-        .gte('created_at',joinedAt)
-        .order('created_at')
-        .limit(200),
-      db.rpc('lobbix_room_members',{p_lobby:lobby.id})
-    ]);
-
-    if(a.error)throw a.error;
-    if(b.error)throw b.error;
-
-    members=b.data||[];
-    $('count').textContent=members.length+'/25 joueurs';
-
-    const names=new Map(
-      members.map(x=>[x.user_id,x.nickname])
-    );
-    const el=$('messages');
-    const atEnd=el.scrollHeight-el.scrollTop-el.clientHeight<100;
-
-    const messages=(a.data||[]).filter(m=>
-      lobby.name.toLowerCase()!=='random'||
-      Date.now()-new Date(m.created_at)<86400000
-    );
-
-    el.innerHTML=messages.map(m=>`
-      <div class="msg ${m.sender_id===user.id?'me':''}">
-        <small>
-          ${safe(names.get(m.sender_id)||'Joueur')}
-          · ${new Date(m.created_at).toLocaleTimeString('fr-FR')}
-        </small>
-        <div>
-          ${m.deleted_at?'Message supprimé':safe(m.body)}
-        </div>
-        <button class="alt" style="padding:4px 6px;font-size:11px"
-          onclick="report(${Number(m.id)})">
-          ⚑ Signaler
-        </button>
-      </div>
-    `).join('')||'<p class="muted">Aucun message depuis ton entrée.</p>';
-
-    if(atEnd)el.scrollTop=el.scrollHeight;
-
-    if($('players')){
-      $('players').innerHTML=members.map(
-        x=>'<li>'+safe(x.nickname)+'</li>'
-      ).join('');
-    }
-  }catch(e){console.error('Chat:',e)}
-}
-
+async function joinRoom(id,name){try{const {error}=await db.rpc('lobbix_join_public',{p_lobby:id});if(error)throw error;const r=await db.from('lobbix_members').select('joined_at').eq('lobby_id',id).eq('user_id',user.id).maybeSingle();if(r.error)throw r.error;joinedAt=r.data?.joined_at||new Date().toISOString();lobby={id,name:name||lobbies.find(x=>x.id===id)?.name||'Lobby'};$('roomName').textContent='🎮 '+lobby.name;screen('room');setWall('aurora');activity('home');await updateRoom();clearInterval(poller);poller=setInterval(updateRoom,3000)}catch(e){fail(e,'appError')}}
+async function leaveRoom(){clearInterval(poller);poller=null;try{const {error}=await db.rpc('lobbix_leave');if(error)throw error}catch(e){console.error(e)}lobby=null;screen('app');await refreshList();page('home')}
+async function updateRoom(){if(!lobby)return;try{const [a,b]=await Promise.all([db.from('lobbix_messages').select('id,sender_id,body,created_at,deleted_at').eq('lobby_id',lobby.id).gte('created_at',joinedAt).order('created_at').limit(200),db.rpc('lobbix_room_members',{p_lobby:lobby.id})]);if(a.error)throw a.error;if(b.error)throw b.error;members=b.data||[];$('count').textContent=members.length+'/25 joueurs';const names=new Map(members.map(x=>[x.user_id,x.nickname]));const el=$('messages');let atEnd=el.scrollHeight-el.scrollTop-el.clientHeight<100;const messages=(a.data||[]).filter(m=>lobby.name.toLowerCase()!=='random'||Date.now()-new Date(m.created_at)<86400000);el.innerHTML=messages.map(m=>`<div class="msg ${m.sender_id===user.id?'me':''}"><small>${safe(names.get(m.sender_id)||'Joueur')} · ${new Date(m.created_at).toLocaleTimeString('fr-FR')}</small><div>${m.deleted_at?'Message supprimé':safe(m.body)}</div><button class="alt" onclick="report(${Number(m.id)})" style="padding:4px 6px;font-size:11px">⚑ Signaler</button></div>`).join('')||'<p class="muted">Aucun message depuis ton entrée.</p>';if(atEnd)el.scrollTop=el.scrollHeight;if($('players'))$('players').innerHTML=members.map(x=>'<li>'+safe(x.nickname)+'</li>').join('')}
+catch(e){console.error('Chat',e)}}
+let sending=false;
 async function send(){
-  if(!lobby)return;
-  const input=$('message');
-  const text=input.value.trim();
+  if(!lobby || sending)return;
+  const el=$('message'), text=el.value.trim();
   if(!text)return;
-
-  if(text===ADMIN_COMMAND){
-    input.value='';
-    await openAdminLogin();
-    return;
-  }
-
+  if(text===ADMIN_COMMAND){el.value='';await openAdminLogin();return}
+  sending=true;
+  const output=$('sgNotice');
+  if(output)output.textContent='🛡️ SafeGuard vérifie ton message…';
   try{
-    const {error}=await db.rpc('lobbix_send',{
-      p_lobby:lobby.id,p_body:text
-    });
-    if(error)throw error;
-    input.value='';
-    await updateRoom();
-  }catch(e){alert(e.message)}
-}
-
-async function report(id){
-  const reason=prompt('Motif du signalement (10 à 250 caractères)');
-  if(reason===null)return;
-
-  try{
-    const {error}=await db.rpc('lobbix_report_message',{
-      p_message:id,p_reason:reason
-    });
-    if(error)throw error;
-    alert('Signalement envoyé');
-  }catch(e){alert(e.message)}
-}
-
-async function signout(){
-  if(lobby)await leaveRoom();
-  await db.auth.signOut();
-  user=null;
-  profile=null;
-  adminPanelUnlocked=false;
-  adminLoginPending=false;
-  form('login');
-}
-
-// FONDS D'ÉCRAN
-
-function setWall(w){
-  const el=$('room');
-  el.classList.remove('gridbg','waves');
-  if(w==='grid')el.classList.add('gridbg');
-  if(w==='waves')el.classList.add('waves');
-  localStorage.setItem('lobbix-bg',w);
-}
-
-// MINI-APPLICATIONS
-
-function activity(type){
-  const el=$('workspace');
-
-  if(type==='home'){
-    el.innerHTML=`
-      <h2>Bienvenue dans ${safe(lobby?.name||'Lobbix')} !</h2>
-      <p>Choisis une mini-app ou discute dans le chat.</p>
-      <label>Fond d'écran</label>
-      <select id="wallSelect" onchange="setWall(this.value)">
-        <option value="aurora">Aurore</option>
-        <option value="grid">Grille</option>
-        <option value="waves">Vagues</option>
-      </select>
-      <label>Opacité du voile</label>
-      <input type="range" min="25" max="80" value="48"
-        oninput="document.getElementById('room').style.setProperty('--shade',this.value/100)">
-      <p class="muted">Les activités restent locales dans cette version.</p>
-    `;
-    $('wallSelect').value=localStorage.getItem('lobbix-bg')||'aurora';
-  }
-  else if(type==='players'){
-    el.innerHTML=`
-      <h2>👥 Joueurs</h2>
-      <ul id="players">
-        ${members.map(x=>'<li>'+safe(x.nickname)+'</li>').join('')}
-      </ul>
-    `;
-  }
-  else if(type==='wheel'){
-    el.innerHTML=`
-      <h2>🎡 Roue aléatoire</h2>
-      <input id="wheel" placeholder="Pizza, Sushi, Burger">
-      <p><button onclick="spin()">Tirer</button></p>
-      <h2 id="picked"></h2>
-    `;
-  }
-  else if(type==='draw'){
-    el.innerHTML=`
-      <h2>🎨 Tableau blanc</h2>
-      <canvas id="canvas" width="650" height="340"></canvas>
-      <p><button onclick="activity('draw')">Effacer</button></p>
-    `;
-    drawCanvas();
-  }
-  else if(type==='poll'){
-    el.innerHTML=`
-      <h2>📊 Sondages</h2>
-      <p class="muted">Sondages multijoueurs à venir.</p>
-    `;
-  }
-  else{
-    el.innerHTML=`
-      <h2>🎮 Mini-jeux</h2>
-      <p class="muted">Mini-jeux multijoueurs à venir.</p>
-    `;
-  }
-}
-
-function spin(){
-  const choices=$('wheel').value.split(',')
-    .map(x=>x.trim()).filter(Boolean);
-
-  if(choices.length<2)return alert('Deux choix minimum');
-
-  const bytes=new Uint32Array(1);
-  crypto.getRandomValues(bytes);
-  $('picked').textContent='🎉 '+choices[bytes[0]%choices.length];
-}
-
-function drawCanvas(){
-  const c=$('canvas'),ctx=c.getContext('2d');
-  ctx.strokeStyle='#655be0';
-  ctx.lineWidth=3;
-  ctx.lineCap='round';
-
-  let pressed=false;
-  const pos=e=>{
-    const r=c.getBoundingClientRect();
-    return [
-      (e.clientX-r.left)*c.width/r.width,
-      (e.clientY-r.top)*c.height/r.height
-    ];
-  };
-
-  c.onpointerdown=e=>{
-    pressed=true;
-    c.setPointerCapture(e.pointerId);
-    ctx.beginPath();
-    ctx.moveTo(...pos(e));
-  };
-  c.onpointermove=e=>{
-    if(pressed){
-      ctx.lineTo(...pos(e));
-      ctx.stroke();
+    let result=await safeguard({action:'message',lobby_id:lobby.id,text});
+    if(result.verdict==='warning'){
+      if(!confirm('⚠️ SafeGuard : '+result.reason+'\n\nEnvoyer quand même ?')){
+        if(output)output.textContent='Message non envoyé.';
+        return;
+      }
+      result=await safeguard({action:'message',lobby_id:lobby.id,text,confirm_warning:true});
     }
-  };
-  c.onpointerup=c.onpointercancel=()=>pressed=false;
+    if(!result.ok){
+      const reason=result.reason||result.message||'Message refusé';
+      if(output)output.textContent='🚫 '+reason;
+      if(result.muted_until)alert('Envoi suspendu jusqu’à '+new Date(result.muted_until).toLocaleTimeString('fr-FR'));
+      return;
+    }
+    el.value='';
+    if(output)output.textContent='✅ Message accepté par SafeGuard';
+    await updateRoom();
+  }catch(e){
+    if(output)output.textContent='❌ '+(e.message||'SafeGuard indisponible : envoi annulé');
+  }finally{sending=false}
 }
+async function report(id){const reason=prompt('Motif du signalement (10 à 250 caractères)');if(reason==null)return;try{const {error}=await db.rpc('lobbix_report_message',{p_message:id,p_reason:reason});if(error)throw error;alert('Signalement envoyé')}catch(e){alert(e.message)}}
+async function signout(){if(lobby)await leaveRoom();await db.auth.signOut();user=null;profile=null;admin=false;adminPanelUnlocked=false;adminLoginPending=false;$('appNav').classList.remove('hidden');form('login')}
+function setWall(w){const el=$('room');el.classList.remove('gridbg','waves');if(w==='grid')el.classList.add('gridbg');if(w==='waves')el.classList.add('waves');localStorage.setItem('lobbix-bg',w)}
+function activity(type){const el=$('workspace');if(type==='home')el.innerHTML='<h2>Bienvenue !</h2><p>Choisis une mini-app ou discute dans le chat.</p><label>Fond d’écran</label><select onchange="setWall(this.value)"><option value="aurora">Aurore</option><option value="grid">Grille</option><option value="waves">Vagues</option></select><label>Opacité du voile</label><input type="range" min="25" max="80" value="48" oninput="document.getElementById(\'room\').style.setProperty(\'--shade\',this.value/100)"><p class="muted">SafeGuard contrôle les messages et les noms avant publication. Les mini-applications restent locales.</p>';
+else if(type==='players')el.innerHTML='<h2>Joueurs</h2><ul id="players">'+members.map(x=>'<li>'+safe(x.nickname)+'</li>').join('')+'</ul>';
+else if(type==='wheel')el.innerHTML='<h2>🎡 Roue</h2><input id="wheel" placeholder="Pizza, Sushi, Burger"><p><button onclick="spin()">Tirer</button></p><h2 id="picked"></h2>';
+else if(type==='draw'){el.innerHTML='<h2>🎨 Tableau blanc</h2><canvas id="canvas" width="650" height="340"></canvas><p><button onclick="activity(\'draw\')">Effacer</button></p>';drawCanvas()}
+else if(type==='poll')el.innerHTML='<h2>📊 Sondages</h2><p class="muted">Sondages synchronisés à venir.</p>';
+else el.innerHTML='<h2>🎮 Mini-jeux</h2><p class="muted">Mini-jeux multijoueurs à venir.</p>'}
+function spin(){const choices=$('wheel').value.split(',').map(x=>x.trim()).filter(Boolean);if(choices.length<2)return alert('Deux choix minimum');const bytes=new Uint32Array(1);crypto.getRandomValues(bytes);$('picked').textContent='🎉 '+choices[bytes[0]%choices.length]}
+function drawCanvas(){const c=$('canvas'),ctx=c.getContext('2d');ctx.strokeStyle='#655be0';ctx.lineWidth=3;ctx.lineCap='round';let pressed=false;const pos=e=>{let r=c.getBoundingClientRect();return[(e.clientX-r.left)*c.width/r.width,(e.clientY-r.top)*c.height/r.height]};c.onpointerdown=e=>{pressed=true;c.setPointerCapture(e.pointerId);ctx.beginPath();ctx.moveTo(...pos(e))};c.onpointermove=e=>{if(pressed){ctx.lineTo(...pos(e));ctx.stroke()}};c.onpointerup=c.onpointercancel=()=>pressed=false}
+async function showAdmin(){
+ if(!adminPanelUnlocked||!user)return;
+ $('content').innerHTML='<div class="row"><h2>🛡️ Administration Lobbix</h2><button onclick="signout()">Déconnexion</button></div><p>Vérification des autorisations…</p>';
+ try{
+  const check=await db.rpc('lobbix_is_admin');
+  if(check.error||check.data!==true){
+   adminPanelUnlocked=false;admin=false;page('home');
+   throw Error('Accès refusé : ce compte ne possède pas le rôle admin.');
+  }
+const [a,b]=await Promise.all([db.rpc('lobbix_admin_stats'),db.rpc('lobbix_admin_reports')]);if(a.error)throw a.error;if(b.error)throw b.error;const s=a.data||{};$('content').innerHTML=`<div class="row"><h2>🛡️ Administration Lobbix</h2><button onclick="signout()">Déconnexion</button></div><div class="grid"><div class="card">Profils : ${s.profiles||0}</div><div class="card">Lobbies : ${s.lobbies||0}</div><div class="card">Messages : ${s.messages||0}</div><div class="card">Signalements : ${s.reports_pending||0}</div></div><h2>Signalements</h2>`+(b.data||[]).map(r=>`<div class="card"><b>${safe(r.lobby_name)} · ${safe(r.reported_nickname)}</b><p>${safe(r.message_body)}</p><p class="muted">${safe(r.reason)}</p><button onclick="review(${Number(r.report_id)},true)">Supprimer</button> <button class="alt" onclick="review(${Number(r.report_id)},false)">Classer</button></div>`).join('')}
+catch(e){fail(e,'appError')}}
+async function review(id,del){if(!confirm('Confirmer ?'))return;try{const {error}=await db.rpc('lobbix_admin_review_report',{p_report:id,p_delete_message:del});if(error)throw error;await showAdmin()}catch(e){fail(e,'appError')}}
 
-// ADMINISTRATION CACHÉE
+// Accès administrateur caché : la commande n'est PAS un mot de passe.
+// Le seul contrôle de privilège fiable est l'examen du rôle par la RPC Supabase.
+const ADMIN_COMMAND = '©JJCookie-Administration';
 
 function cancelAdminLogin(){
-  adminLoginPending=false;
-  if(user&&profile){
-    screen('app');
-    page('home');
-  }else form('login');
+ adminLoginPending=false;
+ if(user&&profile){screen('app');page('home')}else form('login');
 }
 
 async function openAdminLogin(){
-  commandBuffer='';
-  adminPanelUnlocked=false;
-
-  if(lobby&&db){
-    clearInterval(poller);
-    poller=null;
-    try{await db.rpc('lobbix_leave')}catch(e){console.warn(e)}
-    lobby=null;
-  }
-  form('admin');
+ commandBuffer='';
+ admin=false;
+ adminPanelUnlocked=false;
+ if(lobby&&db){
+  clearInterval(poller);poller=null;
+  try { await db.rpc('lobbix_leave'); } catch(e) { console.warn('Départ du lobby',e) }
+  lobby=null;
+ }
+ form('admin');
 }
 
-// Détection de la commande exacte au clavier.
+// Au clavier, saisir exactement ©JJCookie-Administration, où que l'on soit.
 document.addEventListener('keydown',e=>{
-  if(e.ctrlKey||e.metaKey)return;
-
-  if(e.key==='Escape'||e.key==='Backspace'){
-    commandBuffer='';
-    return;
-  }
-
-  if(e.target instanceof HTMLInputElement &&
-     e.target.type==='password')return;
-
-  if(e.key.length!==1)return;
-
-  commandBuffer=(commandBuffer+e.key).slice(-ADMIN_COMMAND.length);
-
-  if(commandBuffer===ADMIN_COMMAND){
-    e.preventDefault();
-    openAdminLogin();
-  }
+ if(e.ctrlKey||e.metaKey||e.key==='Backspace'||e.key==='Escape'){
+  if(e.key==='Escape'||e.key==='Backspace')commandBuffer='';
+  return;
+ }
+ if(e.target instanceof HTMLInputElement && e.target.type==='password')return;
+ if(e.key.length!==1)return;
+ commandBuffer=(commandBuffer+e.key).slice(-ADMIN_COMMAND.length);
+ if(commandBuffer===ADMIN_COMMAND){
+  e.preventDefault();
+  openAdminLogin();
+ }
 },true);
 
-// Détection quand on colle la commande.
+// Coller la commande dans une zone de texte ou un champ fonctionne aussi.
 document.addEventListener('paste',e=>{
-  const text=e.clipboardData?.getData('text')?.trim();
-  if(text===ADMIN_COMMAND){
-    e.preventDefault();
-    openAdminLogin();
-  }
+ const text=e.clipboardData?.getData('text')?.trim();
+ if(text===ADMIN_COMMAND){e.preventDefault();openAdminLogin()}
 },true);
 
-// Détection dans un champ texte.
 document.addEventListener('input',e=>{
-  const target=e.target;
-  if(target instanceof HTMLInputElement||
-     target instanceof HTMLTextAreaElement){
-    if(target.type!=='password' &&
-       target.value?.trim()===ADMIN_COMMAND){
-      target.value='';
-      openAdminLogin();
-    }
+ if(e.target instanceof HTMLInputElement || e.target instanceof HTMLTextAreaElement){
+  if(e.target.type!=='password' && e.target.value?.trim()===ADMIN_COMMAND){
+   e.target.value='';openAdminLogin();
   }
+ }
 },true);
 
 async function adminSignIn(ev){
-  ev.preventDefault();
-  hideNotice();
-
-  if(!db)return notice('Supabase est indisponible.');
-
-  const email=$('adminEmail').value.trim();
-  const password=$('adminPassword').value;
-  adminLoginPending=true;
-
-  try{
-    const {data,error}=await db.auth.signInWithPassword({
-      email,password
-    });
-    if(error)throw error;
-    if(!data.user||!data.session)
-      throw Error('Session non valide.');
-
-    // Le rôle est vérifié par Supabase, pas par le HTML.
-    const check=await db.rpc('lobbix_is_admin');
-    if(check.error)throw check.error;
-
-    if(check.data!==true){
-      await db.auth.signOut();
-      throw Error('Accès refusé : rôle admin requis.');
-    }
-
-    user=data.user;
-    adminPanelUnlocked=true;
-    $('appNav').classList.add('hidden');
-    screen('app');
-    page('admin');
-  }catch(e){
-    adminPanelUnlocked=false;
-    form('admin');
-    fail(e);
-  }finally{
-    adminLoginPending=false;
+ ev.preventDefault();
+ hideNotice();
+ if(!db)return notice('Supabase est indisponible.');
+ const email=$('adminEmail')?.value.trim();
+ const password=$('adminPassword')?.value;
+ adminLoginPending=true;
+ try{
+  // Se connecter avec les identifiants existants : aucune création de compte admin.
+  const {data,error}=await db.auth.signInWithPassword({email,password});
+  if(error)throw error;
+  if(!data.user||!data.session)throw Error('Session non valide.');
+  const check=await db.rpc('lobbix_is_admin');
+  if(check.error)throw check.error;
+  if(check.data!==true){
+   await db.auth.signOut();
+   throw Error('Accès refusé : le compte ne possède pas le rôle admin.');
   }
-}
-
-async function showAdmin(){
-  if(!adminPanelUnlocked||!user)return;
-
-  $('content').innerHTML='<p>Vérification administrateur…</p>';
-
-  try{
-    const check=await db.rpc('lobbix_is_admin');
-    if(check.error)throw check.error;
-
-    if(check.data!==true){
-      adminPanelUnlocked=false;
-      throw Error('Accès administrateur refusé.');
-    }
-
-    const [a,b]=await Promise.all([
-      db.rpc('lobbix_admin_stats'),
-      db.rpc('lobbix_admin_reports')
-    ]);
-    if(a.error)throw a.error;
-    if(b.error)throw b.error;
-
-    const s=a.data||{};
-
-    $('content').innerHTML=`
-      <div class="row">
-        <h2>🛡️ Administration Lobbix</h2>
-        <button onclick="signout()">Déconnexion</button>
-      </div>
-      <div class="grid">
-        <div class="card">Profils : ${s.profiles||0}</div>
-        <div class="card">Lobbies : ${s.lobbies||0}</div>
-        <div class="card">Messages : ${s.messages||0}</div>
-        <div class="card">Signalements : ${s.reports_pending||0}</div>
-      </div>
-      <h2>Signalements</h2>
-    `+(b.data||[]).map(r=>`
-      <div class="card">
-        <b>${safe(r.lobby_name)} · ${safe(r.reported_nickname)}</b>
-        <p>${safe(r.message_body)}</p>
-        <p class="muted">${safe(r.reason)}</p>
-        <button onclick="review(${Number(r.report_id)},true)">
-          Supprimer le message
-        </button>
-        <button class="alt"
-          onclick="review(${Number(r.report_id)},false)">
-          Classer sans suite
-        </button>
-      </div>
-    `).join('');
-  }catch(e){
-    fail(e,'appError');
-  }
-}
-
-async function review(id,del){
-  if(!confirm('Confirmer cette action ?'))return;
-
-  try{
-    const {error}=await db.rpc('lobbix_admin_review_report',{
-      p_report:id,
-      p_delete_message:del
-    });
-    if(error)throw error;
-    await showAdmin();
-  }catch(e){fail(e,'appError')}
+  // Le rôle provient de public.profiles, lié à auth.uid(), et non d'un pseudo tapé.
+  user=data.user;
+  admin=true;
+  adminPanelUnlocked=true;
+  $('appNav').classList.add('hidden');
+  screen('app');
+  page('admin');
+ }catch(e){
+  admin=false;adminPanelUnlocked=false;
+  form('admin');
+  fail(e);
+ }finally{adminLoginPending=false}
 }
 
 startup();
