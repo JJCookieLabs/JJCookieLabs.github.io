@@ -511,6 +511,13 @@
             gap: 1rem;
             font-size: 0.84rem;
         }
+
+        /* Informations légales : textes longs et points à compléter */
+        .legal-content details p { line-height: 1.72; }
+        .legal-content details p + p { margin-top: 0.95rem; }
+        .legal-content a { color: #a5b4fc; text-decoration: underline; }
+        .legal-content .legal-required { color: #fbbf24; font-weight: 650; }
+        .legal-content .legal-warning { border-left: 3px solid #f59e0b; padding-left: 0.9rem; }
     </style>
 </head>
 <body>
@@ -539,7 +546,7 @@
         <div id="projects" class="projects-grid">
             <article class="card">
                 <div>
-                    <h2>CRSHStudio <span class="badge badge-lock">🔒 Protégé</span></h2>
+                    <h2>CRSHStudio <span class="badge badge-lock">Accès par portail</span></h2>
                     <p>Éditeur et visualiseur de graphes relationnels au format compressé maison JJC1.</p>
                 </div>
                 <button type="button" class="btn" id="btnCrsh">Ouvrir CRSHStudio &rarr;</button>
@@ -563,8 +570,8 @@
 
             <article class="card">
                 <div>
-                    <h2>Lobbix <span class="badge badge-lock">🔒 Protégé</span></h2>
-                    <p>Accédez à l'espace privé et aux fonctionnalités expérimentales du projet Lobbix.</p>
+                    <h2>Lobbix <span class="badge badge-lock">Accès par portail</span></h2>
+                    <p>Découvrez Lobbix, un projet expérimental de lobbies et de discussion utilisant Supabase et une connexion utilisateur.</p>
                 </div>
                 <button type="button" class="btn" id="btnLobbix">Ouvrir Lobbix &rarr;</button>
             </article>
@@ -589,7 +596,7 @@
                 <div class="info-grid">
                     <div class="info-box">
                         <h3>About (À propos)</h3>
-                        <p>JJCookieLabs est un laboratoire indépendant concevant des applications web légères, rapides et sans dépendances externes, hébergées en statique.</p>
+                        <p>JJCookieLabs est un laboratoire indépendant qui développe des outils web. PixelPocket et CRSHStudio traitent les fichiers dans le navigateur ; DragonNet et Lobbix utilisent aussi des services hébergés pour leurs fonctionnalités collaboratives.</p>
                     </div>
                     <div class="info-box">
                         <h3>Projects (Projets actifs)</h3>
@@ -603,7 +610,7 @@
                     <div class="info-box">
                         <h3>Features (Fonctionnalités)</h3>
                         <ul>
-                            <li>Traitement 100 % côté client dans le navigateur.</li>
+                            <li>Traitement local des fichiers avec PixelPocket et CRSHStudio ; services connectés pour DragonNet et Lobbix.</li>
                             <li>Mode clair / sombre adaptatif et exports hors ligne (PDF, ZIP, PNG).</li>
                             <li>Aucune bibliothèque tierce requise sur les outils locaux.</li>
                         </ul>
@@ -649,7 +656,7 @@
                     </details>
                     <details>
                         <summary>FAQ — Comment obtenir un accès à CRSHStudio ou Lobbix ?</summary>
-                        <p>Ces deux espaces sont protégés par mot de passe et réservés aux membres autorisés du laboratoire.</p>
+                        <p>L’accès depuis le portail passe par une vérification côté navigateur. Ce filtre ne garantit pas à lui seul la confidentialité des fichiers hébergés sur GitHub Pages : toute ressource sensible doit disposer d’une véritable autorisation côté serveur. Lobbix utilise par ailleurs une authentification Supabase.</p>
                     </details>
                 </div>
             </div>
@@ -711,24 +718,47 @@
             <div id="panel-legal" class="tab-panel">
                 <div class="section-head">
                     <h2>Informations légales</h2>
-                    <p>Transparence sur la confidentialité, les conditions d'utilisation, les mentions légales et le stockage local.</p>
+                    <p>Confidentialité, conditions d’utilisation et informations sur l’éditeur et les services techniques.</p>
                 </div>
-                <div class="accordion-list">
+                <div class="accordion-list legal-content">
                     <details open>
                         <summary>Privacy Policy (Politique de confidentialité)</summary>
-                        <p>JJCookieLabs ne collecte aucune donnée personnelle à des fins commerciales ou publicitaires. Les fichiers traités dans PixelPocket et CRSHStudio restent strictement locaux sur votre appareil. Sur DragonNet, seules les publications volontaires et un identifiant technique anonyme généré localement sont enregistrés pour assurer le fonctionnement et la modération du service.</p>
+                        <p><strong>Dernière mise à jour :</strong> 17 novembre 2026.</p>
+                        <p><strong>Responsable du traitement :</strong> éditeur de JJCookieLabs — <strong class="legal-required">[identité / coordonnées de contact à compléter]</strong>. JJCookieLabs déclare ne pas revendre les données personnelles et ne pas les utiliser pour de la publicité ciblée.</p>
+                        <p><strong>PixelPocket et CRSHStudio :</strong> les fichiers ouverts ou transformés sont traités localement dans le navigateur par ces outils ; ils ne sont pas envoyés par ces applications à un serveur. Les préférences d’affichage peuvent être mémorisées localement.</p>
+                        <p><strong>DragonNet :</strong> les articles, pseudonymes, commentaires et photos publiés volontairement sont enregistrés via Supabase. Les publications et photos non masquées sont accessibles au public. L’administrateur utilise un compte Supabase pour modérer les articles et les commentaires.</p>
+                        <p><strong>Lobbix :</strong> Supabase intervient pour l’authentification, les comptes, pseudonymes, lobbies et messages. Des données de session et des réglages, dont les préférences de thème et de fond, peuvent être conservés sur l’appareil. Les possibilités de conservation et de suppression des messages dépendent du fonctionnement du service.</p>
+                        <p><strong>Finalités :</strong> fournir les fonctionnalités demandées, héberger les contributions, gérer les accès, assurer la sécurité technique et permettre la modération. <strong class="legal-required">[Bases juridiques à préciser pour chaque traitement avant publication définitive.]</strong></p>
+                        <p><strong>Destinataires et prestataires :</strong> l’éditeur du site et les prestataires techniques nécessaires au service, notamment GitHub Pages (hébergement du site) et Supabase (base de données, authentification et stockage). Ces services peuvent traiter des données techniques de connexion, dont l’adresse IP et des journaux d’accès. Des transferts de données hors de l’Espace économique européen sont possibles suivant les services utilisés.</p>
+                        <p><strong>Conservation :</strong> les publications et messages sont conservés selon les règles et fonctionnalités des services, jusqu’à leur suppression ou fermeture du service, sous réserve d’éventuelles sauvegardes et obligations légales. <strong class="legal-required">[Préciser les durées exactes ou critères de conservation des comptes, contenus, journaux et sauvegardes.]</strong></p>
+                        <p><strong>Vos droits :</strong> selon le traitement et les conditions légales applicables, vous pouvez demander l’accès, la rectification, l’effacement, la limitation ou l’opposition au traitement de vos données, et parfois leur portabilité. Adressez votre demande à <strong class="legal-required">[adresse de contact pour les demandes RGPD]</strong>. Vous pouvez également saisir la <a href="https://www.cnil.fr/fr/plaintes" target="_blank" rel="noopener noreferrer">CNIL</a>.</p>
+                        <p><strong>Attention :</strong> un pseudonyme libre n’assure pas l’anonymat absolu. Évitez de publier vos données sensibles ou celles d’autres personnes sans leur accord.</p>
                     </details>
                     <details>
                         <summary>Terms of Service (Conditions d'utilisation)</summary>
-                        <p>Les outils sont fournis gratuitement « en l'état ». Les utilisateurs s'engagent à ne pas publier de contenu illicite, diffamatoire ou de données personnelles sensibles sur les espaces publics tels que DragonNet, et à conserver une sauvegarde de leurs fichiers importants.</p>
+                        <p><strong>Objet :</strong> JJCookieLabs propose gratuitement des outils de traitement local ainsi que des services communautaires expérimentaux. Les fonctionnalités peuvent évoluer ou être temporairement indisponibles.</p>
+                        <p><strong>Utilisation responsable :</strong> les utilisateurs s’engagent à respecter les lois applicables. Il est interdit de publier notamment des contenus illicites, menaçants, diffamatoires, harcelants, portant atteinte à la vie privée ou violant les droits d’auteur. La publication de données personnelles sensibles ou d’informations privées relatives à d’autres personnes sans autorisation est interdite.</p>
+                        <p><strong>Contributions :</strong> les personnes qui publient des textes, images ou commentaires doivent disposer des droits ou autorisations nécessaires. Elles restent responsables de leurs contributions. Les contenus publiés sur DragonNet peuvent être consultés et copiés par d’autres internautes ; ne publiez rien de confidentiel.</p>
+                        <p><strong>Modération :</strong> l’administration peut masquer ou supprimer des articles ou commentaires contraires à ces règles ou à la loi. L’absence de vérification préalable ne signifie pas qu’un contenu est autorisé. Pour signaler un contenu, utilisez <strong class="legal-required">[canal de signalement à renseigner]</strong>.</p>
+                        <p><strong>Disponibilité et sauvegardes :</strong> les services sont fournis « en l’état », sans promesse de fonctionnement ininterrompu. Conservez une copie des fichiers importants avant toute opération. Cette clause ne supprime ni les droits des utilisateurs ni les responsabilités imposées par la loi.</p>
                     </details>
                     <details>
                         <summary>Legal Notice (Mentions légales)</summary>
-                        <p>Éditeur : Projet indépendant JJCookieLabs. Hébergement statique assuré par GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis).</p>
+                        <p><strong>Nom du site :</strong> JJCookieLabs — <a href="https://jjcookielabs.github.io/">https://jjcookielabs.github.io/</a>.</p>
+                        <p><strong>Nature du projet :</strong> laboratoire indépendant d’expérimentation et de développement informatique. <strong class="legal-required">[Préciser le statut de l’éditeur : particulier / structure / activité professionnelle, selon la situation réelle.]</strong></p>
+                        <p><strong>Éditeur / responsable de publication :</strong> <strong class="legal-required">[identité ou mentions adaptées au statut réel à compléter]</strong>.</p>
+                        <p><strong>Contact :</strong> <strong class="legal-required">[adresse e-mail dédiée ou autre moyen de contact réel]</strong>.</p>
+                        <p><strong>Hébergement du site web :</strong> GitHub Pages, service de GitHub, Inc. — <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">pages.github.com</a>. <strong class="legal-required">[Vérifier et ajouter les coordonnées légales de l’hébergeur exigées pour votre situation.]</strong></p>
+                        <p><strong>Services de données :</strong> Supabase est utilisé par DragonNet et Lobbix pour leurs fonctionnalités connectées. <a href="https://supabase.com/" target="_blank" rel="noopener noreferrer">supabase.com</a>.</p>
+                        <p><strong>Propriété intellectuelle :</strong> les créations originales de JJCookieLabs restent soumises aux droits de leurs titulaires ; les contenus publiés par les utilisateurs restent sous leur responsabilité. Les marques et logiciels tiers appartiennent à leurs détenteurs respectifs.</p>
+                        <p class="legal-warning"><strong>À compléter avant publication définitive :</strong> les champs entre crochets sont des informations manquantes, pas des mentions légales finales. Ne publiez pas d’adresse ou de donnée privée inutile : choisissez les informations adaptées au statut juridique réel de l’éditeur.</p>
                     </details>
                     <details>
-                        <summary>Cookie Policy (Politique de cookies & stockage local)</summary>
-                        <p>Ce site n'utilise aucun cookie publicitaire ni pisteur tiers. Seul le stockage local du navigateur (<code>localStorage</code>) est utilisé pour mémoriser vos préférences d'affichage (thème clair/sombre) et votre identifiant de session anonyme sur DragonNet.</p>
+                        <summary>Cookie Policy (Politique de cookies et stockage local)</summary>
+                        <p><strong>Publicité et mesure d’audience :</strong> aucun script publicitaire ou d’analyse marketing n’a été identifié dans les versions de code vérifiées pour ce portail et les applications citées. Cette déclaration doit être révisée si de nouveaux services sont ajoutés.</p>
+                        <p><strong>Stockage local :</strong> PixelPocket utilise notamment <code>localStorage</code> pour le thème. Lobbix utilise <code>localStorage</code> et <code>sessionStorage</code> pour des préférences, des fonds d’écran et des informations nécessaires à l’authentification ou à la session. Les données conservées localement restent sur l’appareil, sauf envoi explicite par une fonctionnalité connectée.</p>
+                        <p><strong>Services tiers :</strong> GitHub Pages et Supabase peuvent mettre en œuvre des mécanismes techniques nécessaires au fonctionnement du site, à la sécurité et à l’authentification. Les éventuels cookies ou stockages non indispensables à la prestation du service doivent faire l’objet des choix et informations exigés par la réglementation.</p>
+                        <p><strong>Gestion :</strong> vous pouvez supprimer les données locales dans les paramètres du navigateur ; cela peut entraîner la perte de préférences ou nécessiter une nouvelle connexion. Cette opération ne supprime pas les publications déjà enregistrées sur Supabase.</p>
                     </details>
                 </div>
             </div>
@@ -797,7 +827,7 @@
         </div>
         <div class="footer-bottom">
             <span>&copy; 2026 JJCookieLabs. Tous droits réservés.</span>
-            <span>100 % HTML autonome · Hébergé sur GitHub Pages</span>
+            <span>Hébergé sur <a href="https://pages.github.com/" target="_blank" rel="noopener noreferrer">GitHub Pages</a></span>
         </div>
     </footer>
 
@@ -862,5 +892,49 @@
         })();
     </script>
 
+
+    <script>
+    (() => {
+      const names = new Set(['presentation', 'assistance', 'evolution', 'communaute', 'legal']);
+      function activateTab(name) {
+        if (!names.has(name)) return;
+        document.querySelectorAll('.tab-btn').forEach(btn => {
+          const active = btn.dataset.tab === name;
+          btn.classList.toggle('active', active);
+          btn.setAttribute('aria-selected', String(active));
+        });
+        document.querySelectorAll('.tab-panel').forEach(panel => {
+          panel.classList.toggle('active', panel.id === 'panel-' + name);
+        });
+      }
+      document.querySelectorAll('.tab-btn').forEach(btn => {
+        btn.addEventListener('click', () => activateTab(btn.dataset.tab));
+      });
+      document.querySelectorAll('[data-jump]').forEach(link => {
+        link.addEventListener('click', () => activateTab(link.dataset.jump));
+      });
+      async function copyMessage(value, noteId) {
+        try {
+          await navigator.clipboard.writeText(value);
+          document.getElementById(noteId).style.display = 'block';
+        } catch (err) {
+          alert('Impossible de copier automatiquement. Vérifiez les autorisations du navigateur.');
+        }
+      }
+      document.getElementById('contactForm').addEventListener('submit', event => {
+        event.preventDefault();
+        const topic = document.getElementById('contactTopic').value;
+        const message = document.getElementById('contactMsg').value.trim();
+        if (message) copyMessage('[' + topic + ']\n' + message, 'contactNote');
+      });
+      document.getElementById('feedbackForm').addEventListener('submit', event => {
+        event.preventDefault();
+        const title = document.getElementById('feedbackTitle').value.trim();
+        const description = document.getElementById('feedbackDesc').value.trim();
+        if (title && description) copyMessage('[Suggestion] ' + title + '\n' + description, 'feedbackNote');
+      });
+      activateTab('presentation');
+    })();
+    </script>
 </body>
 </html>
