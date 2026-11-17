@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lobbix V0.8.7 — SafeGuard 1.0.1</title>
+<title>Lobbix V0.8.8 — SafeGuard 1.0.1</title>
 <style>
 :root{
   font-family:system-ui,Arial;
@@ -292,10 +292,11 @@ canvas{
     </p>
 
     <div class="notice muted">
-      Prototype privé V0.8.7 · SafeGuard 1.0.1.
+      Prototype privé V0.8.8 · SafeGuard 1.0.1.
     </div>
 
     <div id="authError" class="notice hidden" role="status"></div>
+    <p class="muted">La connexion est conservée au rechargement et oubliée à la fermeture de cet onglet.</p>
     <div id="authForm"></div>
 
     <button type="button" class="alt" onclick="openWallpaperSettings()">🖼️ Fond d’écran</button>
@@ -717,7 +718,18 @@ async function startup() {
     return;
   }
 
-  const sessionKey = 'lobbix-email-v084-hkwnfxgrnyvyfprzvlyb';
+  const legacySessionKey = 'lobbix-email-v084-hkwnfxgrnyvyfprzvlyb';
+  const migrationKey = 'lobbix-auth-tab-storage-v1';
+  const tabIdKey = 'lobbix-auth-tab-id-v1';
+  let tabId = globalThis.crypto?.randomUUID?.() ||
+    Date.now().toString(36) + '-' + Math.random().toString(36).slice(2);
+  try {
+    const savedId = sessionStorage.getItem(tabIdKey);
+    if (savedId && /^[a-z0-9-]{1,80}$/i.test(savedId)) tabId = savedId;
+    sessionStorage.setItem(tabIdKey, tabId);
+  } catch {}
+  // A stable key per tab also separates Supabase's Auth broadcast channels.
+  const sessionKey = 'lobbix-email-tab-v1-hkwnfxgrnyvyfprzvlyb-' + tabId;
   const memory = new Map();
 
   const storage = {
@@ -727,7 +739,7 @@ async function startup() {
       }
 
       try {
-        const value = localStorage.getItem(key);
+        const value = sessionStorage.getItem(key);
 
         if (value !== null) {
           memory.set(key, value);
@@ -743,7 +755,7 @@ async function startup() {
       memory.set(key, value);
 
       try {
-        localStorage.setItem(key, value);
+        sessionStorage.setItem(key, value);
       } catch {}
     },
 
@@ -751,10 +763,27 @@ async function startup() {
       memory.delete(key);
 
       try {
-        localStorage.removeItem(key);
+        sessionStorage.removeItem(key);
       } catch {}
     }
   };
+
+  // Move the previous persistent login once, without signing the user out
+  // during this upgrade. Never restore it again after this tab is closed.
+  // Only Lobbix Auth keys are touched; photos, theme and other apps stay put.
+  try {
+    const migrate = localStorage.getItem(migrationKey) !== '1' &&
+      storage.getItem(sessionKey) === null;
+    for (const suffix of ['', '-code-verifier', '-user']) {
+      const oldKey = legacySessionKey + suffix;
+      const saved = localStorage.getItem(oldKey);
+      if (migrate && saved !== null && storage.getItem(sessionKey + suffix) === null) {
+        storage.setItem(sessionKey + suffix, saved);
+      }
+      localStorage.removeItem(oldKey);
+    }
+    localStorage.setItem(migrationKey, '1');
+  } catch {}
 
   let signedSession = null;
   const baseFetch = globalThis.fetch.bind(globalThis);
