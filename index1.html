@@ -1,22 +1,23 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta http-equiv="refresh" content="0; url=./503.html">
-    <script>window.location.replace('./503.html');</script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="JJCookieLabs - Portail principal, CRSHStudio, DragonNet, PixelPocket et Lobbix.">
+    <meta name="description" content="JJCookieLabs - Portail principal, Projets, Documentation, Changelog, Communauté et Informations légales.">
     <meta name="robots" content="index, follow">
-    <title>JJCookieLabs | Accueil</title>
+    <title>JJCookieLabs | Accueil & Laboratoire</title>
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23181b22'/%3E%3Ccircle cx='32' cy='32' r='21' fill='%23d97706'/%3E%3Ccircle cx='25' cy='25' r='3' fill='%23451a03'/%3E%3Ccircle cx='38' cy='23' r='2.5' fill='%23451a03'/%3E%3Ccircle cx='23' cy='37' r='2.5' fill='%23451a03'/%3E%3Ccircle cx='35' cy='36' r='3.5' fill='%23451a03'/%3E%3Ccircle cx='42' cy='31' r='2' fill='%23451a03'/%3E%3C/svg%3E">
     <style>
         :root {
             --bg-color: #0f1115;
             --card-bg: #181b22;
+            --card-alt: #13161c;
             --text-color: #f3f4f6;
             --text-muted: #9ca3af;
             --accent: #6366f1;
             --accent-hover: #4f46e5;
+            --green: #10b981;
+            --amber: #f59e0b;
             --border: #2a2f3d;
             --danger: #ef4444;
         }
@@ -27,6 +28,10 @@
             padding: 0;
         }
 
+        html {
+            scroll-behavior: smooth;
+        }
+
         body {
             font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
             background-color: var(--bg-color);
@@ -34,34 +39,43 @@
             min-height: 100vh;
             display: flex;
             flex-direction: column;
+            line-height: 1.6;
         }
 
         header {
-            padding: 1.5rem 5%;
+            padding: 1.25rem 5%;
             display: flex;
             justify-content: space-between;
             align-items: center;
             border-bottom: 1px solid var(--border);
             flex-wrap: wrap;
             gap: 1rem;
+            background-color: rgba(15, 17, 21, 0.9);
+            backdrop-filter: blur(8px);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .logo {
             font-size: 1.4rem;
             font-weight: 800;
             letter-spacing: -0.5px;
+            color: var(--text-color);
+            text-decoration: none;
         }
 
         nav {
             display: flex;
             flex-wrap: wrap;
-            gap: 1.5rem;
+            gap: 1.25rem;
         }
 
         nav a {
             color: var(--text-muted);
             text-decoration: none;
             font-weight: 500;
+            font-size: 0.95rem;
             transition: color 0.2s;
             cursor: pointer;
         }
@@ -72,37 +86,39 @@
 
         main {
             flex: 1;
-            max-width: 1050px;
+            max-width: 1080px;
             width: 100%;
             margin: 0 auto;
-            padding: 4rem 1.5rem;
+            padding: 3.5rem 1.5rem;
             text-align: center;
         }
 
         h1 {
-            font-size: 3rem;
-            margin-bottom: 1rem;
+            font-size: clamp(2.2rem, 5vw, 3rem);
+            margin-bottom: 0.85rem;
             letter-spacing: -1px;
         }
 
         .subtitle {
             color: var(--text-muted);
-            font-size: 1.15rem;
-            margin-bottom: 3.5rem;
+            font-size: 1.12rem;
+            margin-bottom: 3rem;
         }
 
+        /* Grille des projets */
         .projects-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 1.5rem;
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            gap: 1.4rem;
             text-align: left;
+            margin-bottom: 4.5rem;
         }
 
         .card {
             background-color: var(--card-bg);
             border: 1px solid var(--border);
             border-radius: 12px;
-            padding: 1.8rem;
+            padding: 1.6rem;
             transition: transform 0.2s, border-color 0.2s;
             display: flex;
             flex-direction: column;
@@ -115,27 +131,37 @@
         }
 
         .card h2 {
-            font-size: 1.4rem;
+            font-size: 1.3rem;
             margin-bottom: 0.6rem;
             display: flex;
             align-items: center;
             justify-content: space-between;
+            gap: 0.5rem;
         }
 
-        .badge-lock {
-            font-size: 0.75rem;
-            background-color: rgba(99, 102, 241, 0.15);
-            color: var(--accent);
+        .badge {
+            font-size: 0.72rem;
             padding: 0.2rem 0.6rem;
             border-radius: 20px;
             font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .badge-lock {
+            background-color: rgba(99, 102, 241, 0.15);
+            color: var(--accent);
+        }
+
+        .badge-live {
+            background-color: rgba(16, 185, 129, 0.15);
+            color: var(--green);
         }
 
         .card p {
             color: var(--text-muted);
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             line-height: 1.5;
-            margin-bottom: 1.5rem;
+            margin-bottom: 1.4rem;
         }
 
         .btn {
@@ -145,18 +171,212 @@
             background-color: var(--accent);
             color: #fff;
             text-decoration: none;
-            padding: 0.75rem 1.2rem;
+            padding: 0.72rem 1.1rem;
             border-radius: 8px;
             border: none;
             font-family: inherit;
             font-weight: 600;
-            font-size: 0.95rem;
+            font-size: 0.92rem;
             cursor: pointer;
             transition: background-color 0.2s;
         }
 
         .btn:hover {
             background-color: var(--accent-hover);
+        }
+
+        /* Hub des catégories */
+        .hub-section {
+            text-align: left;
+            border-top: 1px solid var(--border);
+            padding-top: 3rem;
+            margin-top: 2rem;
+        }
+
+        .hub-tabs {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.6rem;
+            margin-bottom: 2rem;
+            border-bottom: 1px solid var(--border);
+            padding-bottom: 1rem;
+        }
+
+        .tab-btn {
+            background-color: var(--card-bg);
+            color: var(--text-muted);
+            border: 1px solid var(--border);
+            padding: 0.6rem 1.1rem;
+            border-radius: 8px;
+            font-family: inherit;
+            font-size: 0.92rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .tab-btn:hover {
+            color: var(--text-color);
+            border-color: var(--accent);
+        }
+
+        .tab-btn.active {
+            background-color: var(--accent);
+            color: #fff;
+            border-color: var(--accent);
+        }
+
+        .tab-panel {
+            display: none;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .tab-panel.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(4px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .section-head {
+            margin-bottom: 1.5rem;
+        }
+
+        .section-head h2 {
+            font-size: 1.7rem;
+            margin-bottom: 0.35rem;
+            letter-spacing: -0.5px;
+        }
+
+        .section-head p {
+            color: var(--text-muted);
+            font-size: 0.95rem;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.25rem;
+        }
+
+        .info-box {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 1.5rem;
+        }
+
+        .info-box h3 {
+            font-size: 1.08rem;
+            margin-bottom: 0.55rem;
+            color: var(--text-color);
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.5rem;
+        }
+
+        .info-box p, .info-box li {
+            color: var(--text-muted);
+            font-size: 0.92rem;
+        }
+
+        .info-box ul {
+            padding-left: 1.2rem;
+            margin-top: 0.5rem;
+        }
+
+        .info-box li {
+            margin-bottom: 0.35rem;
+        }
+
+        /* Accordéon FAQ & Légal */
+        .accordion-list {
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            margin-top: 1.25rem;
+        }
+
+        details {
+            background-color: var(--card-bg);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 1.1rem 1.4rem;
+            transition: border-color 0.2s;
+        }
+
+        details[open] {
+            border-color: var(--accent);
+        }
+
+        summary {
+            font-weight: 600;
+            font-size: 1rem;
+            cursor: pointer;
+            list-style: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        summary::-webkit-details-marker {
+            display: none;
+        }
+
+        summary::after {
+            content: "+";
+            font-size: 1.3rem;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        details[open] summary::after {
+            content: "−";
+        }
+
+        details p {
+            margin-top: 0.8rem;
+            color: var(--text-muted);
+            font-size: 0.93rem;
+        }
+
+        /* Formulaire Feedback / Contact rapide */
+        .quick-form {
+            display: flex;
+            flex-direction: column;
+            gap: 0.75rem;
+            margin-top: 0.75rem;
+        }
+
+        .quick-form input, .quick-form textarea, .quick-form select {
+            width: 100%;
+            padding: 0.7rem 0.9rem;
+            border-radius: 8px;
+            border: 1px solid var(--border);
+            background-color: var(--bg-color);
+            color: var(--text-color);
+            font-family: inherit;
+            font-size: 0.92rem;
+            outline: none;
+        }
+
+        .quick-form input:focus, .quick-form textarea:focus, .quick-form select:focus {
+            border-color: var(--accent);
+        }
+
+        .quick-form textarea {
+            min-height: 90px;
+            resize: vertical;
+        }
+
+        .form-note {
+            font-size: 0.85rem;
+            color: var(--green);
+            display: none;
         }
 
         /* Fenêtre modale pour le mot de passe */
@@ -236,65 +456,283 @@
             color: var(--text-color);
         }
 
+        /* Footer structuré par catégories */
         footer {
-            text-align: center;
-            padding: 1.5rem;
-            color: var(--text-muted);
-            font-size: 0.85rem;
+            background-color: var(--card-alt);
             border-top: 1px solid var(--border);
+            padding: 3rem 5% 2rem;
+            color: var(--text-muted);
+            font-size: 0.88rem;
+        }
+
+        .footer-grid {
+            max-width: 1080px;
+            margin: 0 auto 2.5rem;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+            gap: 2rem;
+            text-align: left;
+        }
+
+        .footer-col h4 {
+            color: var(--text-color);
+            font-size: 0.92rem;
+            margin-bottom: 0.85rem;
+            letter-spacing: 0.3px;
+        }
+
+        .footer-col ul {
+            list-style: none;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+
+        .footer-col a {
+            color: var(--text-muted);
+            text-decoration: none;
+            transition: color 0.2s;
+            cursor: pointer;
+        }
+
+        .footer-col a:hover {
+            color: var(--text-color);
+        }
+
+        .footer-bottom {
+            max-width: 1080px;
+            margin: 0 auto;
+            padding-top: 1.5rem;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+            font-size: 0.84rem;
         }
     </style>
 </head>
 <body>
 
     <header>
-        <div class="logo">JJCookieLabs</div>
+        <a href="./index.html" class="logo">JJCookieLabs</a>
         <nav>
-            <a href="./index.html">Accueil</a>
+            <a href="#projects">Projects</a>
             <a href="#" id="navCrsh">CRSHStudio</a>
             <a href="./DragonNet/index.html">DragonNet</a>
             <a href="./PixelPocket/index.html">PixelPocket</a>
             <a href="#" id="navLobbix">Lobbix</a>
+            <a href="#hub" data-jump="presentation">Présentation</a>
+            <a href="#hub" data-jump="assistance">Assistance</a>
+            <a href="#hub" data-jump="evolution">Évolution</a>
+            <a href="#hub" data-jump="communaute">Communauté</a>
+            <a href="#hub" data-jump="legal">Légal</a>
         </nav>
     </header>
 
     <main>
         <h1>Welcome to JJCookieLabs</h1>
-        <p class="subtitle">Espace central et laboratoire de projets numériques.</p>
+        <p class="subtitle">Espace central et laboratoire de projets numériques autonomes.</p>
 
-        <div class="projects-grid">
+        <!-- Projets principaux -->
+        <div id="projects" class="projects-grid">
             <article class="card">
                 <div>
-                    <h2>CRSHStudio <span class="badge-lock">🔒 Protégé</span></h2>
-                    <p>Accédez à l'espace dédié au projet CRSHStudio, nos créations et outils.</p>
+                    <h2>CRSHStudio <span class="badge badge-lock">🔒 Protégé</span></h2>
+                    <p>Éditeur et visualiseur de graphes relationnels au format compressé maison JJC1.</p>
                 </div>
                 <button type="button" class="btn" id="btnCrsh">Ouvrir CRSHStudio &rarr;</button>
             </article>
 
             <article class="card">
                 <div>
-                    <h2>DragonNet</h2>
-                    <p>Accédez à la plateforme et aux ressources du projet DragonNet.</p>
+                    <h2>DragonNet <span class="badge badge-live">En ligne</span></h2>
+                    <p>Espace de publication libre, rapide et anonyme sans création de compte.</p>
                 </div>
                 <a href="./DragonNet/index.html" class="btn">Ouvrir DragonNet &rarr;</a>
             </article>
 
             <article class="card">
                 <div>
-                    <h2>PixelPocket</h2>
-                    <p>Découvrez l'univers et les fonctionnalités du projet PixelPocket.</p>
+                    <h2>PixelPocket <span class="badge badge-live">v2</span></h2>
+                    <p>Intégrez des fichiers et dossiers complets directement à l'intérieur d'une image.</p>
                 </div>
                 <a href="./PixelPocket/index.html" class="btn">Ouvrir PixelPocket &rarr;</a>
             </article>
 
             <article class="card">
                 <div>
-                    <h2>Lobbix <span class="badge-lock">🔒 Protégé</span></h2>
-                    <p>Accédez à l'espace et aux fonctionnalités du projet Lobbix.</p>
+                    <h2>Lobbix <span class="badge badge-lock">🔒 Protégé</span></h2>
+                    <p>Accédez à l'espace privé et aux fonctionnalités expérimentales du projet Lobbix.</p>
                 </div>
                 <button type="button" class="btn" id="btnLobbix">Ouvrir Lobbix &rarr;</button>
             </article>
         </div>
+
+        <!-- Hub structuré par catégories -->
+        <section id="hub" class="hub-section">
+            <div class="hub-tabs" role="tablist">
+                <button type="button" class="tab-btn active" data-tab="presentation">Présentation</button>
+                <button type="button" class="tab-btn" data-tab="assistance">Assistance</button>
+                <button type="button" class="tab-btn" data-tab="evolution">Évolution</button>
+                <button type="button" class="tab-btn" data-tab="communaute">Communauté</button>
+                <button type="button" class="tab-btn" data-tab="legal">Informations légales</button>
+            </div>
+
+            <!-- 1. PRÉSENTATION : About, Projects, Features -->
+            <div id="panel-presentation" class="tab-panel active">
+                <div class="section-head">
+                    <h2>Présentation — About, Projects & Features</h2>
+                    <p>Découvrez l'architecture technique et les fonctionnalités clés de l'écosystème JJCookieLabs.</p>
+                </div>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <h3>About (À propos)</h3>
+                        <p>JJCookieLabs est un laboratoire indépendant concevant des applications web légères, rapides et sans dépendances externes, hébergées en statique.</p>
+                    </div>
+                    <div class="info-box">
+                        <h3>Projects (Projets actifs)</h3>
+                        <ul>
+                            <li><strong>PixelPocket</strong> : Capsules stéganographiques PNG, WebP, SVG & ZIP.</li>
+                            <li><strong>CRSHStudio</strong> : Notation relationnelle & compression arithmétique JJC1.</li>
+                            <li><strong>DragonNet</strong> : Tableau d'articles libres et modération communautaire.</li>
+                            <li><strong>Lobbix</strong> : Module expérimental à accès restreint.</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <h3>Features (Fonctionnalités)</h3>
+                        <ul>
+                            <li>Traitement 100 % côté client dans le navigateur.</li>
+                            <li>Mode clair / sombre adaptatif et exports hors ligne (PDF, ZIP, PNG).</li>
+                            <li>Aucune bibliothèque tierce requise sur les outils locaux.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 2. ASSISTANCE : FAQ, Contact, Support, Help Center -->
+            <div id="panel-assistance" class="tab-panel">
+                <div class="section-head">
+                    <h2>Assistance — Help Center, FAQ, Support & Contact</h2>
+                    <p>Guides rapides, réponses aux problèmes courants et canal de contact direct.</p>
+                </div>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <h3>Help Center & Support</h3>
+                        <ul>
+                            <li><strong>PixelPocket</strong> : Envoyez toujours les images comme <em>Fichier</em> ou <em>Document</em> pour éviter la recompression des messageries.</li>
+                            <li><strong>CRSHStudio</strong> : Utilisez <code>Ctrl+S</code> pour sauvegarder en <code>.crsh</code> et <code>Ctrl+O</code> pour ouvrir un fichier local.</li>
+                            <li><strong>Maintenance (503)</strong> : En cas de mise à jour, patientez quelques minutes puis videz le cache (<code>Ctrl+Shift+R</code>).</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <h3>Contact rapide</h3>
+                        <p>Une question technique ou un bug à signaler sur l'un des outils ?</p>
+                        <form class="quick-form" id="contactForm">
+                            <select id="contactTopic">
+                                <option value="Support technique">Support technique</option>
+                                <option value="Accès projet">Question sur un projet</option>
+                                <option value="Autre">Autre demande</option>
+                            </select>
+                            <textarea id="contactMsg" placeholder="Décrivez votre demande..." required></textarea>
+                            <button type="submit" class="btn">Préparer le message</button>
+                            <span class="form-note" id="contactNote">Message copié ! Vous pouvez le publier directement dans la catégorie Support de DragonNet.</span>
+                        </form>
+                    </div>
+                </div>
+
+                <div class="accordion-list">
+                    <details>
+                        <summary>FAQ — Mes fichiers sont-ils envoyés sur un serveur ?</summary>
+                        <p>Non. PixelPocket et CRSHStudio exécutent l'intégralité du code dans la mémoire de votre navigateur. Aucun fichier n'est téléversé sur Internet.</p>
+                    </details>
+                    <details>
+                        <summary>FAQ — Comment obtenir un accès à CRSHStudio ou Lobbix ?</summary>
+                        <p>Ces deux espaces sont protégés par mot de passe et réservés aux membres autorisés du laboratoire.</p>
+                    </details>
+                </div>
+            </div>
+
+            <!-- 3. ÉVOLUTION : Changelog, Roadmap, Updates -->
+            <div id="panel-evolution" class="tab-panel">
+                <div class="section-head">
+                    <h2>Évolution — Changelog, Roadmap & Updates</h2>
+                    <p>Suivi des dernières mises à jour déployées et des prochaines fonctionnalités prévues.</p>
+                </div>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <h3>Changelog & Updates <span class="badge badge-live">Nov. 2026</span></h3>
+                        <ul>
+                            <li><strong>Portail</strong> : Ajout du favicon SVG cookie, protection Lobbix et navigation par catégories.</li>
+                            <li><strong>PixelPocket v2</strong> : Support multi-formats (PNG, WebP, SVG, JPEG, GIF, BMP, TIFF, ICO) et export ZIP.</li>
+                            <li><strong>CRSHStudio</strong> : Intégration du format compressé JJC1 (PPM/LZ77 + codage arithmétique).</li>
+                        </ul>
+                    </div>
+                    <div class="info-box">
+                        <h3>Roadmap (À venir)</h3>
+                        <ul>
+                            <li><strong>JJVault</strong> : Module de chiffrement AES-256-GCM local avant mise en capsule.</li>
+                            <li><strong>Nouveaux mini-outils</strong> : Générateur d'utilitaires ludiques et boîte à sons Web Audio.</li>
+                            <li><strong>Lobbix</strong> : Ouverture progressive des modules de test.</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 4. COMMUNAUTÉ : Feedback, Community -->
+            <div id="panel-communaute" class="tab-panel">
+                <div class="section-head">
+                    <h2>Communauté — Community & Feedback</h2>
+                    <p>Partagez vos idées, retours d'expérience et créations avec les autres utilisateurs.</p>
+                </div>
+                <div class="info-grid">
+                    <div class="info-box">
+                        <h3>Community (Espace communautaire)</h3>
+                        <p>Rejoignez les discussions publiques sur <strong>DragonNet</strong> pour échanger des astuces, proposer des idées d'outils ou tester les nouveautés du laboratoire sans créer de compte.</p>
+                        <div style="margin-top: 1.2rem;">
+                            <a href="./DragonNet/index.html" class="btn">Rejoindre DragonNet &rarr;</a>
+                        </div>
+                    </div>
+                    <div class="info-box">
+                        <h3>Feedback (Suggérer une idée)</h3>
+                        <p>Un outil vous manque sur JJCookieLabs ? Notez votre idée ici pour la copier et la proposer.</p>
+                        <form class="quick-form" id="feedbackForm">
+                            <input type="text" id="feedbackTitle" placeholder="Nom de l'idée ou de l'outil..." required>
+                            <textarea id="feedbackDesc" placeholder="Expliquez comment cet outil fonctionnerait..." required></textarea>
+                            <button type="submit" class="btn">Copier la suggestion</button>
+                            <span class="form-note" id="feedbackNote">Suggestion copiée dans le presse-papiers ! Collez-la sur DragonNet.</span>
+                        </form>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 5. INFORMATIONS LÉGALES : Privacy Policy, Terms of Service, Legal Notice, Cookie Policy -->
+            <div id="panel-legal" class="tab-panel">
+                <div class="section-head">
+                    <h2>Informations légales</h2>
+                    <p>Transparence sur la confidentialité, les conditions d'utilisation, les mentions légales et le stockage local.</p>
+                </div>
+                <div class="accordion-list">
+                    <details open>
+                        <summary>Privacy Policy (Politique de confidentialité)</summary>
+                        <p>JJCookieLabs ne collecte aucune donnée personnelle à des fins commerciales ou publicitaires. Les fichiers traités dans PixelPocket et CRSHStudio restent strictement locaux sur votre appareil. Sur DragonNet, seules les publications volontaires et un identifiant technique anonyme généré localement sont enregistrés pour assurer le fonctionnement et la modération du service.</p>
+                    </details>
+                    <details>
+                        <summary>Terms of Service (Conditions d'utilisation)</summary>
+                        <p>Les outils sont fournis gratuitement « en l'état ». Les utilisateurs s'engagent à ne pas publier de contenu illicite, diffamatoire ou de données personnelles sensibles sur les espaces publics tels que DragonNet, et à conserver une sauvegarde de leurs fichiers importants.</p>
+                    </details>
+                    <details>
+                        <summary>Legal Notice (Mentions légales)</summary>
+                        <p>Éditeur : Projet indépendant JJCookieLabs. Hébergement statique assuré par GitHub Pages (GitHub, Inc., 88 Colin P Kelly Jr St, San Francisco, CA 94107, États-Unis).</p>
+                    </details>
+                    <details>
+                        <summary>Cookie Policy (Politique de cookies & stockage local)</summary>
+                        <p>Ce site n'utilise aucun cookie publicitaire ni pisteur tiers. Seul le stockage local du navigateur (<code>localStorage</code>) est utilisé pour mémoriser vos préférences d'affichage (thème clair/sombre) et votre identifiant de session anonyme sur DragonNet.</p>
+                    </details>
+                </div>
+            </div>
+        </section>
     </main>
 
     <!-- Fenêtre modale de vérification -->
@@ -314,27 +752,65 @@
     </div>
 
     <footer>
-        &copy; 2026 JJCookieLabs. Tous droits réservés.
+        <div class="footer-grid">
+            <div class="footer-col">
+                <h4>Présentation</h4>
+                <ul>
+                    <li><a href="#hub" data-jump="presentation">About</a></li>
+                    <li><a href="#projects">Projects</a></li>
+                    <li><a href="#hub" data-jump="presentation">Features</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Assistance</h4>
+                <ul>
+                    <li><a href="#hub" data-jump="assistance">FAQ</a></li>
+                    <li><a href="#hub" data-jump="assistance">Contact</a></li>
+                    <li><a href="#hub" data-jump="assistance">Support</a></li>
+                    <li><a href="#hub" data-jump="assistance">Help Center</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Évolution</h4>
+                <ul>
+                    <li><a href="#hub" data-jump="evolution">Changelog</a></li>
+                    <li><a href="#hub" data-jump="evolution">Roadmap</a></li>
+                    <li><a href="#hub" data-jump="evolution">Updates</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Communauté</h4>
+                <ul>
+                    <li><a href="#hub" data-jump="communaute">Feedback</a></li>
+                    <li><a href="#hub" data-jump="communaute">Community</a></li>
+                </ul>
+            </div>
+            <div class="footer-col">
+                <h4>Informations légales</h4>
+                <ul>
+                    <li><a href="#hub" data-jump="legal">Privacy Policy</a></li>
+                    <li><a href="#hub" data-jump="legal">Terms of Service</a></li>
+                    <li><a href="#hub" data-jump="legal">Legal Notice</a></li>
+                    <li><a href="#hub" data-jump="legal">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span>&copy; 2026 JJCookieLabs. Tous droits réservés.</span>
+            <span>100 % HTML autonome · Hébergé sur GitHub Pages</span>
+        </div>
     </footer>
 
     <script>
         (function () {
-            const _h = s => {
-                let r = 0;
-                for (let i = 0; i < s.length; i++) r = (r * 131 + s.charCodeAt(i)) % 1000000007;
-                return r;
-            };
-
             const _targets = {
                 crsh: {
                     name: 'CRSHStudio',
-                    v: 426674042,
                     k: [24, 30, 4, 83, 5, 83, 83, 7, 29, 95, 88, 85, 85, 77, 30, 95, 70, 88, 94]
                 },
                 lobbix: {
                     name: 'Lobbix',
-                    v: 287595570,
-                    k: [31, 26, 124, 87, 94, 87, 91, 72, 31, 95, 88, 85, 85, 77, 30, 95, 70, 88, 94]
+                    k: [31, 26, 124, 90, 83, 87, 91, 72, 29, 95, 95, 81, 85, 77, 31, 93, 70, 93, 94]
                 }
             };
 
@@ -371,11 +847,11 @@
                 e.preventDefault();
                 const val = input.value.trim();
                 const cfg = _targets[currentKey];
-                if (_h(val) === cfg.v) {
-                    let dest = '';
-                    for (let i = 0; i < cfg.k.length; i++) {
-                        dest += String.fromCharCode(cfg.k[i] ^ val.charCodeAt(i % val.length));
-                    }
+                let dest = '';
+                for (let i = 0; i < cfg.k.length; i++) {
+                    dest += String.fromCharCode(cfg.k[i] ^ val.charCodeAt(i % val.length));
+                }
+                if (val.length === 10 && dest.startsWith('./') && dest.endsWith('/index.html')) {
                     window.location.href = dest;
                 } else {
                     error.style.display = 'block';
