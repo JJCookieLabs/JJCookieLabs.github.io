@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lobbix V0.8.4 — SafeGuard 1.0</title>
+<title>Lobbix V0.8.5 — SafeGuard 1.0.1</title>
 <style>
 :root{
   font-family:system-ui,Arial;
@@ -33,7 +33,9 @@ button{
   padding:10px 14px;
   color:white;
   background:var(--accent);
-  cursor:pointer
+  cursor:pointer;
+  transition:background-color .16s ease,border-color .16s ease,
+    box-shadow .16s ease,filter .16s ease,transform .16s ease
 }
 button.alt{
   color:var(--text);
@@ -41,6 +43,28 @@ button.alt{
   border:1px solid var(--line)
 }
 button:disabled{opacity:.5;cursor:wait}
+button:focus-visible{
+  outline:3px solid var(--accent);
+  outline-offset:3px
+}
+.room button:focus-visible{outline-color:#fff}
+@media(hover:hover) and (pointer:fine){
+  button:not(:disabled):hover{
+    filter:brightness(1.08);
+    transform:translateY(-2px);
+    box-shadow:0 6px 16px #14182624
+  }
+  button.alt:not(:disabled):hover{border-color:var(--accent)}
+  .room button:not(:disabled):hover{border-color:#ffffffb3}
+}
+button:not(:disabled):active{
+  transform:translateY(0) scale(.98);
+  filter:brightness(.96)
+}
+@media(prefers-reduced-motion:reduce){
+  button{transition:none}
+  button:not(:disabled):hover,button:not(:disabled):active{transform:none}
+}
 input,textarea,select{
   padding:11px;
   width:100%;
@@ -243,7 +267,7 @@ canvas{
   <div class="card">
     <div class="row">
       <h1>🎮 Lobbix</h1>
-      <button class="alt" onclick="theme()">☀️/🌙</button>
+      <button type="button" class="alt" onclick="theme()">☀️/🌙</button>
     </div>
 
     <p class="muted">
@@ -251,7 +275,7 @@ canvas{
     </p>
 
     <div class="notice muted">
-      Prototype privé V0.8.4 · SafeGuard 1.0.
+      Prototype privé V0.8.5 · SafeGuard 1.0.1.
     </div>
 
     <div id="authError" class="notice hidden" role="status"></div>
@@ -266,16 +290,16 @@ canvas{
 <section id="app" class="app hidden">
   <nav class="nav" id="appNav">
     <h2>🎮 Lobbix</h2>
-    <button class="alt" onclick="page('home')">🏠 Accueil</button>
-    <button class="alt" onclick="page('explore')">🧭 Explorer</button>
-    <button class="alt" onclick="page('create')">➕ Créer</button>
-    <button class="alt" onclick="page('profile')">👤 Profil</button>
+    <button type="button" class="alt" onclick="page('home')">🏠 Accueil</button>
+    <button type="button" class="alt" onclick="page('explore')">🧭 Explorer</button>
+    <button type="button" class="alt" onclick="page('create')">➕ Créer</button>
+    <button type="button" class="alt" onclick="page('profile')">👤 Profil</button>
   </nav>
 
   <main class="main">
     <div class="row">
       <h1 id="heading">Accueil</h1>
-      <button class="alt" onclick="theme()">🌓 Thème</button>
+      <button type="button" class="alt" onclick="theme()">🌓 Thème</button>
     </div>
 
     <div id="appError" class="notice hidden" role="status"></div>
@@ -290,17 +314,17 @@ canvas{
       <div id="count" class="muted">0/25 joueurs</div>
     </div>
 
-    <button onclick="leaveRoom()">← Quitter le lobby</button>
+    <button type="button" onclick="leaveRoom()">← Quitter le lobby</button>
   </div>
 
   <div class="roomlayout">
     <nav class="glass mini">
-      <button onclick="activity('home')">🏠 Lobby</button>
-      <button onclick="activity('players')">👥 Joueurs</button>
-      <button onclick="activity('draw')">🎨 Dessin</button>
-      <button onclick="activity('wheel')">🎡 Roue</button>
-      <button onclick="activity('poll')">📊 Sondage</button>
-      <button onclick="activity('games')">🎮 Jeux</button>
+      <button type="button" onclick="activity('home')">🏠 Lobby</button>
+      <button type="button" onclick="activity('players')">👥 Joueurs</button>
+      <button type="button" onclick="activity('draw')">🎨 Dessin</button>
+      <button type="button" onclick="activity('wheel')">🎡 Roue</button>
+      <button type="button" onclick="activity('poll')">📊 Sondage</button>
+      <button type="button" onclick="activity('games')">🎮 Jeux</button>
     </nav>
 
     <div class="glass work" id="workspace"></div>
@@ -324,7 +348,7 @@ canvas{
           placeholder="Message…"
           onkeydown="if(event.key==='Enter')send()"
         >
-        <button onclick="send()">Envoyer</button>
+        <button type="button" onclick="send()">Envoyer</button>
       </div>
     </div>
   </div>
@@ -425,7 +449,7 @@ function screen(name) {
   $('room').classList.toggle('hidden', name !== 'room');
 }
 
-function form(modeName) {
+function renderAuth(modeName) {
   mode = modeName;
   screen('auth');
   hideNotice();
@@ -434,8 +458,8 @@ function form(modeName) {
     ? ''
     : `
       <div class="row">
-        <button class="alt" onclick="form('login')">Connexion</button>
-        <button class="alt" onclick="form('signup')">Inscription</button>
+        <button type="button" class="alt" onclick="renderAuth('login')">Connexion</button>
+        <button type="button" class="alt" onclick="renderAuth('signup')">Inscription</button>
       </div>
     `;
 
@@ -471,7 +495,7 @@ function form(modeName) {
         </p>
       </form>
 
-      <button class="alt" onclick="cancelAdminLogin()">Annuler</button>
+      <button type="button" class="alt" onclick="cancelAdminLogin()">Annuler</button>
     `;
   } else if (mode === 'login' || mode === 'signup') {
     const signup = mode === 'signup';
@@ -527,11 +551,11 @@ function form(modeName) {
 
     if (!signup) {
       html += `
-        <button class="alt" onclick="form('forgot')">
+        <button type="button" class="alt" onclick="renderAuth('forgot')">
           Mot de passe oublié ?
         </button>
 
-        <button class="alt" onclick="form('resend')">
+        <button type="button" class="alt" onclick="renderAuth('resend')">
           Renvoyer la confirmation
         </button>
       `;
@@ -621,7 +645,7 @@ function form(modeName) {
 /* SESSION ET TRANSMISSION DU JETON UTILISATEUR */
 
 async function startup() {
-  form('login');
+  renderAuth('login');
 
   if (!window.supabase?.createClient) {
     notice('Impossible de charger Supabase JS. Vérifie ta connexion Internet.');
@@ -737,7 +761,7 @@ async function startup() {
       if (event === 'PASSWORD_RECOVERY') {
         recovering = true;
         user = session?.user ?? null;
-        form('reset');
+        renderAuth('reset');
       }
 
       if (event === 'SIGNED_OUT') {
@@ -754,7 +778,7 @@ async function startup() {
         poller = null;
 
         if (!adminLoginPending) {
-          form('login');
+          renderAuth('login');
         }
       }
     });
@@ -775,7 +799,7 @@ async function startup() {
     }
   } catch (error) {
     console.error('Démarrage Lobbix :', error);
-    form('login');
+    renderAuth('login');
     notice(authErrorMessage(error));
   }
 }
@@ -877,7 +901,7 @@ async function authSubmit(event) {
         hideNotice();
         await loadUser(data.session);
       } else {
-        form('login');
+        renderAuth('login');
         notice(
           'Inscription demandée. Si la confirmation email est activée, ouvre le lien reçu avant de te connecter.'
         );
@@ -980,7 +1004,7 @@ async function resetPassword(event) {
     if (sessionResult.data.session?.access_token) {
       await loadUser(sessionResult.data.session);
     } else {
-      form('login');
+      renderAuth('login');
       notice('Mot de passe modifié. Tu peux maintenant te connecter.');
     }
   } catch (error) {
@@ -1001,7 +1025,7 @@ async function reloadAccount() {
     if (!data.session?.access_token || !data.session.user) {
       user = null;
       profile = null;
-      form('login');
+      renderAuth('login');
       notice('Ta session n’est plus active. Connecte-toi à nouveau.');
       return;
     }
@@ -1009,7 +1033,7 @@ async function reloadAccount() {
     await loadUser(data.session);
   } catch (error) {
     console.error('Actualisation de la session :', error);
-    form('login');
+    renderAuth('login');
     notice(authErrorMessage(error));
   }
 }
@@ -1022,7 +1046,7 @@ async function loadUser(session) {
   if (!session?.access_token || !session.user?.id) {
     user = null;
     profile = null;
-    form('login');
+    renderAuth('login');
     notice('Aucune session valide. Connecte-toi avec ton email.');
     return;
   }
@@ -1044,7 +1068,7 @@ async function loadUser(session) {
     profile = data;
 
     if (!profile) {
-      form('nickname');
+      renderAuth('nickname');
       return;
     }
 
@@ -1074,7 +1098,7 @@ async function loadUser(session) {
     console.error('Lecture du profil :', error);
 
     if (error?.code === 'LOBBIX_SESSION_MISSING') {
-      form('login');
+      renderAuth('login');
       notice(authErrorMessage(error));
       return;
     }
@@ -1089,8 +1113,8 @@ async function loadUser(session) {
         <p class="muted">
           Réessaie ou reconnecte-toi.
         </p>
-        <button onclick="reloadAccount()">Réessayer</button>
-        <button class="alt" onclick="signout()">Se déconnecter</button>
+        <button type="button" onclick="reloadAccount()">Réessayer</button>
+        <button type="button" class="alt" onclick="signout()">Se déconnecter</button>
       </div>
     `;
 
@@ -1193,7 +1217,7 @@ function roomCard(room) {
         · ${Number(room.current_players) || 0}/25 joueurs
       </p>
 
-      <button onclick="joinRoom('${safe(room.id)}')">
+      <button type="button" onclick="joinRoom('${safe(room.id)}')">
         Rejoindre
       </button>
     </div>
@@ -1207,7 +1231,7 @@ function page(pageName) {
   }
 
   if (pageName !== 'admin' && !profile) {
-    form('login');
+    renderAuth('login');
     return;
   }
 
@@ -1227,7 +1251,7 @@ function page(pageName) {
     html = `
       <div class="row">
         <h2>Bonjour ${safe(profile.nickname)} !</h2>
-        <button onclick="page('create')">+ Créer</button>
+        <button type="button" onclick="page('create')">+ Créer</button>
       </div>
 
       <div class="grid">
@@ -1238,7 +1262,7 @@ function page(pageName) {
       </div>
 
       <p>
-        <button class="alt" onclick="refreshList()">Actualiser</button>
+        <button type="button" class="alt" onclick="refreshList()">Actualiser</button>
       </p>
     `;
   }
@@ -1256,7 +1280,7 @@ function page(pageName) {
       </div>
 
       <p>
-        <button onclick="refreshList()">Actualiser</button>
+        <button type="button" onclick="refreshList()">Actualiser</button>
       </p>
     `;
   }
@@ -1313,7 +1337,7 @@ function page(pageName) {
       <div class="card">
         <h2>👤 ${safe(profile.nickname)}</h2>
         <p>${safe(user?.email || '')}</p>
-        <button onclick="signout()">Déconnexion</button>
+        <button type="button" onclick="signout()">Déconnexion</button>
       </div>
     `;
   }
@@ -1519,7 +1543,7 @@ async function updateRoom() {
           }
         </div>
 
-        <button
+        <button type="button"
             class="alt"
             onclick="report(${Number(message.id)})"
             style="padding:4px 6px;font-size:11px"
@@ -1685,7 +1709,7 @@ async function signout() {
   members = [];
 
   $('appNav').classList.remove('hidden');
-  form('login');
+  renderAuth('login');
 }
 
 /* ACTIVITÉS */
@@ -1752,7 +1776,7 @@ function activity(type) {
     element.innerHTML = `
       <h2>🎡 Roue</h2>
       <input id="wheel" placeholder="Pizza, Sushi, Burger">
-      <p><button onclick="spin()">Tirer</button></p>
+      <p><button type="button" onclick="spin()">Tirer</button></p>
       <h2 id="picked"></h2>
     `;
   } else if (type === 'draw') {
@@ -1764,7 +1788,7 @@ function activity(type) {
       </p>
       <canvas id="canvas" width="650" height="340"></canvas>
       <p>
-        <button onclick="activity('draw')">Effacer mon dessin</button>
+        <button type="button" onclick="activity('draw')">Effacer mon dessin</button>
       </p>
     `;
 
@@ -1846,7 +1870,7 @@ async function showAdmin() {
   $('content').innerHTML = `
     <div class="row">
       <h2>🛡️ Administration Lobbix</h2>
-      <button onclick="signout()">Déconnexion</button>
+      <button type="button" onclick="signout()">Déconnexion</button>
     </div>
     <p>Vérification des autorisations…</p>
   `;
@@ -1878,7 +1902,7 @@ async function showAdmin() {
     $('content').innerHTML = `
       <div class="row">
         <h2>🛡️ Administration Lobbix</h2>
-        <button onclick="signout()">Déconnexion</button>
+        <button type="button" onclick="signout()">Déconnexion</button>
       </div>
 
       <div class="grid">
@@ -1910,11 +1934,11 @@ async function showAdmin() {
             <p>${safe(item.message_body)}</p>
             <p class="muted">${safe(item.reason)}</p>
 
-            <button onclick="review(${Number(item.report_id)},true)">
+            <button type="button" onclick="review(${Number(item.report_id)},true)">
               Supprimer le message
             </button>
 
-            <button
+            <button type="button"
                 class="alt"
                 onclick="review(${Number(item.report_id)},false)"
             >
@@ -1953,7 +1977,7 @@ function cancelAdminLogin() {
     screen('app');
     page('home');
   } else {
-    form('login');
+    renderAuth('login');
   }
 }
 
@@ -1976,7 +2000,7 @@ async function openAdminLogin() {
     lobby = null;
   }
 
-  form('admin');
+  renderAuth('admin');
 }
 
 async function adminSignIn(event) {
@@ -2036,7 +2060,7 @@ async function adminSignIn(event) {
   } catch (error) {
     admin = false;
     adminPanelUnlocked = false;
-    form('admin');
+    renderAuth('admin');
     notice(authErrorMessage(error));
   } finally {
     adminLoginPending = false;
