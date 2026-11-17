@@ -1,0 +1,1013 @@
+"use strict";
+
+// Applique le thème avant le premier affichage.
+(function () {
+  let theme;
+  try {
+    theme = localStorage.getItem("pixelpocket-theme");
+  } catch {}
+
+  if (theme !== "light" && theme !== "dark") {
+    theme = window.matchMedia &&
+      window.matchMedia("(prefers-color-scheme: light)").matches
+      ? "light" : "dark";
+  }
+
+  document.documentElement.dataset.theme = theme;
+})();
+
+// Initialise les commandes lorsque le document est prêt.
+document.addEventListener("DOMContentLoaded", () => {
+"use strict";
+
+const $ = id => document.getElementById(id);
+const enc = new TextEncoder();
+const dec = new TextDecoder("utf-8", { fatal: true });
+
+const LIMIT = 200 * 1024 * 1024;
+const IMAGE_MAX = 250 * 1024 * 1024;
+const INDEX_MAX = 2 * 1024 * 1024;
+const TYPE = "jjCa";
+const MAGIC = enc.encode("JJCAP001");
+const TAIL = enc.encode("PIXELPOCKETv2END");
+
+let chosen = [];
+let extracted = [];
+let previewURL;
+
+/* Thème */
+
+const themeButton = $("theme-toggle");
+
+function updateThemeButton() {
+  const dark = document.documentElement.dataset.theme === "dark";
+
+  themeButton.textContent = dark
+    ? "☀ Mode clair"
+    : "☾ Mode sombre";
+
+  themeButton.setAttribute(
+    "aria-label",
+    dark ? "Activer le mode clair" : "Activer le mode sombre"
+  );
+}
+
+themeButton.onclick = () => {
+  const theme = document.documentElement.dataset.theme === "dark"
+    ? "light"
+    : "dark";
+
+  document.documentElement.dataset.theme = theme;
+
+  try {
+    localStorage.setItem("pixelpocket-theme", theme);
+  } catch {}
+
+  updateThemeButton();
+};
+
+updateThemeButton();
+
+/* Utilitaires */
+
+function say(message) {
+  $("status").textContent = message;
+}
+
+function size(n) {
+  if (n < 1024) return n + " o";
+  if (n < 1048576) return (n / 1024).toFixed(1) + " Kio";
+  return (n / 1048576).toFixed(1) + " Mio";
+}
+
+function concat(parts) {
+  const length = parts.reduce((sum, part) => sum + part.length, 0);
+  const out = new Uint8Array(length);
+  let offset = 0;
+
+  for (const part of parts) {
+    out.set(part, offset);
+    offset += part.length;
+  }
+
+  return out;
+}
+
+function u32(n, littleEndian = false) {
+  const bytes = new Uint8Array(4);
+  new DataView(bytes.buffer).setUint32(0, n, littleEndian);
+  return bytes;
+}
+
+function read32(bytes, offset, littleEndian = false) {
+  if (offset < 0 || offset + 4 > bytes.length) {
+    throw Error("Données tronquées.");
+  }
+
+  return new DataView(
+    bytes.buffer,
+    bytes.byteOffset + offset,
+    4
+  ).getUint32(0, littleEndian);
+}
+
+function ascii(bytes, offset, length) {
+  return String.fromCharCode(
+    ...bytes.subarray(offset, offset + length)
+  );
+}
+
+const CRC_TABLE = Uint32Array.from({ length: 256 }, (_, n) => {
+  for (let i = 0; i < 8; i++) {
+    n = (n >>> 1) ^ ((n & 1) ? 0xedb88320 : 0);
+  }
+
+  return n >>> 0;
+});
+
+function crc32(bytes) {
+  let crc = 0xffffffff;
+
+  for (const byte of bytes) {
+    crc = (crc >>> 8) ^ CRC_TABLE[(crc ^ byte) & 255];
+  }
+
+  return (crc ^ 0xffffffff) >>> 0;
+}
+
+function safePath(path) {
+  if (
+    typeof path !== "string" ||
+    !path ||
+    path.includes("\\") ||
+    path.startsWith("/") ||
+    path.includes(":") ||
+    /[\x00-\x1f]/.test(path) ||
+    path.split("/").some(
+      part => !part || part === "." || part === ".."
+    )
+  ) {
+    throw Error("Nom de fichier non autorisé.");
+  }
+
+  return path;
+}
+
+function save(blob, name) {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = name;
+  document.body.append(link);
+  link.click();
+  link.remove();
+
+  setTimeout(() => URL.revokeObjectURL(url), 60000);
+}
+
+async function busy(id, action) {
+  $(id).disabled = true;
+
+  try {
+    await action();
+  } catch (error) {
+    say("Erreur : " + error.message);
+  } finally {
+    $(id).disabled = false;
+  }
+}
+
+async function transform(bytes, mode) {
+  const stream = new Blob([bytes]).stream().pipeThrough(mode);
+  const reader = stream.getReader();
+  const parts = [];
+  let total = 0;
+
+  try {
+    while (true) {
+      const result = await reader.read();
+      if (result.done) break;
+
+      total += result.value.length;
+
+      if (total > LIMIT + INDEX_MAX + 4) {
+        throw Error("Données décompressées trop volumineuses.");
+      }
+
+      parts.push(result.value);
+    }
+  } catch (error) {
+    await reader.cancel().catch(() => {});
+    throw error;
+  }
+
+  return concat(parts);
+}
+
+/* Formats */
+
+const formats = {
+  png: {
+    mime: "image/png",
+    ext: ["png"]
+  },
+  jpeg: {
+    mime: "image/jpeg",
+    ext: ["jpg", "jpeg"]
+  },
+  bmp: {
+    mime: "image/bmp",
+    ext: ["bmp"]
+  },
+  svg: {
+    mime: "image/svg+xml",
+    ext: ["svg"]
+  },
+  webp: {
+    mime: "image/webp",
+    ext: ["webp"]
+  },
+  gif: {
+    mime: "image/gif",
+    ext: ["gif"]
+  },
+  tiff: {
+    mime: "image/tiff",
+    ext: ["tif", "tiff"]
+  },
+  ico: {
+    mime: "image/x-icon",
+    ext: ["ico"]
+  }
+};
+
+function detectFormat(bytes) {
+  if (bytes.length < 8) {
+    throw Error("Image trop courte.");
+  }
+
+  if (
+    [137, 80, 78, 71, 13, 10, 26, 10].every(
+      (value, index) => bytes[index] === value
+    )
+  ) {
+    return formats.png;
+  }
+
+  if (
+    bytes[0] === 255 &&
+    bytes[1] === 216 &&
+    bytes[2] === 255
+  ) {
+    return formats.jpeg;
+  }
+
+  if (ascii(bytes, 0, 2) === "BM") {
+    return formats.bmp;
+  }
+
+  if (
+    ascii(bytes, 0, 4) === "RIFF" &&
+    ascii(bytes, 8, 4) === "WEBP"
+  ) {
+    return formats.webp;
+  }
+
+  if (/^GIF8[79]a$/.test(ascii(bytes, 0, 6))) {
+    return formats.gif;
+  }
+
+  if (["II*\0", "MM\0*"].includes(ascii(bytes, 0, 4))) {
+    return formats.tiff;
+  }
+
+  if (
+    bytes[0] === 0 &&
+    bytes[1] === 0 &&
+    bytes[2] === 1 &&
+    bytes[3] === 0
+  ) {
+    return formats.ico;
+  }
+
+  try {
+    const text = dec.decode(bytes);
+
+    if (/<(?:[\w.-]+:)?svg(?:\s|\/?>)/.test(text)) {
+      return formats.svg;
+    }
+  } catch {}
+
+  throw Error(
+    "Format non reconnu. Formats : PNG, JPEG, BMP, SVG UTF-8, " +
+    "WebP, GIF, TIFF et ICO."
+  );
+}
+
+/* PNG */
+
+function pngChunk(type, data) {
+  const typeBytes = enc.encode(type);
+
+  return concat([
+    u32(data.length),
+    typeBytes,
+    data,
+    u32(crc32(concat([typeBytes, data])))
+  ]);
+}
+
+function pngChunks(bytes) {
+  const signature = [137, 80, 78, 71, 13, 10, 26, 10];
+
+  if (!signature.every((value, index) => bytes[index] === value)) {
+    throw Error("Ce fichier n’est pas un PNG.");
+  }
+
+  const parts = [];
+  let offset = 8;
+  let ended = false;
+
+  while (offset < bytes.length) {
+    if (offset + 12 > bytes.length) {
+      throw Error("PNG tronqué.");
+    }
+
+    const length = read32(bytes, offset);
+
+    if (
+      length > 0x7fffffff ||
+      offset + length + 12 > bytes.length
+    ) {
+      throw Error("Bloc PNG invalide.");
+    }
+
+    const type = ascii(bytes, offset + 4, 4);
+    const data = bytes.subarray(
+      offset + 8,
+      offset + 8 + length
+    );
+
+    const expectedCRC = read32(bytes, offset + 8 + length);
+    const actualCRC = crc32(
+      bytes.subarray(offset + 4, offset + 8 + length)
+    );
+
+    if (actualCRC !== expectedCRC) {
+      throw Error("PNG endommagé : contrôle CRC incorrect.");
+    }
+
+    parts.push({
+      type,
+      data,
+      raw: bytes.subarray(offset, offset + length + 12)
+    });
+
+    offset += length + 12;
+
+    if (type === "IEND") {
+      ended = true;
+      break;
+    }
+  }
+
+  if (
+    !ended ||
+    parts[0]?.type !== "IHDR" ||
+    !parts.some(part => part.type === "IDAT")
+  ) {
+    throw Error("Structure PNG invalide.");
+  }
+
+  return parts;
+}
+
+/* WebP */
+
+function webpChunks(bytes) {
+  const end = read32(bytes, 4, true) + 8;
+
+  if (end !== bytes.length) {
+    throw Error("Taille RIFF WebP incorrecte.");
+  }
+
+  const parts = [];
+  let offset = 12;
+
+  while (offset < end) {
+    if (offset + 8 > end) {
+      throw Error("Bloc WebP tronqué.");
+    }
+
+    const length = read32(bytes, offset + 4, true);
+    const next = offset + 8 + length + (length % 2);
+
+    if (next > end) {
+      throw Error("Bloc WebP tronqué.");
+    }
+
+    parts.push({
+      type: ascii(bytes, offset, 4),
+      data: bytes.subarray(offset + 8, offset + 8 + length),
+      raw: bytes.subarray(offset, next)
+    });
+
+    offset = next;
+  }
+
+  return parts;
+}
+
+/* SVG */
+
+function to64(bytes) {
+  const parts = [];
+
+  for (let offset = 0; offset < bytes.length; offset += 32768) {
+    parts.push(
+      String.fromCharCode(...bytes.subarray(offset, offset + 32768))
+    );
+  }
+
+  return btoa(parts.join(""));
+}
+
+function from64(text) {
+  const binary = atob(text);
+  const bytes = new Uint8Array(binary.length);
+
+  for (let i = 0; i < binary.length; i++) {
+    bytes[i] = binary.charCodeAt(i);
+  }
+
+  return bytes;
+}
+
+function svgText(bytes) {
+  const text = dec.decode(bytes);
+
+  if (/<!DOCTYPE/i.test(text)) {
+    throw Error("SVG avec DOCTYPE non pris en charge.");
+  }
+
+  const doc = new DOMParser().parseFromString(
+    text,
+    "image/svg+xml"
+  );
+
+  if (
+    doc.getElementsByTagName("parsererror").length ||
+    doc.documentElement.localName !== "svg" ||
+    doc.documentElement.namespaceURI !==
+      "http://www.w3.org/2000/svg"
+  ) {
+    throw Error("SVG invalide : un document SVG UTF-8 est requis.");
+  }
+
+  return text;
+}
+
+const SVG_TAIL =
+  /\n?<!--PixelPocket-v2:([A-Za-z0-9+/=]+)-->\s*$/;
+
+/* Contrôle d’intégrité */
+
+function wrapData(data) {
+  return concat([data, u32(crc32(data))]);
+}
+
+function unwrapData(data) {
+  if (
+    data.length < 4 ||
+    crc32(data.subarray(0, -4)) !== read32(data, data.length - 4)
+  ) {
+    throw Error("Capsule endommagée : CRC incorrect.");
+  }
+
+  return data.subarray(0, -4);
+}
+
+/* Données ajoutées en fin de fichier */
+
+function tailInfo(bytes) {
+  const footerSize = TAIL.length + 8;
+
+  if (
+    bytes.length < footerSize ||
+    !TAIL.every(
+      (value, index) =>
+        bytes[bytes.length - TAIL.length + index] === value
+    )
+  ) {
+    return null;
+  }
+
+  const length = read32(bytes, bytes.length - footerSize);
+  const crc = read32(bytes, bytes.length - footerSize + 4);
+  const start = bytes.length - footerSize - length;
+
+  if (start < 8) {
+    throw Error("Capsule tronquée.");
+  }
+
+  const data = bytes.subarray(start, start + length);
+
+  if (crc32(data) !== crc) {
+    throw Error("Capsule endommagée : CRC incorrect.");
+  }
+
+  return { start, data };
+}
+
+/* Intégration dans l’image */
+
+function embedImage(bytes, data, format = detectFormat(bytes)) {
+  if (format === formats.png) {
+    const parts = [bytes.subarray(0, 8)];
+
+    for (const part of pngChunks(bytes)) {
+      if (part.type === TYPE) continue;
+
+      if (part.type === "IEND") {
+        parts.push(pngChunk(TYPE, data));
+      }
+
+      parts.push(part.raw);
+    }
+
+    return concat(parts);
+  }
+
+  if (format === formats.webp) {
+    const parts = webpChunks(bytes)
+      .filter(part => part.type !== "PXP2")
+      .map(part => part.raw);
+
+    const wrapped = wrapData(data);
+
+    parts.push(concat([
+      enc.encode("PXP2"),
+      u32(wrapped.length, true),
+      wrapped,
+      ...(wrapped.length % 2 ? [new Uint8Array(1)] : [])
+    ]));
+
+    const body = concat([enc.encode("WEBP"), ...parts]);
+
+    return concat([
+      enc.encode("RIFF"),
+      u32(body.length, true),
+      body
+    ]);
+  }
+
+  if (format === formats.svg) {
+    const text = svgText(bytes).replace(SVG_TAIL, "");
+
+    return enc.encode(
+      text +
+      "\n<!--PixelPocket-v2:" +
+      to64(wrapData(data)) +
+      "-->"
+    );
+  }
+
+  const old = tailInfo(bytes);
+
+  if (old) {
+    bytes = bytes.subarray(0, old.start);
+  }
+
+  return concat([
+    bytes,
+    data,
+    u32(data.length),
+    u32(crc32(data)),
+    TAIL
+  ]);
+}
+
+/* Lecture de la capsule */
+
+function readImageCapsule(bytes) {
+  const format = detectFormat(bytes);
+
+  if (format === formats.png) {
+    const blocks = pngChunks(bytes)
+      .filter(part => part.type === TYPE);
+
+    if (blocks.length !== 1) {
+      throw Error("Aucune capsule unique dans ce PNG.");
+    }
+
+    return blocks[0].data;
+  }
+
+  if (format === formats.webp) {
+    const blocks = webpChunks(bytes)
+      .filter(part => part.type === "PXP2");
+
+    if (blocks.length !== 1) {
+      throw Error("Aucune capsule unique dans ce WebP.");
+    }
+
+    return unwrapData(blocks[0].data);
+  }
+
+  if (format === formats.svg) {
+    const match = svgText(bytes).match(SVG_TAIL);
+
+    if (!match) {
+      throw Error("Aucune capsule PixelPocket dans ce SVG.");
+    }
+
+    return unwrapData(from64(match[1]));
+  }
+
+  const info = tailInfo(bytes);
+
+  if (!info) {
+    throw Error("Cette image ne contient aucune capsule PixelPocket.");
+  }
+
+  return info.data;
+}
+
+async function decodeCapsule(bytes) {
+  const data = readImageCapsule(bytes);
+
+  if (
+    data.length < 9 ||
+    !MAGIC.every((value, index) => data[index] === value)
+  ) {
+    throw Error("Format de capsule inconnu.");
+  }
+
+  const flag = data[8];
+  let raw = data.subarray(9);
+
+  if (flag === 1) {
+    if (typeof DecompressionStream === "undefined") {
+      throw Error(
+        "Décompression indisponible. Utilisez un navigateur récent."
+      );
+    }
+
+    raw = await transform(raw, new DecompressionStream("gzip"));
+  } else if (flag !== 0) {
+    throw Error("Compression inconnue.");
+  }
+
+  if (raw.length < 4 || raw.length > LIMIT + INDEX_MAX + 4) {
+    throw Error("Taille de capsule incorrecte.");
+  }
+
+  const indexLength = read32(raw, 0);
+
+  if (
+    indexLength > INDEX_MAX ||
+    4 + indexLength > raw.length
+  ) {
+    throw Error("Index invalide.");
+  }
+
+  const index = JSON.parse(
+    dec.decode(raw.subarray(4, 4 + indexLength))
+  );
+
+  if (
+    index.version !== 1 ||
+    !Array.isArray(index.files) ||
+    !index.files.length ||
+    index.files.length > 65535
+  ) {
+    throw Error("Index non reconnu ou trop de fichiers.");
+  }
+
+  let offset = 4 + indexLength;
+  let total = 0;
+  const seen = new Set();
+  const entries = [];
+
+  for (const file of index.files) {
+    safePath(file.path);
+
+    if (
+      seen.has(file.path) ||
+      !Number.isSafeInteger(file.size) ||
+      file.size < 0 ||
+      offset + file.size > raw.length
+    ) {
+      throw Error("Entrée de capsule invalide.");
+    }
+
+    seen.add(file.path);
+    total += file.size;
+
+    if (total > LIMIT) {
+      throw Error("Contenu trop volumineux.");
+    }
+
+    entries.push({
+      path: file.path,
+      data: raw.subarray(offset, offset + file.size)
+    });
+
+    offset += file.size;
+  }
+
+  if (offset !== raw.length) {
+    throw Error("Données supplémentaires inattendues.");
+  }
+
+  return entries;
+}
+
+/* Sélection */
+
+function selectFiles(input) {
+  chosen = Array.from(input.files);
+
+  $("selection").textContent =
+    chosen.length +
+    " fichier(s) · " +
+    size(chosen.reduce((sum, file) => sum + file.size, 0));
+
+  $("result").replaceChildren();
+}
+
+$("files").onchange = () => {
+  selectFiles($("files"));
+  $("folder").value = "";
+};
+
+$("folder").onchange = () => {
+  selectFiles($("folder"));
+  $("files").value = "";
+};
+
+$("cover").onchange = () => {
+  if (previewURL) {
+    URL.revokeObjectURL(previewURL);
+  }
+
+  const file = $("cover").files[0];
+  $("preview").hidden = !file;
+
+  if (file) {
+    previewURL = URL.createObjectURL(file);
+    $("preview").src = previewURL;
+  } else {
+    $("preview").removeAttribute("src");
+  }
+
+  $("result").replaceChildren();
+};
+
+/* Création */
+
+$("pack").onclick = () => busy("pack", async () => {
+  const cover = $("cover").files[0];
+  const files = chosen.slice();
+
+  if (!cover || !files.length) {
+    throw Error("Choisissez une image et au moins un fichier.");
+  }
+
+  if (files.length > 65535) {
+    throw Error("Maximum : 65 535 fichiers.");
+  }
+
+  if (
+    cover.size > IMAGE_MAX ||
+    files.reduce((sum, file) => sum + file.size, 0) > LIMIT
+  ) {
+    throw Error("La sélection dépasse la limite de taille.");
+  }
+
+  say("Lecture et compression…");
+  $("result").replaceChildren();
+
+  const image = new Uint8Array(await cover.arrayBuffer());
+  const format = detectFormat(image);
+  const names = new Set();
+  const entries = [];
+  const bodies = [];
+
+  for (const file of files) {
+    const path = safePath(file.webkitRelativePath || file.name);
+
+    if (names.has(path)) {
+      throw Error("Nom en double : " + path);
+    }
+
+    names.add(path);
+    entries.push({ path, size: file.size });
+    bodies.push(new Uint8Array(await file.arrayBuffer()));
+  }
+
+  const index = enc.encode(JSON.stringify({
+    version: 1,
+    files: entries
+  }));
+
+  if (index.length > INDEX_MAX) {
+    throw Error("Trop de noms de fichiers.");
+  }
+
+  const raw = concat([u32(index.length), index, ...bodies]);
+  let payload = raw;
+  let flag = 0;
+
+  if (typeof CompressionStream !== "undefined") {
+    const compressed = await transform(
+      raw,
+      new CompressionStream("gzip")
+    );
+
+    if (compressed.length < raw.length) {
+      payload = compressed;
+      flag = 1;
+    }
+  }
+
+  const capsule = concat([
+    MAGIC,
+    new Uint8Array([flag]),
+    payload
+  ]);
+
+  const output = embedImage(image, capsule, format);
+  const blob = new Blob([output], { type: format.mime });
+
+  if (blob.size > IMAGE_MAX) {
+    throw Error("L’image finale dépasse 250 Mio.");
+  }
+
+  let extension = cover.name.split(".").pop().toLowerCase();
+
+  if (!format.ext.includes(extension)) {
+    extension = format.ext[0];
+  }
+
+  const outputName =
+    cover.name.replace(/\.[^.]+$/, "") +
+    "_pixelpocket." +
+    extension;
+
+  const button = document.createElement("button");
+  button.type = "button";
+  button.textContent = "Télécharger l’image · " + size(blob.size);
+  button.onclick = () => save(blob, outputName);
+
+  $("result").append(button);
+
+  say(
+    "Capsule prête : " + files.length +
+    " fichier(s). Cliquez sur Télécharger l’image."
+  );
+});
+
+/* Extraction */
+
+$("capsule").onchange = () => {
+  extracted = [];
+  $("list").replaceChildren();
+  $("zip").hidden = true;
+  $("summary").textContent = "Cliquez sur Lire le contenu.";
+};
+
+$("open").onclick = () => busy("open", async () => {
+  extracted = [];
+  $("list").replaceChildren();
+  $("zip").hidden = true;
+  $("summary").textContent = "";
+
+  const file = $("capsule").files[0];
+
+  if (!file) {
+    throw Error("Choisissez une image à ouvrir.");
+  }
+
+  if (file.size > IMAGE_MAX) {
+    throw Error("Cette image dépasse 250 Mio.");
+  }
+
+  say("Vérification et lecture…");
+
+  extracted = await decodeCapsule(
+    new Uint8Array(await file.arrayBuffer())
+  );
+
+  for (const entry of extracted) {
+    const row = document.createElement("article");
+    const label = document.createElement("span");
+    const button = document.createElement("button");
+
+    label.textContent =
+      entry.path + " · " + size(entry.data.length);
+
+    button.type = "button";
+    button.textContent = "Extraire";
+    button.onclick = () => save(
+      new Blob([entry.data]),
+      entry.path.split("/").pop()
+    );
+
+    row.append(label, button);
+    $("list").append(row);
+  }
+
+  $("summary").textContent =
+    extracted.length +
+    " fichier(s) · " +
+    size(extracted.reduce(
+      (sum, entry) => sum + entry.data.length,
+      0
+    ));
+
+  $("zip").hidden = false;
+
+  say(
+    "Contenu vérifié. Téléchargez chaque fichier " +
+    "ou l’ensemble en ZIP."
+  );
+});
+
+/* ZIP standard avec noms UTF-8 */
+
+function makeZip(entries) {
+  const localParts = [];
+  const centralParts = [];
+  let offset = 0;
+  let centralSize = 0;
+
+  for (const entry of entries) {
+    const name = enc.encode(entry.path);
+    const data = entry.data;
+
+    if (name.length > 65535) {
+      throw Error("Nom trop long pour le ZIP.");
+    }
+
+    const crc = crc32(data);
+
+    const local = new Uint8Array(30);
+    const lv = new DataView(local.buffer);
+
+    lv.setUint32(0, 0x04034b50, true);
+    lv.setUint16(4, 20, true);
+    lv.setUint16(6, 0x800, true);
+    lv.setUint16(12, 33, true);
+    lv.setUint32(14, crc, true);
+    lv.setUint32(18, data.length, true);
+    lv.setUint32(22, data.length, true);
+    lv.setUint16(26, name.length, true);
+
+    localParts.push(local, name, data);
+
+    const central = new Uint8Array(46);
+    const cv = new DataView(central.buffer);
+
+    cv.setUint32(0, 0x02014b50, true);
+    cv.setUint16(4, 20, true);
+    cv.setUint16(6, 20, true);
+    cv.setUint16(8, 0x800, true);
+    cv.setUint16(14, 33, true);
+    cv.setUint32(16, crc, true);
+    cv.setUint32(20, data.length, true);
+    cv.setUint32(24, data.length, true);
+    cv.setUint16(28, name.length, true);
+    cv.setUint32(42, offset, true);
+
+    centralParts.push(central, name);
+
+    offset += 30 + name.length + data.length;
+    centralSize += 46 + name.length;
+  }
+
+  const end = new Uint8Array(22);
+  const ev = new DataView(end.buffer);
+
+  ev.setUint32(0, 0x06054b50, true);
+  ev.setUint16(8, entries.length, true);
+  ev.setUint16(10, entries.length, true);
+  ev.setUint32(12, centralSize, true);
+  ev.setUint32(16, offset, true);
+
+  return new Blob(
+    [...localParts, ...centralParts, end],
+    { type: "application/zip" }
+  );
+}
+
+$("zip").onclick = () => busy("zip", async () => {
+  if (!extracted.length) {
+    throw Error("Ouvrez d’abord une capsule.");
+  }
+
+  save(makeZip(extracted), "pixelpocket_extrait.zip");
+  say("ZIP préparé pour le téléchargement.");
+});
+});
