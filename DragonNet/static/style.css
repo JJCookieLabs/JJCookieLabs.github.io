@@ -1,0 +1,138 @@
+:root {
+  color-scheme:dark;
+  font-family:system-ui,Arial,sans-serif;
+  background:#0a1020;
+  color:#edf3ff;
+  scroll-behavior:smooth;
+}
+* {box-sizing:border-box}
+body {margin:0;line-height:1.5}
+button,input,textarea,select {font:inherit}
+button,a,input,textarea,select {outline-offset:3px}
+a {color:inherit}
+header {
+  position:sticky;top:0;z-index:20;
+  background:#101a30;
+  border-bottom:1px solid #314562;
+}
+.navbar {
+  max-width:1120px;margin:auto;padding:12px 18px;
+  display:flex;align-items:center;gap:14px;flex-wrap:wrap;
+}
+.logo {
+  font-size:1.25rem;font-weight:800;
+  text-decoration:none;color:#8cd0ff;
+}
+nav {display:flex;gap:5px;flex-wrap:wrap;margin-left:auto}
+nav a {
+  padding:9px 13px;border-radius:10px;
+  text-decoration:none;color:#ccd9f0;font-weight:650;
+}
+nav a:hover,nav a.active {background:#263c61;color:white}
+nav .back {border:1px solid #506482;color:#9acdf6}
+.hero {max-width:1120px;margin:28px auto;padding:0 18px}
+h1 {font-size:clamp(2rem,5vw,3rem);margin:5px 0}
+h2 {font-size:1.35rem;margin:0 0 15px}
+h3 {margin:0 0 5px}
+main {max-width:1120px;margin:auto;padding:0 18px 60px}
+.section {scroll-margin-top:100px}
+.panel {
+  background:#15233d;border:1px solid #30476a;
+  border-radius:17px;padding:22px;margin-bottom:20px;
+}
+.muted,small {color:#b6c7df}
+.row {display:flex;gap:12px;flex-wrap:wrap;align-items:end}
+.row>* {flex:1 1 180px;min-width:0}
+label {display:block;font-size:.92rem;margin:10px 0 5px}
+input,textarea,select {
+  width:100%;padding:11px;border-radius:9px;
+  background:#0b172e;color:white;border:1px solid #536987;
+}
+textarea {min-height:120px;resize:vertical}
+button {
+  border:0;background:#277fdf;color:white;
+  padding:10px 15px;border-radius:9px;
+  cursor:pointer;font-weight:650;
+}
+button:hover {filter:brightness(1.1)}
+button:disabled {opacity:.5;cursor:wait}
+button.secondary {background:#385273}
+button.danger {background:#a7384e}
+.actions {display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.grid {
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(min(100%,320px),1fr));
+  gap:14px;margin-top:16px;align-items:start;
+}
+.article,.comment-admin-card {
+  background:#1b2c49;border:1px solid #334969;
+  border-radius:13px;padding:17px;
+  overflow-wrap:anywhere;
+}
+.article p,.comment-admin-card p {
+  white-space:pre-wrap;line-height:1.6;
+}
+.meta {font-size:.83rem;color:#adc3e0;margin:7px 0}
+.hidden {display:none!important}
+.tag {
+  background:#594323;color:#ffe2b1;
+  border-radius:20px;padding:4px 9px;font-size:.78rem;
+  display:inline-block;
+}
+.admin-badge {
+  background:#1a4d7a;border:1px solid #62a9ee;
+  border-radius:20px;padding:3px 9px;
+  color:#e7f5ff;font-size:.75rem;font-weight:800;
+  display:inline-block;margin-left:7px;
+}
+.photos,.preview {
+  display:flex;gap:8px;flex-wrap:wrap;margin:12px 0;
+}
+.photos a,.preview img {width:110px;max-width:100%}
+.photos img,.preview img {
+  width:110px;height:90px;object-fit:cover;
+  border-radius:9px;border:1px solid #425a7c;
+}
+.comments {
+  margin-top:15px;padding-top:12px;
+  border-top:1px solid #405575;
+}
+.comments summary {
+  cursor:pointer;color:#9ed0ff;font-weight:700;
+}
+.comment-list {display:grid;gap:8px;margin:12px 0}
+.comment {
+  background:#13213a;border:1px solid #354968;
+  border-radius:9px;padding:11px;
+}
+.comment p {margin:5px 0}
+.comment-date {color:#9eafca;font-size:.75rem}
+.comment-form textarea {min-height:75px}
+.adminrow {
+  display:flex;align-items:center;justify-content:space-between;
+  gap:10px;flex-wrap:wrap;
+}
+.stats {display:flex;gap:12px;margin:14px 0}
+.stat {
+  flex:1;background:#203655;border-radius:11px;padding:13px;
+}
+.stat strong {display:block;font-size:1.5rem}
+.comment-admin-panel {
+  margin-top:25px;padding-top:22px;
+  border-top:1px solid #405677;
+}
+.comment-parent {font-size:.84rem;color:#acd0fa}
+.comment-count {margin:12px 0;color:#c6d6ee}
+#notice {
+  position:sticky;top:65px;z-index:19;
+  background:#294d75;padding:12px 18px;display:none;
+}
+.about-lines {display:grid;gap:10px;color:#c3d2e9}
+footer {text-align:center;padding:20px;color:#93a7c6}
+@media(max-width:700px) {
+  .logo {width:100%}
+  nav {margin-left:0;width:100%}
+  nav a {padding:8px;font-size:.85rem}
+  .panel {padding:16px}
+  #notice {top:105px}
+}
