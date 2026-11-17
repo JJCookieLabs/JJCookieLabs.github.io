@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lobbix V0.8.6 — SafeGuard 1.0.1</title>
+<title>Lobbix V0.8.7 — SafeGuard 1.0.1</title>
 <style>
 :root{
   font-family:system-ui,Arial;
@@ -292,7 +292,7 @@ canvas{
     </p>
 
     <div class="notice muted">
-      Prototype privé V0.8.6 · SafeGuard 1.0.1.
+      Prototype privé V0.8.7 · SafeGuard 1.0.1.
     </div>
 
     <div id="authError" class="notice hidden" role="status"></div>
@@ -392,18 +392,21 @@ canvas{
     <option value="photo">Ma photo</option>
   </select>
   <div id="wallpaperPreview" class="wallpaper-preview" role="img" aria-label="Aperçu du fond d’écran"></div>
+  <p id="wallpaperPhotoInfo" class="muted"></p>
+  <div id="wallpaperNotice" class="notice hidden" role="status" aria-live="polite"></div>
   <label for="wallpaperFile">Importer une photo depuis cet appareil</label>
-  <input id="wallpaperFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif,image/bmp" onchange="importWallpaper(this)">
+  <input id="wallpaperFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif,image/bmp" onchange="importWallpaper(this)" aria-describedby="wallpaperFileHelp">
+  <p id="wallpaperFileHelp" class="muted">Le fichier choisi s’applique automatiquement. Clique ensuite sur « Terminé ».</p>
   <p class="muted">JPG, PNG, WebP, GIF, AVIF ou BMP · 15 Mo maximum.</p>
   <form onsubmit="useWallpaperUrl(event)">
-    <label for="wallpaperUrl">Ou utiliser le lien HTTPS d’une image</label>
-    <input id="wallpaperUrl" type="url" placeholder="https://exemple.fr/photo.jpg" maxlength="2048" required>
-    <button id="wallpaperUrlButton" type="submit">Utiliser cette image</button>
+    <label for="wallpaperUrl">Autre possibilité : lien HTTPS d’une image (facultatif)</label>
+    <input id="wallpaperUrl" type="url" placeholder="https://exemple.fr/photo.jpg" maxlength="2048" oninput="syncWallControls()">
+    <button id="wallpaperUrlButton" type="submit" disabled>Charger l’image du lien</button>
   </form>
   <label for="wallpaperShade">Opacité du voile : <span id="wallpaperShadeValue">48 %</span></label>
   <input id="wallpaperShade" type="range" min="25" max="80" value="48" oninput="setWallShade(this.value)">
   <button id="removeWallpaperButton" type="button" class="alt" onclick="removeWallpaper()">Retirer ma photo</button>
-  <div id="wallpaperNotice" class="notice hidden" role="status" aria-live="polite"></div>
+  <button type="button" onclick="document.getElementById('wallpaperDialog').close()">Terminé</button>
 </dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js"></script>
@@ -456,6 +459,7 @@ let roomPresenceConfirmed = false;
 let authRevision = 0;
 let wallChoice = 'aurora';
 let wallPhoto = '';
+let wallPhotoName = '';
 let wallShade = 48;
 let wallpaperLoading = false;
 
@@ -1881,7 +1885,10 @@ function validWallPhoto(value) {
 function restoreWall() {
   try {
     const savedPhoto = localStorage.getItem('lobbix-bg-photo');
-    if (validWallPhoto(savedPhoto)) wallPhoto = savedPhoto;
+    if (validWallPhoto(savedPhoto)) {
+      wallPhoto = savedPhoto;
+      wallPhotoName = (localStorage.getItem('lobbix-bg-photo-name') || '').slice(0, 180);
+    }
     const savedChoice = localStorage.getItem('lobbix-bg');
     if (['aurora', 'grid', 'waves', 'photo'].includes(savedChoice)) wallChoice = savedChoice;
     const savedShade = localStorage.getItem('lobbix-bg-shade');
@@ -1899,6 +1906,7 @@ function saveWall() {
     if (wallPhoto && localStorage.getItem('lobbix-bg-photo') !== wallPhoto) {
       localStorage.setItem('lobbix-bg-photo', wallPhoto);
     }
+    if (wallPhoto) localStorage.setItem('lobbix-bg-photo-name', wallPhotoName);
     localStorage.setItem('lobbix-bg', wallChoice);
     localStorage.setItem('lobbix-bg-shade', String(wallShade));
     return true;
@@ -1912,7 +1920,11 @@ function syncWallControls() {
   $('wallpaperShadeValue').textContent = wallShade + ' %';
   $('removeWallpaperButton').disabled = !wallPhoto || wallpaperLoading;
   $('wallpaperFile').disabled = wallpaperLoading;
-  $('wallpaperUrlButton').disabled = wallpaperLoading;
+  $('wallpaperUrlButton').disabled = wallpaperLoading || !$('wallpaperUrl').value.trim();
+  $('wallpaperPhotoInfo').textContent = wallPhoto
+    ? (wallChoice === 'photo' ? 'Photo appliquée' : 'Photo enregistrée') +
+      (wallPhotoName ? ' : ' + wallPhotoName : ' sur cet appareil.')
+    : 'Choisis un fichier pour utiliser ta photo.';
   const appearance = getComputedStyle($('room'));
   const preview = $('wallpaperPreview');
   preview.style.backgroundImage = appearance.backgroundImage;
@@ -2008,20 +2020,21 @@ async function importWallpaper(input) {
       throw Error('Cette photo reste trop volumineuse après préparation. Essaie une image plus petite.');
     }
     wallPhoto = source;
+    wallPhotoName = file.name.slice(0, 180);
     setWall('photo', false);
     notice(saveWall() ? 'Photo appliquée et enregistrée sur cet appareil.' : 'Photo appliquée pour cette session. La sauvegarde sur cet appareil est indisponible.', 'wallpaperNotice');
   } catch (error) {
+    input.value = '';
     notice(error.message || 'Impossible de charger cette photo.', 'wallpaperNotice');
   } finally {
     wallpaperLoading = false;
-    input.value = '';
     syncWallControls();
   }
 }
 
 async function useWallpaperUrl(event) {
   event.preventDefault();
-  if (wallpaperLoading) return;
+  if (wallpaperLoading || !$('wallpaperUrl').value.trim()) return;
   wallpaperLoading = true;
   syncWallControls();
   notice('Chargement de l’image…', 'wallpaperNotice');
@@ -2032,6 +2045,7 @@ async function useWallpaperUrl(event) {
     }
     await loadWallImage(source);
     wallPhoto = new URL(source).href;
+    wallPhotoName = '';
     setWall('photo', false);
     notice(saveWall() ? 'Image appliquée et enregistrée sur cet appareil.' : 'Image appliquée pour cette session. La sauvegarde sur cet appareil est indisponible.', 'wallpaperNotice');
   } catch (error) {
@@ -2044,9 +2058,14 @@ async function useWallpaperUrl(event) {
 
 function removeWallpaper() {
   wallPhoto = '';
-  try { localStorage.removeItem('lobbix-bg-photo'); } catch {}
-  setWall('aurora');
+  wallPhotoName = '';
+  try {
+    localStorage.removeItem('lobbix-bg-photo');
+    localStorage.removeItem('lobbix-bg-photo-name');
+  } catch {}
+  $('wallpaperFile').value = '';
   $('wallpaperUrl').value = '';
+  setWall('aurora');
   notice('Photo retirée. Le fond Aurore est rétabli.', 'wallpaperNotice');
 }
 
