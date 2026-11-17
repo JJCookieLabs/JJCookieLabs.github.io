@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lobbix V0.8.5 — SafeGuard 1.0.1</title>
+<title>Lobbix V0.8.6 — SafeGuard 1.0.1</title>
 <style>
 :root{
   font-family:system-ui,Arial;
@@ -155,6 +155,23 @@ label{display:block;margin:12px 0 5px}
     radial-gradient(ellipse at 90% 85%,#7459a3,transparent 60%),
     #21283f
 }
+.room.photobg{background-position:center;background-size:cover;background-repeat:no-repeat}
+.wallpaper-dialog{
+  width:min(540px,calc(100% - 28px));
+  max-height:85dvh;overflow:auto;padding:22px;
+  border:1px solid var(--line);border-radius:18px;
+  background:var(--panel);color:var(--text)
+}
+.wallpaper-dialog::backdrop{background:#080d22b3;backdrop-filter:blur(5px)}
+.wallpaper-preview{
+  height:170px;border-radius:12px;margin:16px 0;
+  position:relative;overflow:hidden;
+  background-position:center;background-size:cover;
+  border:1px solid var(--line)
+}
+.wallpaper-preview::after{content:"";position:absolute;inset:0;background:rgba(0,7,28,var(--preview-shade,.48))}
+.wallpaper-dialog button{margin:5px 0}
+.room-notice{margin:8px 12px;background:#17223f;flex-shrink:0}
 .room::before{
   content:"";
   position:absolute;
@@ -275,11 +292,13 @@ canvas{
     </p>
 
     <div class="notice muted">
-      Prototype privé V0.8.5 · SafeGuard 1.0.1.
+      Prototype privé V0.8.6 · SafeGuard 1.0.1.
     </div>
 
     <div id="authError" class="notice hidden" role="status"></div>
     <div id="authForm"></div>
+
+    <button type="button" class="alt" onclick="openWallpaperSettings()">🖼️ Fond d’écran</button>
 
     <p class="muted" style="font-size:12px">
       Respecte les autres et ne publie pas leurs informations personnelles.
@@ -299,6 +318,7 @@ canvas{
   <main class="main">
     <div class="row">
       <h1 id="heading">Accueil</h1>
+      <button type="button" class="alt" onclick="openWallpaperSettings()">🖼️ Fond d’écran</button>
       <button type="button" class="alt" onclick="theme()">🌓 Thème</button>
     </div>
 
@@ -314,8 +334,12 @@ canvas{
       <div id="count" class="muted">0/25 joueurs</div>
     </div>
 
+    <button type="button" onclick="openWallpaperSettings()">🖼️ Fond d’écran</button>
     <button type="button" onclick="leaveRoom()">← Quitter le lobby</button>
   </div>
+
+  <div id="roomNotice" class="notice room-notice hidden" role="status"></div>
+  <button id="rejoinRoomButton" type="button" class="hidden" onclick="joinRoom(lobby.id,lobby.name)">Rejoindre à nouveau ce lobby</button>
 
   <div class="roomlayout">
     <nav class="glass mini">
@@ -348,11 +372,39 @@ canvas{
           placeholder="Message…"
           onkeydown="if(event.key==='Enter')send()"
         >
-        <button type="button" onclick="send()">Envoyer</button>
+        <button id="sendMessageButton" type="button" onclick="send()">Envoyer</button>
       </div>
     </div>
   </div>
 </section>
+
+<dialog id="wallpaperDialog" class="wallpaper-dialog" aria-labelledby="wallpaperTitle">
+  <div class="row">
+    <h2 id="wallpaperTitle">🖼️ Fond d’écran</h2>
+    <button type="button" class="alt" onclick="document.getElementById('wallpaperDialog').close()" aria-label="Fermer les fonds d’écran">✕</button>
+  </div>
+  <p class="muted">Personnalise le fond de tes lobbies. Ton choix est conservé sur cet appareil. Les photos importées restent dans ton navigateur.</p>
+  <label for="wallpaperPreset">Choisir un fond</label>
+  <select id="wallpaperPreset" onchange="setWall(this.value)">
+    <option value="aurora">Aurore</option>
+    <option value="grid">Grille</option>
+    <option value="waves">Vagues</option>
+    <option value="photo">Ma photo</option>
+  </select>
+  <div id="wallpaperPreview" class="wallpaper-preview" role="img" aria-label="Aperçu du fond d’écran"></div>
+  <label for="wallpaperFile">Importer une photo depuis cet appareil</label>
+  <input id="wallpaperFile" type="file" accept="image/jpeg,image/png,image/webp,image/gif,image/avif,image/bmp" onchange="importWallpaper(this)">
+  <p class="muted">JPG, PNG, WebP, GIF, AVIF ou BMP · 15 Mo maximum.</p>
+  <form onsubmit="useWallpaperUrl(event)">
+    <label for="wallpaperUrl">Ou utiliser le lien HTTPS d’une image</label>
+    <input id="wallpaperUrl" type="url" placeholder="https://exemple.fr/photo.jpg" maxlength="2048" required>
+    <button id="wallpaperUrlButton" type="submit">Utiliser cette image</button>
+  </form>
+  <label for="wallpaperShade">Opacité du voile : <span id="wallpaperShadeValue">48 %</span></label>
+  <input id="wallpaperShade" type="range" min="25" max="80" value="48" oninput="setWallShade(this.value)">
+  <button id="removeWallpaperButton" type="button" class="alt" onclick="removeWallpaper()">Retirer ma photo</button>
+  <div id="wallpaperNotice" class="notice hidden" role="status" aria-live="polite"></div>
+</dialog>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2.119.0/dist/umd/supabase.js"></script>
 
@@ -397,6 +449,15 @@ let commandBuffer = '';
 let authSubmitting = false;
 let profileLoadingId = null;
 let sending = false;
+let creatingRoom = false;
+let joiningRoom = false;
+let pendingCreatedLobby = null;
+let roomPresenceConfirmed = false;
+let authRevision = 0;
+let wallChoice = 'aurora';
+let wallPhoto = '';
+let wallShade = 48;
+let wallpaperLoading = false;
 
 try {
   if (localStorage.getItem('lobbix-theme') === 'dark') {
@@ -758,6 +819,31 @@ async function startup() {
         storage.setItem(sessionKey, JSON.stringify(session));
       }
 
+      // A session can change in another tab while this page still shows
+      // the previous account. Do not mix that account with the new JWT.
+      if (session?.user && user && session.user.id !== user.id && !adminLoginPending) {
+        authRevision++;
+        clearInterval(poller);
+        poller = null;
+        lobby = null;
+        members = [];
+        pendingCreatedLobby = null;
+        roomPresenceConfirmed = false;
+        profile = null;
+        admin = false;
+        adminPanelUnlocked = false;
+        user = session.user;
+        renderAuth('login');
+      }
+
+      if (event === 'SIGNED_IN' && session?.user && !profile &&
+          !authSubmitting && !adminLoginPending && !recovering) {
+        // Defer SDK work until the synchronous Auth callback has returned.
+        setTimeout(() => {
+          if (signedSession?.user?.id === session.user.id) loadUser(signedSession);
+        }, 0);
+      }
+
       if (event === 'PASSWORD_RECOVERY') {
         recovering = true;
         user = session?.user ?? null;
@@ -765,6 +851,7 @@ async function startup() {
       }
 
       if (event === 'SIGNED_OUT') {
+        authRevision++;
         signedSession = null;
         storage.removeItem(sessionKey);
 
@@ -773,6 +860,8 @@ async function startup() {
         admin = false;
         adminPanelUnlocked = false;
         lobby = null;
+        pendingCreatedLobby = null;
+        roomPresenceConfirmed = false;
 
         clearInterval(poller);
         poller = null;
@@ -1059,9 +1148,12 @@ async function loadUser(session) {
 
   profileLoadingId = nextUser.id;
   user = nextUser;
+  const loadRevision = authRevision;
 
   try {
     const { data, error } = await db.rpc('lobbix_my_profile');
+
+    if (user?.id !== nextUser.id || authRevision !== loadRevision) return;
 
     if (error) throw error;
 
@@ -1093,8 +1185,9 @@ async function loadUser(session) {
       );
     }
 
-    page('home');
+    if (user?.id === nextUser.id && authRevision === loadRevision) page('home');
   } catch (error) {
+    if (user?.id !== nextUser.id || authRevision !== loadRevision) return;
     console.error('Lecture du profil :', error);
 
     if (error?.code === 'LOBBIX_SESSION_MISSING') {
@@ -1125,7 +1218,7 @@ async function loadUser(session) {
       'appError'
     );
   } finally {
-    profileLoadingId = null;
+    if (profileLoadingId === nextUser.id) profileLoadingId = null;
   }
 }
 
@@ -1200,11 +1293,13 @@ async function safeguard(payload) {
 /* LOBBIES ET NAVIGATION */
 
 async function listRooms() {
+  const accountId = user?.id;
+  const revision = authRevision;
   const { data, error } = await db.rpc('lobbix_list_public');
 
   if (error) throw error;
 
-  lobbies = data || [];
+  if (user?.id === accountId && authRevision === revision) lobbies = data || [];
 }
 
 function roomCard(room) {
@@ -1290,7 +1385,10 @@ function page(pageName) {
       <div class="card">
         <h2>Créer un lobby public</h2>
 
-        <form onsubmit="createRoom(event)">
+        <div id="createNotice" class="notice hidden" role="status" aria-live="polite"></div>
+        ${pendingCreatedLobby ? '<p>Le lobby « ' + safe(pendingCreatedLobby.name) + ' » est créé. Réessaie de le rejoindre.</p>' : ''}
+        <form id="createLobbyForm" onsubmit="createRoom(event)">
+          <fieldset style="border:0;padding:0;margin:0" ${pendingCreatedLobby ? 'disabled' : ''}>
           <label for="rName">Nom</label>
           <input id="rName" maxlength="60" required>
 
@@ -1325,8 +1423,9 @@ function page(pageName) {
           <p class="muted">
             Les lobbies privés ne sont pas encore disponibles.
           </p>
+          </fieldset>
 
-          <button type="submit">Créer et rejoindre</button>
+          <button type="submit">${pendingCreatedLobby ? 'Rejoindre le lobby créé' : 'Créer et rejoindre'}</button>
         </form>
       </div>
     `;
@@ -1369,86 +1468,128 @@ async function refreshList() {
 
 async function createRoom(event) {
   event.preventDefault();
+  if (creatingRoom || joiningRoom) return;
+  if (!db || !user || !profile) {
+    notice('Connecte-toi et complète ton profil avant de créer un lobby.', 'createNotice');
+    return;
+  }
+
+  const formElement = event.currentTarget;
+  const button = formElement.querySelector('button[type="submit"]');
+  const actor = user.id;
+  const revision = authRevision;
+  creatingRoom = true;
+  button.disabled = true;
+  button.textContent = pendingCreatedLobby ? 'Entrée dans le lobby…' : 'Création en cours…';
+  hideNotice('appError');
+  notice(pendingCreatedLobby ? 'Entrée dans ton lobby…' : 'SafeGuard vérifie le nom et crée ton lobby…', 'createNotice');
 
   try {
-    const name = $('rName').value.trim();
+    if (!pendingCreatedLobby) {
+      const name = $('rName').value.trim();
+      if (!name) throw Error('Donne un nom à ton lobby.');
+      const reply = await safeguard({
+        action: 'lobby',
+        name,
+        description: $('rDesc').value,
+        hours: $('rHours').value
+          ? Number($('rHours').value)
+          : null,
+        empty_minutes: Number($('rEmpty').value)
+      });
+      if (user?.id !== actor || authRevision !== revision) return;
 
-    const reply = await safeguard({
-      action: 'lobby',
-      name,
-      description: $('rDesc').value,
-      hours: $('rHours').value
-        ? Number($('rHours').value)
-        : null,
-      empty_minutes: Number($('rEmpty').value)
-    });
-
-    if (!reply.ok) {
-      throw Error(
-        reply.reason ||
-        reply.message ||
-        'Lobby refusé.'
-      );
+      if (!reply.ok) {
+        throw Error(
+          reply.reason ||
+          reply.message ||
+          'Lobby refusé.'
+        );
+      }
+      if (typeof reply.lobby_id !== 'string' || !/^[0-9a-f-]{36}$/i.test(reply.lobby_id)) {
+        throw Error('Le serveur n’a pas confirmé la création du lobby. Actualise la liste avant de réessayer.');
+      }
+      pendingCreatedLobby = { id: reply.lobby_id, name };
+      formElement.querySelector('fieldset').disabled = true;
     }
-
-    await joinRoom(reply.lobby_id, name);
+    await enterRoom(pendingCreatedLobby.id, pendingCreatedLobby.name);
+    if (user?.id === actor && authRevision === revision) pendingCreatedLobby = null;
   } catch (error) {
-    fail(error, 'appError');
+    if (user?.id === actor && authRevision === revision) {
+      notice((pendingCreatedLobby ? 'Ton lobby est créé. Impossible de le rejoindre : ' : '') + (error.message || error), 'createNotice');
+    }
+  } finally {
+    creatingRoom = false;
+    if (button.isConnected) {
+      button.disabled = false;
+      button.textContent = pendingCreatedLobby ? 'Rejoindre le lobby créé' : 'Créer et rejoindre';
+    }
   }
 }
 
 async function joinRoom(id, name) {
+  if (joiningRoom || creatingRoom) return;
+  joiningRoom = true;
   try {
-    if (!user) {
-      throw Error('Connecte-toi avant de rejoindre un lobby.');
-    }
-
-    const { error } = await db.rpc('lobbix_join_public', {
-      p_lobby: id
-    });
-
-    if (error) throw error;
-
-    const membership = await db
-      .from('lobbix_members')
-      .select('joined_at')
-      .eq('lobby_id', id)
-      .eq('user_id', user.id)
-      .maybeSingle();
-
-    if (membership.error) throw membership.error;
-
-    joinedAt =
-      membership.data?.joined_at ||
-      new Date().toISOString();
-
-    lobby = {
-      id,
-      name:
-        name ||
-        lobbies.find(room => room.id === id)?.name ||
-        'Lobby'
-    };
-
-    $('roomName').textContent = '🎮 ' + lobby.name;
-    screen('room');
-
-    let background = 'aurora';
-
-    try {
-      background = localStorage.getItem('lobbix-bg') || 'aurora';
-    } catch {}
-
-    setWall(background);
-    activity('home');
-
-    await updateRoom();
-
-    clearInterval(poller);
-    poller = setInterval(updateRoom, 3000);
+    await enterRoom(id, name);
   } catch (error) {
-    fail(error, 'appError');
+    fail(error, lobby ? 'roomNotice' : 'appError');
+  } finally {
+    joiningRoom = false;
   }
+}
+
+async function enterRoom(id, name) {
+  if (!user) {
+    throw Error('Connecte-toi avant de rejoindre un lobby.');
+  }
+  const actor = user.id;
+  const revision = authRevision;
+
+  const { error } = await db.rpc('lobbix_join_public', {
+    p_lobby: id
+  });
+
+  if (error) throw error;
+  if (user?.id !== actor || authRevision !== revision) throw Error('Le compte connecté a changé. Recommence avec le compte actuel.');
+
+  const membership = await db
+    .from('lobbix_members')
+    .select('joined_at')
+    .eq('lobby_id', id)
+    .eq('user_id', actor)
+    .maybeSingle();
+
+  if (membership.error) throw membership.error;
+  if (user?.id !== actor || authRevision !== revision) throw Error('Le compte connecté a changé.');
+  if (!membership.data?.joined_at) {
+    throw Error('L’entrée dans le lobby n’a pas été confirmée. Réessaie de le rejoindre.');
+  }
+
+  joinedAt = membership.data.joined_at;
+
+  lobby = {
+    id,
+    name: name || lobbies.find(room => room.id === id)?.name || 'Lobby'
+  };
+
+  $('roomName').textContent = '🎮 ' + lobby.name;
+  roomPresenceConfirmed = true;
+  hideNotice('roomNotice');
+  hideNotice('appError');
+  $('rejoinRoomButton').classList.add('hidden');
+  $('message').disabled = false;
+  $('sendMessageButton').disabled = false;
+  $('messages').textContent = '';
+  $('sgNotice').textContent = '';
+  screen('room');
+  setWall(wallChoice, false);
+  activity('home');
+
+  await updateRoom();
+  if (user?.id !== actor || authRevision !== revision || lobby?.id !== id) return;
+  clearInterval(poller);
+  poller = setInterval(updateRoom, 3000);
 }
 
 async function leaveRoom() {
@@ -1466,6 +1607,7 @@ async function leaveRoom() {
 
   lobby = null;
   members = [];
+  roomPresenceConfirmed = false;
 
   screen('app');
 
@@ -1506,6 +1648,15 @@ async function updateRoom() {
     }
 
     members = membersResult.data || [];
+    roomPresenceConfirmed = members.some(member => member.user_id === user.id);
+    $('message').disabled = !roomPresenceConfirmed;
+    $('sendMessageButton').disabled = !roomPresenceConfirmed;
+    $('rejoinRoomButton').classList.toggle('hidden', roomPresenceConfirmed);
+    if (!roomPresenceConfirmed) {
+      notice('Tu n’es plus présent dans ce lobby, par exemple après un départ dans un autre onglet. Clique sur « Rejoindre à nouveau ce lobby » pour continuer.', 'roomNotice');
+    } else {
+      hideNotice('roomNotice');
+    }
 
     $('count').textContent = members.length + '/25 joueurs';
 
@@ -1576,6 +1727,10 @@ async function updateRoom() {
 
 async function send() {
   if (!lobby || sending) return;
+  if (!roomPresenceConfirmed) {
+    notice('Rejoins à nouveau ce lobby avant d’envoyer un message.', 'roomNotice');
+    return;
+  }
 
   const input = $('message');
   const text = input.value.trim();
@@ -1714,10 +1869,71 @@ async function signout() {
 
 /* ACTIVITÉS */
 
-function setWall(wall) {
-  const element = $('room');
+function validWallPhoto(value) {
+  if (typeof value !== 'string' || value.length > 2000000) return false;
+  if (/^data:image\/jpeg;base64,[a-z0-9+/=]+$/i.test(value)) return true;
+  try {
+    const url = new URL(value);
+    return value.length <= 2048 && url.protocol === 'https:' && !url.username && !url.password;
+  } catch { return false; }
+}
 
-  element.classList.remove('gridbg', 'waves');
+function restoreWall() {
+  try {
+    const savedPhoto = localStorage.getItem('lobbix-bg-photo');
+    if (validWallPhoto(savedPhoto)) wallPhoto = savedPhoto;
+    const savedChoice = localStorage.getItem('lobbix-bg');
+    if (['aurora', 'grid', 'waves', 'photo'].includes(savedChoice)) wallChoice = savedChoice;
+    const savedShade = localStorage.getItem('lobbix-bg-shade');
+    if (savedShade !== null && Number.isFinite(Number(savedShade))) {
+      wallShade = Math.max(25, Math.min(80, Number(savedShade)));
+    }
+  } catch {}
+  if (wallChoice === 'photo' && !wallPhoto) wallChoice = 'aurora';
+  setWall(wallChoice, false);
+}
+
+function saveWall() {
+  try {
+    // Save the larger value first; a quota error leaves the saved photo intact.
+    if (wallPhoto && localStorage.getItem('lobbix-bg-photo') !== wallPhoto) {
+      localStorage.setItem('lobbix-bg-photo', wallPhoto);
+    }
+    localStorage.setItem('lobbix-bg', wallChoice);
+    localStorage.setItem('lobbix-bg-shade', String(wallShade));
+    return true;
+  } catch { return false; }
+}
+
+function syncWallControls() {
+  $('wallpaperPreset').value = wallChoice;
+  $('wallpaperPreset').querySelector('option[value="photo"]').disabled = !wallPhoto;
+  $('wallpaperShade').value = wallShade;
+  $('wallpaperShadeValue').textContent = wallShade + ' %';
+  $('removeWallpaperButton').disabled = !wallPhoto || wallpaperLoading;
+  $('wallpaperFile').disabled = wallpaperLoading;
+  $('wallpaperUrlButton').disabled = wallpaperLoading;
+  const appearance = getComputedStyle($('room'));
+  const preview = $('wallpaperPreview');
+  preview.style.backgroundImage = appearance.backgroundImage;
+  preview.style.backgroundSize = appearance.backgroundSize;
+  preview.style.backgroundPosition = appearance.backgroundPosition;
+  preview.style.backgroundColor = appearance.backgroundColor;
+  preview.style.setProperty('--preview-shade', wallShade / 100);
+}
+
+function openWallpaperSettings() {
+  syncWallControls();
+  if (!$('wallpaperDialog').open) $('wallpaperDialog').showModal();
+}
+
+function setWall(wall, persist = true) {
+  const element = $('room');
+  if (!['aurora', 'grid', 'waves', 'photo'].includes(wall)) wall = 'aurora';
+  if (wall === 'photo' && !wallPhoto) return;
+  wallChoice = wall;
+  element.classList.remove('gridbg', 'waves', 'photobg');
+  element.style.backgroundImage = '';
 
   if (wall === 'grid') {
     element.classList.add('gridbg');
@@ -1726,10 +1942,112 @@ function setWall(wall) {
   if (wall === 'waves') {
     element.classList.add('waves');
   }
+  if (wall === 'photo') {
+    element.classList.add('photobg');
+    element.style.backgroundImage = 'url(' + JSON.stringify(wallPhoto) + ')';
+  }
+  element.style.setProperty('--shade', wallShade / 100);
+  syncWallControls();
+  if (persist && !saveWall()) {
+    notice('Fond appliqué pour cette session. La sauvegarde sur cet appareil est indisponible.', 'wallpaperNotice');
+  }
+}
 
+function setWallShade(value) {
+  if (!Number.isFinite(Number(value))) return;
+  wallShade = Math.max(25, Math.min(80, Number(value)));
+  setWall(wallChoice);
+}
+
+function readWallFile(file) {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.onload = () => resolve(reader.result);
+    reader.onerror = () => reject(Error('Impossible de lire cette photo.'));
+    reader.readAsDataURL(file);
+  });
+}
+
+function loadWallImage(source) {
+  return new Promise((resolve, reject) => {
+    const image = new Image();
+    const timer = setTimeout(() => { image.src = ''; reject(Error('Le chargement de cette image a pris trop de temps.')); }, 15000);
+    image.onload = () => { clearTimeout(timer); resolve(image); };
+    image.onerror = () => { clearTimeout(timer); reject(Error('Image illisible. Essaie une photo JPG, PNG ou WebP.')); };
+    image.referrerPolicy = 'no-referrer';
+    image.src = source;
+  });
+}
+
+async function importWallpaper(input) {
+  const file = input.files?.[0];
+  if (!file || wallpaperLoading) return;
+  wallpaperLoading = true;
+  syncWallControls();
+  notice('Préparation de ta photo…', 'wallpaperNotice');
   try {
-    localStorage.setItem('lobbix-bg', wall);
-  } catch {}
+    if (!/^image\/(jpeg|png|webp|gif|avif|bmp)$/i.test(file.type)) {
+      throw Error('Format non pris en charge. Choisis une photo JPG, PNG, WebP, GIF, AVIF ou BMP.');
+    }
+    if (file.size > 15 * 1024 * 1024) throw Error('Cette photo dépasse 15 Mo. Choisis une image plus petite.');
+    const image = await loadWallImage(await readWallFile(file));
+    const width = image.naturalWidth, height = image.naturalHeight;
+    if (!width || !height) throw Error('Cette image ne contient pas de photo lisible.');
+    const ratio = Math.min(1, 1920 / width, 1080 / height);
+    const canvas = document.createElement('canvas');
+    canvas.width = Math.max(1, Math.round(width * ratio));
+    canvas.height = Math.max(1, Math.round(height * ratio));
+    const context = canvas.getContext('2d');
+    if (!context) throw Error('La préparation de photos est indisponible dans ce navigateur.');
+    context.fillStyle = '#182339';
+    context.fillRect(0, 0, canvas.width, canvas.height);
+    context.drawImage(image, 0, 0, canvas.width, canvas.height);
+    let source = canvas.toDataURL('image/jpeg', 0.82);
+    if (source.length > 2000000) source = canvas.toDataURL('image/jpeg', 0.6);
+    if (!validWallPhoto(source) || !source.startsWith('data:image/jpeg;')) {
+      throw Error('Cette photo reste trop volumineuse après préparation. Essaie une image plus petite.');
+    }
+    wallPhoto = source;
+    setWall('photo', false);
+    notice(saveWall() ? 'Photo appliquée et enregistrée sur cet appareil.' : 'Photo appliquée pour cette session. La sauvegarde sur cet appareil est indisponible.', 'wallpaperNotice');
+  } catch (error) {
+    notice(error.message || 'Impossible de charger cette photo.', 'wallpaperNotice');
+  } finally {
+    wallpaperLoading = false;
+    input.value = '';
+    syncWallControls();
+  }
+}
+
+async function useWallpaperUrl(event) {
+  event.preventDefault();
+  if (wallpaperLoading) return;
+  wallpaperLoading = true;
+  syncWallControls();
+  notice('Chargement de l’image…', 'wallpaperNotice');
+  try {
+    const source = $('wallpaperUrl').value.trim();
+    if (!source.startsWith('https://') || !validWallPhoto(source)) {
+      throw Error('Utilise le lien HTTPS direct d’une image, sans identifiants.');
+    }
+    await loadWallImage(source);
+    wallPhoto = new URL(source).href;
+    setWall('photo', false);
+    notice(saveWall() ? 'Image appliquée et enregistrée sur cet appareil.' : 'Image appliquée pour cette session. La sauvegarde sur cet appareil est indisponible.', 'wallpaperNotice');
+  } catch (error) {
+    notice(error.message || 'Impossible de charger cette image.', 'wallpaperNotice');
+  } finally {
+    wallpaperLoading = false;
+    syncWallControls();
+  }
+}
+
+function removeWallpaper() {
+  wallPhoto = '';
+  try { localStorage.removeItem('lobbix-bg-photo'); } catch {}
+  setWall('aurora');
+  $('wallpaperUrl').value = '';
+  notice('Photo retirée. Le fond Aurore est rétabli.', 'wallpaperNotice');
 }
 
 function activity(type) {
@@ -1740,21 +2058,7 @@ function activity(type) {
       <h2>Bienvenue !</h2>
       <p>Choisis une mini-app ou discute dans le chat.</p>
 
-      <label>Fond d’écran</label>
-      <select onchange="setWall(this.value)">
-        <option value="aurora">Aurore</option>
-        <option value="grid">Grille</option>
-        <option value="waves">Vagues</option>
-      </select>
-
-      <label>Opacité du voile</label>
-      <input
-          type="range"
-          min="25"
-          max="80"
-          value="48"
-          oninput="document.getElementById('room').style.setProperty('--shade',this.value/100)"
-      >
+      <p><button type="button" onclick="openWallpaperSettings()">🖼️ Personnaliser mon fond avec une photo</button></p>
 
       <p class="muted">
         SafeGuard contrôle les messages et les noms avant publication.
@@ -2136,6 +2440,7 @@ document.addEventListener('input', event => {
   }
 }, true);
 
+restoreWall();
 startup();
 </script>
 
