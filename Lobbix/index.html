@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Lobbix V0.8.8 — SafeGuard 1.0.1</title>
+<title>Lobbix 1.0 — SafeGuard 2.0</title>
 <style>
 :root{
   font-family:system-ui,Arial;
@@ -276,6 +276,7 @@ canvas{
   .roomlayout{gap:7px;padding:7px}
 }
 </style>
+<link rel="stylesheet" href="static/v1.css?v=1.0.0">
 </head>
 
 <body>
@@ -292,7 +293,7 @@ canvas{
     </p>
 
     <div class="notice muted">
-      Prototype privé V0.8.8 · SafeGuard 1.0.1.
+      Lobbix 1.0 · SafeGuard 2.0
     </div>
 
     <div id="authError" class="notice hidden" role="status"></div>
@@ -328,44 +329,44 @@ canvas{
   </main>
 </section>
 
-<section id="room" class="room hidden">
-  <div class="roomtop">
-    <div>
+<section id="room" class="room hidden" data-view="chat" data-chat="open">
+  <header id="roomTop" class="roomtop">
+    <div class="room-brand">
+      <span style="font-size:26px" aria-hidden="true">🎮</span>
+      <div>
       <strong id="roomName">Lobby</strong>
-      <div id="count" class="muted">0/25 joueurs</div>
+      <small><span id="count">0/25 membres</span> · <span id="roomDeadline" class="expiration-chip"></span></small>
+      </div>
     </div>
-
-    <button type="button" onclick="openWallpaperSettings()">🖼️ Fond d’écran</button>
-    <button type="button" onclick="leaveRoom()">← Quitter le lobby</button>
-  </div>
+    <div class="roomtools">
+      <button id="chatPill" type="button" class="alt conversation-pill" onclick="toggleConversation()" aria-controls="roomChat" aria-expanded="true">💬 Conversation</button>
+      <button type="button" class="alt" onclick="copyLobbyInvite()">🔗 Inviter</button>
+      <button type="button" class="alt" onclick="leaveRoom()">← Quitter le lobby</button>
+    </div>
+    <nav class="roomnav" aria-label="Navigation du lobby">
+      <button type="button" class="nav-action active" data-view-name="home" onclick="activity('home')">💬 Discussion</button>
+      <button type="button" class="nav-action" data-view-name="catalog" onclick="activity('catalog')">🧩 Activités</button>
+      <button type="button" class="nav-action" data-view-name="screen" onclick="activity('screen')">🖥️ Écran</button>
+      <button type="button" class="nav-action" data-view-name="scores" onclick="activity('scores')">🏆 Classement</button>
+      <button type="button" class="nav-action" data-view-name="players" onclick="activity('players')">👥 Membres</button>
+      <button type="button" class="nav-action" onclick="openWallpaperSettings()">🖼️ Fond d’écran</button>
+    </nav>
+  </header>
 
   <div id="roomNotice" class="notice room-notice hidden" role="status"></div>
   <button id="rejoinRoomButton" type="button" class="hidden" onclick="joinRoom(lobby.id,lobby.name)">Rejoindre à nouveau ce lobby</button>
 
+  <button type="button" class="chat-backdrop" onclick="toggleConversation(false)" aria-label="Fermer la conversation latérale"></button>
   <div class="roomlayout">
-    <nav class="glass mini">
-      <button type="button" onclick="activity('home')">🏠 Lobby</button>
-      <button type="button" onclick="activity('players')">👥 Joueurs</button>
-      <button type="button" onclick="activity('draw')">🎨 Dessin</button>
-      <button type="button" onclick="activity('wheel')">🎡 Roue</button>
-      <button type="button" onclick="activity('poll')">📊 Sondage</button>
-      <button type="button" onclick="activity('games')">🎮 Jeux</button>
-    </nav>
-
-    <div class="glass work" id="workspace"></div>
-
-    <div class="glass chat">
-      <h3>💬 Discussion · 🛡️ SafeGuard</h3>
-
+    <main class="glass work" id="workspace"></main>
+    <aside class="glass chat" id="roomChat" aria-label="Conversation du lobby">
+      <div class="chat-heading">
+        <div><h2>💬 Conversation</h2><small>🛡️ SafeGuard 2.0</small></div>
+        <button type="button" class="close-chat" onclick="toggleConversation(false)" aria-label="Réduire la conversation">×</button>
+      </div>
       <div id="messages" class="messages"></div>
-
-      <div
-        id="sgNotice"
-        style="font-size:12px;padding:4px 0;color:#ffdc91"
-        role="status"
-        aria-live="polite"
-      ></div>
-
+      <div class="composer-wrap">
+      <div id="sgNotice" role="status" aria-live="polite"></div>
       <div class="composer">
         <input
           id="message"
@@ -375,9 +376,21 @@ canvas{
         >
         <button id="sendMessageButton" type="button" onclick="send()">Envoyer</button>
       </div>
-    </div>
+      </div>
+    </aside>
   </div>
 </section>
+
+<dialog id="joinLobbyDialog" class="invite-card" aria-labelledby="joinLobbyTitle">
+ <h2 id="joinLobbyTitle">Rejoindre un lobby</h2>
+ <p id="joinLobbyDescription" class="muted">Renseigne son mot de passe s’il est privé.</p>
+ <form onsubmit="submitPrivateJoin(event)">
+  <label for="joinLobbyPassword">Mot de passe du lobby</label>
+  <input id="joinLobbyPassword" type="password" maxlength="128" autocomplete="off">
+  <div id="joinLobbyError" class="notice hidden" role="status"></div>
+  <p><button type="submit">Rejoindre</button> <button type="button" class="alt" onclick="document.getElementById('joinLobbyDialog').close()">Annuler</button></p>
+ </form>
+</dialog>
 
 <dialog id="wallpaperDialog" class="wallpaper-dialog" aria-labelledby="wallpaperTitle">
   <div class="row">
@@ -510,6 +523,7 @@ function fail(error, target = 'authError') {
 }
 
 function screen(name) {
+  if (name !== 'room' && typeof cleanupRoomMedia === 'function') cleanupRoomMedia();
   $('auth').classList.toggle('hidden', name !== 'auth');
   $('app').classList.toggle('hidden', name !== 'app');
   $('room').classList.toggle('hidden', name !== 'room');
@@ -1631,8 +1645,7 @@ async function leaveRoom() {
 
   try {
     if (db && user) {
-      const { error } = await db.rpc('lobbix_leave');
-      if (error) throw error;
+      await v1Action('leave', {}, lobby.id);
     }
   } catch (error) {
     console.error('Départ du lobby :', error);
@@ -2343,8 +2356,7 @@ async function openAdminLogin() {
     poller = null;
 
     try {
-      const { error } = await db.rpc('lobbix_leave');
-      if (error) throw error;
+      await v1Action('leave', {}, lobby.id);
     } catch (error) {
       console.warn('Départ du lobby :', error);
     }
@@ -2489,8 +2501,9 @@ document.addEventListener('input', event => {
 }, true);
 
 restoreWall();
-startup();
 </script>
+<script src="static/screen-share.js?v=1.0.0"></script>
+<script src="static/v1.js?v=1.0.0" onerror="renderAuth('login');notice('Le chargement de Lobbix a échoué. Recharge la page.')"></script>
 
 </body>
 </html>

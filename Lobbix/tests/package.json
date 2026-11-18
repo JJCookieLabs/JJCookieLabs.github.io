@@ -1,0 +1,7 @@
+{
+  "private": true,
+  "name": "lobbix-v1-tests",
+  "version": "1.0.0",
+  "scripts": {"test": "node test-database.cjs && node test-safeguard.mjs && node test-edge.cjs && node test-ui.cjs && node test-screen.cjs"},
+  "devDependencies": {"@electric-sql/pglite":"0.5.16","@roamhq/wrtc":"0.10.0","@supabase/supabase-js":"2.119.0","jsdom":"26.1.0"}
+}
