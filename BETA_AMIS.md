@@ -4,7 +4,9 @@
 
 ## Inviter un ami
 
-Dans le SQL Editor du projet Supabase `hkwnfxgrnyvyfprzvlyb`, exécuter **avec le rôle administrateur** :
+Depuis un compte Lobbix disposant du rôle administrateur, ouvre **Profil → Inviter un ami à la bêta**. Saisis l'adresse e-mail de ton ami, puis copie le code généré. L'outil vérifie ton rôle sur le serveur ; aucun secret d'administration n'est présent dans le navigateur.
+
+Autre méthode pour l'administrateur : dans le SQL Editor du projet Supabase `hkwnfxgrnyvyfprzvlyb`, exécuter **avec le rôle administrateur** :
 
 ```sql
 SELECT lobbix_private.create_beta_invite('adresse-de-ton-ami@example.com');
