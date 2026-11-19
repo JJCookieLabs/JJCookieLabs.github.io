@@ -1494,11 +1494,14 @@ function page(pageName) {
         <h3>Confidentialité et compte</h3>
         <p class="muted">Les messages de discussion sont supprimés après environ 7 jours. La suppression du compte est définitive et supprime les données personnelles qui y sont liées.</p>
         <button type="button" class="danger" onclick="deleteMyLobbixAccount()">Supprimer mon compte</button>
+        <div id="betaInviteArea"></div>
       </div>
     `;
   }
 
   $('content').innerHTML = html;
+
+  if (pageName === 'profile') loadBetaInvitationArea();
 
   if (pageName === 'admin') {
     showAdmin();
@@ -1893,6 +1896,54 @@ async function report(id) {
   }
 }
 
+
+
+/* Invitations bêta : un administrateur peut générer un code personnel,
+   dont la vérification se fait exclusivement côté Supabase. */
+async function loadBetaInvitationArea() {
+  const element = $('betaInviteArea');
+  if (!element || !db) return;
+  try {
+    const {data:isAdminAccount,error} = await db.rpc('lobbix_is_admin');
+    if (error || !isAdminAccount || !$('betaInviteArea')) return;
+    $('betaInviteArea').innerHTML = `
+      <hr>
+      <h3>🗝️ Inviter un ami à la bêta</h3>
+      <p class="muted">Le code fonctionne uniquement pour l'adresse saisie et expire dans 14 jours.</p>
+      <form onsubmit="issueBetaInvite(event)">
+        <label for="betaFriendEmail">Adresse e-mail de ton ami</label>
+        <input id="betaFriendEmail" type="email" required autocomplete="off" placeholder="ami@example.com">
+        <button type="submit">Générer l'invitation</button>
+      </form>
+      <p id="betaInviteOutput" class="muted" style="overflow-wrap:anywhere"></p>
+    `;
+  } catch (error) { console.warn('Invitations indisponibles',error); }
+}
+async function issueBetaInvite(event) {
+  event.preventDefault();
+  const target=$('betaInviteOutput');
+  const button=event.currentTarget.querySelector('button[type="submit"]');
+  button.disabled=true;
+  target.textContent='Création de l’invitation…';
+  try {
+    const email=$('betaFriendEmail').value.trim();
+    const {data,error}=await db.functions.invoke('lobbix-invite',{body:{email}});
+    if(error)throw Error(data?.message||error.message);
+    if(!data?.ok||!data.code)throw Error(data?.message||'Invitation indisponible');
+    target.replaceChildren();
+    const label=document.createElement('p');
+    label.textContent='Pour '+data.email+' :';
+    const code=document.createElement('code');
+    code.textContent=data.code;
+    const copy=document.createElement('button');
+    copy.type='button';
+    copy.textContent='Copier le code';
+    copy.onclick=()=>navigator.clipboard.writeText(data.code).catch(()=>alert('Sélectionne et copie le code affiché.'));
+    target.append(label,code,document.createTextNode(' '),copy);
+  } catch(error) {
+    target.textContent=error?.message||'Création impossible';
+  } finally{button.disabled=false;}
+}
 
 /* Suppression du compte : re-authentification et action privilégiée côté serveur */
 async function deleteMyLobbixAccount() {
