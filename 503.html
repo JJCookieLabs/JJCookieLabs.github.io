@@ -1,48 +1,82 @@
 <!DOCTYPE html>
 <html lang="fr">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="robots" content="noindex, nofollow">
-    <title>JJCookieLabs | Maintenance</title>
-    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%23181b22'/%3E%3Ccircle cx='32' cy='32' r='21' fill='%23d97706'/%3E%3Ccircle cx='25' cy='25' r='3' fill='%23451a03'/%3E%3Ccircle cx='38' cy='23' r='2.5' fill='%23451a03'/%3E%3Ccircle cx='23' cy='37' r='2.5' fill='%23451a03'/%3E%3Ccircle cx='35' cy='36' r='3.5' fill='%23451a03'/%3E%3Ccircle cx='42' cy='31' r='2' fill='%23451a03'/%3E%3C/svg%3E">
-    <style>
-        * {
-            box-sizing: border-box;
-            margin: 0;
-            padding: 0;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="robots" content="noindex">
+  <title>503 — JJCookieLabs</title>
 
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background-color: #0f1115;
-            color: #f3f4f6;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            text-align: center;
-            padding: 2rem;
-        }
+  <style>
+    body {
+      margin: 0;
+      min-height: 100dvh;
+      display: grid;
+      place-items: center;
+      background: #141826;
+      color: #f3f3ff;
+      font-family: system-ui, sans-serif;
+      text-align: center;
+    }
 
-        h1 {
-            font-size: clamp(2.5rem, 8vw, 5.5rem);
-            font-weight: 800;
-            letter-spacing: -1.5px;
-            line-height: 1.1;
-            margin-bottom: 1.2rem;
-        }
+    main {
+      max-width: 550px;
+      padding: 24px;
+    }
 
-        p {
-            font-size: clamp(1.1rem, 2.5vw, 1.5rem);
-            color: #9ca3af;
-            max-width: 600px;
-        }
-    </style>
+    h1 {
+      margin: 0;
+      color: #a296ff;
+      font-size: clamp(80px, 20vw, 150px);
+    }
+
+    p {
+      color: #c0c7de;
+      line-height: 1.6;
+    }
+
+    a {
+      display: inline-block;
+      margin-top: 16px;
+      padding: 12px 22px;
+      border-radius: 12px;
+      background: #6554d9;
+      color: white;
+      text-decoration: none;
+      transition: background .2s;
+    }
+
+    a:hover {
+      background: #7968ed;
+    }
+
+    a:focus-visible {
+      outline: 3px solid white;
+      outline-offset: 4px;
+    }
+
+    footer {
+      margin-top: 35px;
+      color: #c0c7de;
+      font-size: 13px;
+    }
+  </style>
 </head>
+
 <body>
-    <h1>Site en entretien</h1>
-    <p>Nous revenons très vite.</p>
+  <main>
+    <h1>503</h1>
+    <h2>🍪 Une petite pause technique…</h2>
+
+    <p>
+      JJCookieLabs est temporairement indisponible.
+      Nous préparons le retour du site.
+    </p>
+
+    <p>Merci de réessayer dans quelques instants.</p>
+
+    <a href="/">Réessayer</a>
+
+    <footer>JJCookieLabs · Service temporairement indisponible</footer>
+  </main>
 </body>
 </html>
