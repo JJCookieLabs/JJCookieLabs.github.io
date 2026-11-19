@@ -602,9 +602,10 @@ function renderAuth(modeName) {
 
     if (signup) {
       html += `
-        <p class="muted">
-          Un email de confirmation pourra être nécessaire.
-        </p>
+        <p class="muted">Bêta privée : inscription uniquement sur invitation personnelle (un code par adresse e-mail).</p>
+        <label for="inviteCode">Code d'invitation</label>
+        <input id="inviteCode" type="text" maxlength="48" minlength="48" pattern="[0-9a-fA-F]{48}" required autocomplete="off" placeholder="Code reçu de JJCookieLabs">
+        <p class="muted">Un e-mail de confirmation pourra être nécessaire.</p>
 
         <label>
           <input
@@ -1021,11 +1022,16 @@ async function authSubmit(event) {
         throw Error('Accepte les règles du prototype.');
       }
 
+      const inviteCode = $('inviteCode')?.value.trim().toLowerCase() || '';
+      if (!/^[0-9a-f]{48}$/.test(inviteCode)) {
+        throw Error("Code d'invitation invalide.");
+      }
       const { data, error } = await db.auth.signUp({
         email,
         password,
         options: {
-          emailRedirectTo: redirect()
+          emailRedirectTo: redirect(),
+          data: { lobbix_invite_code: inviteCode }
         }
       });
 
@@ -1484,6 +1490,10 @@ function page(pageName) {
         <h2>👤 ${safe(profile.nickname)}</h2>
         <p>${safe(user?.email || '')}</p>
         <button type="button" onclick="signout()">Déconnexion</button>
+        <hr>
+        <h3>Confidentialité et compte</h3>
+        <p class="muted">Les messages de discussion sont supprimés après environ 7 jours. La suppression du compte est définitive et supprime les données personnelles qui y sont liées.</p>
+        <button type="button" class="danger" onclick="deleteMyLobbixAccount()">Supprimer mon compte</button>
       </div>
     `;
   }
@@ -1880,6 +1890,35 @@ async function report(id) {
     alert('Signalement envoyé.');
   } catch (error) {
     alert(error.message || String(error));
+  }
+}
+
+
+/* Suppression du compte : re-authentification et action privilégiée côté serveur */
+async function deleteMyLobbixAccount() {
+  if (!db || !user) { alert('Connecte-toi d’abord.'); return; }
+  if (!confirm('Supprimer définitivement ton compte Lobbix, son profil et les données liées ? Cette opération est irréversible.')) return;
+  const confirmWord = prompt('Pour confirmer, écris SUPPRIMER (en majuscules) :');
+  if (confirmWord !== 'SUPPRIMER') return;
+  const password = prompt('Entre le mot de passe de ton compte pour confirmer :');
+  if (password === null) return;
+  try {
+    const { data, error } = await db.functions.invoke('lobbix-delete-account', {
+      body: { confirm: 'SUPPRIMER', password }
+    });
+    if (error) {
+      const detail = (data && data.message) || error.message || 'Suppression impossible';
+      throw Error(detail);
+    }
+    if (!data?.ok) throw Error(data?.message || 'Suppression impossible');
+    try { await db.auth.signOut(); } catch {}
+    user = null; profile = null; lobby = null; admin = false;
+    adminPanelUnlocked = false;
+    clearInterval(poller); poller = null;
+    renderAuth('login');
+    notice('Ton compte a été supprimé.');
+  } catch (error) {
+    alert((error?.message || 'Erreur') + '\nSi le problème persiste : jjcookielabs@monemail.com');
   }
 }
 
